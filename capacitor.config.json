@@ -1,0 +1,15 @@
+{
+  "appId": "com.plantrip.ai",
+  "appName": "PlanTrip AI",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "http://127.0.0.1:5173",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "PlanTrip AI — Intelligent Travel App",
+  "short_name": "PlanTrip App",
+  "description": "All-in-one Travel App for Planning, Google Reviews Explorer, Live Fare Comparison, WhatsApp Auto-Sync, and AI Itineraries.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#051126",
+  "theme_color": "#051126",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "productivity", "utilities"]
+}

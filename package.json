@@ -1,0 +1,26 @@
+{
+  "name": "roamly-trip-planner",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "vite build",
+    "preview": "cross-env NODE_ENV=production node server.js",
+    "update-airports": "node scripts/update-airports.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@vitejs/plugin-react": "latest",
+    "cross-env": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "three": "^0.185.1",
+    "vite": "latest"
+  }
+}
