@@ -13,18 +13,20 @@ import TripBasketDrawer from './TripBasketDrawer'
 import GroupChatDrawer from './GroupChatDrawer'
 import ComparePage from './ComparePage'
 import AIAgentPage from './AIAgentPage'
+import PostcardCheckinPage from './PostcardCheckinPage'
 import AppBottomNav from './AppBottomNav'
 import InstallAppModal from './InstallAppModal'
 import {
   Smartphone, Laptop, Download, ShieldCheck, Wifi, BatteryCharging,
-  Sliders
+  Sliders, Camera
 } from 'lucide-react'
 import { countriesData, popularDestinations } from './data/destinationsData'
 import './styles.css'
 
 function App() {
-  // Navigation: 'explore' (1) | 'compare' (2) | 'ai' (3)
+  // Navigation: 'explore' (1) | 'compare' (2) | 'ai' (3) | 'postcard' (4)
   const [currentPage, setCurrentPage] = useState('explore')
+  const [postcardInitialSpot, setPostcardInitialSpot] = useState(null)
 
   // App View & Installation Mode: 'mobile' (Phone View Enabled) | 'responsive' (Full App)
   const [appViewMode, setAppViewMode] = useState('mobile')
@@ -248,6 +250,12 @@ function App() {
     setBasketDrawerOpen(true)
   }
 
+  // Open Postcard Check-in Studio with preloaded spot
+  const handleOpenPostcardWithSpot = spot => {
+    setPostcardInitialSpot(spot)
+    setCurrentPage('postcard')
+  }
+
   // Basket Actions
   const addToBasket = item => {
     if (!basket.some(b => b.id === item.id)) {
@@ -411,6 +419,16 @@ function App() {
                   <span className="step-num">3</span>
                   <span className="step-label">3. AI Agent Itinerary Doc</span>
                 </button>
+
+                <div className="step-arrow"><ChevronRight size={15} /></div>
+
+                <button
+                  className={`step-link ${currentPage === 'postcard' ? 'active' : ''}`}
+                  onClick={() => setCurrentPage('postcard')}
+                >
+                  <span className="step-num">4</span>
+                  <span className="step-label">4. 📸 Postcard & IG Story</span>
+                </button>
               </nav>
 
               {/* HEADER RIGHT ACTIONS & EDITABLE LIVE BUDGET GAUGE */}
@@ -433,6 +451,17 @@ function App() {
                   </div>
                   <small className="budget-per-person">RM {Math.round(budgetAmount / Math.max(1, travellers)).toLocaleString()}/pax</small>
                 </div>
+
+                {/* POSTCARD / CHECK-IN QUICK BUTTON */}
+                <button
+                  className={`btn-group-chat-header ${currentPage === 'postcard' ? 'active' : ''}`}
+                  onClick={() => setCurrentPage('postcard')}
+                  aria-label="Open Postcard & Check-in Studio"
+                  title="Generate Digital Postcard & Share to Instagram Story"
+                >
+                  <Camera size={17} />
+                  <span className="desktop-only">📸 Postcard</span>
+                </button>
 
                 {/* GROUP CHAT & WHATSAPP SYNC BUTTON */}
                 <button
@@ -870,6 +899,7 @@ function App() {
               travellers={travellers}
               onAddToBasket={addToBasket}
               onRemoveFromBasket={removeFromBasket}
+              onOpenPostcard={handleOpenPostcardWithSpot}
             />
           </section>
 
@@ -885,6 +915,7 @@ function App() {
               travellers={travellers}
               onAddToBasket={addToBasket}
               onRemoveFromBasket={removeFromBasket}
+              onOpenPostcard={handleOpenPostcardWithSpot}
             />
           </section>
 
@@ -953,6 +984,18 @@ function App() {
           travelPace={travelPace}
           onNavigateToExplore={() => setCurrentPage('explore')}
           onNavigateToCompare={() => setCurrentPage('compare')}
+        />
+      )}
+
+      {/* PAGE 4: POSTCARD CHECK-IN & INSTAGRAM STORY STUDIO */}
+      {currentPage === 'postcard' && (
+        <PostcardCheckinPage
+          selectedCity={selectedCity}
+          basket={basket}
+          initialSpot={postcardInitialSpot}
+          onBackToExplore={() => setCurrentPage('explore')}
+          travellers={travellers}
+          travelParty={travelParty}
         />
       )}
 

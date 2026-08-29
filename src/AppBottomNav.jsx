@@ -1,5 +1,5 @@
 import React from 'react'
-import { Compass, Scale, Bot, MessageCircle, ShoppingBag, Sparkles } from 'lucide-react'
+import { Compass, Scale, Bot, Camera, MessageCircle, ShoppingBag, Sparkles } from 'lucide-react'
 
 export default function AppBottomNav({
   currentPage,
@@ -21,7 +21,7 @@ export default function AppBottomNav({
           }}
         >
           <div className="tab-icon-wrapper">
-            <Compass size={20} />
+            <Compass size={19} />
           </div>
           <span className="tab-label">Explore</span>
         </button>
@@ -34,7 +34,7 @@ export default function AppBottomNav({
           }}
         >
           <div className="tab-icon-wrapper">
-            <Scale size={20} />
+            <Scale size={19} />
           </div>
           <span className="tab-label">Compare</span>
         </button>
@@ -47,30 +47,43 @@ export default function AppBottomNav({
           }}
         >
           <div className="tab-icon-wrapper center-badge">
-            <Bot size={22} />
+            <Bot size={20} />
           </div>
           <span className="tab-label">AI Plan</span>
         </button>
 
-        {/* 4. WhatsApp Hub */}
+        {/* 4. Postcard & Check-in Tab */}
+        <button
+          className={`nav-tab-item ${currentPage === 'postcard' && !groupChatOpen && !basketOpen ? 'active' : ''}`}
+          onClick={() => {
+            onSelectPage('postcard')
+          }}
+        >
+          <div className="tab-icon-wrapper">
+            <Camera size={19} />
+          </div>
+          <span className="tab-label">Postcard</span>
+        </button>
+
+        {/* 5. WhatsApp Hub */}
         <button
           className={`nav-tab-item ${groupChatOpen ? 'active' : ''}`}
           onClick={onOpenGroupChat}
         >
           <div className="tab-icon-wrapper">
-            <MessageCircle size={20} />
+            <MessageCircle size={19} />
             <span className="live-nav-dot" />
           </div>
-          <span className="tab-label">Group Hub</span>
+          <span className="tab-label">Hub</span>
         </button>
 
-        {/* 5. Trip Basket */}
+        {/* 6. Trip Basket */}
         <button
           className={`nav-tab-item ${basketOpen ? 'active' : ''}`}
           onClick={onOpenBasket}
         >
           <div className="tab-icon-wrapper">
-            <ShoppingBag size={20} />
+            <ShoppingBag size={19} />
             {basketCount > 0 && (
               <span className="nav-badge-count">{basketCount}</span>
             )}

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import {
   Star, Clock, MapPin, Plus, Check, Compass, Eye, Sparkles,
-  Info, Users, Heart, User, Users2, DollarSign, Filter, ThumbsUp, Calendar
+  Info, Users, Heart, User, Users2, DollarSign, Filter, ThumbsUp, Calendar, Camera
 } from 'lucide-react'
 import PlaceDetailModal from './PlaceDetailModal'
 
@@ -14,7 +14,8 @@ export default function AttractionsGrid({
   durationDays = 4,
   travellers = 4,
   onAddToBasket,
-  onRemoveFromBasket
+  onRemoveFromBasket,
+  onOpenPostcard
 }) {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortBy, setSortBy] = useState('tailored') // 'tailored' | 'rating' | 'reviews'
@@ -232,6 +233,20 @@ export default function AttractionsGrid({
                   </div>
 
                   <div className="place-card-actions">
+                    {onOpenPostcard && (
+                      <button
+                        className="btn-card-postcard"
+                        onClick={e => {
+                          e.stopPropagation()
+                          onOpenPostcard(attraction)
+                        }}
+                        title="Check-in & Create Instagram Story Postcard / 打卡明信片"
+                      >
+                        <Camera size={14} />
+                        <span>打卡</span>
+                      </button>
+                    )}
+
                     <button
                       className="btn-view-details"
                       onClick={e => {

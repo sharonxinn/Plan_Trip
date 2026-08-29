@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import {
   Star, Utensils, DollarSign, MapPin, Plus, Check, Coffee, Flame,
-  Sparkles, Info, Users, Heart, User, Users2, ThumbsUp, Calendar
+  Sparkles, Info, Users, Heart, User, Users2, ThumbsUp, Calendar, Camera
 } from 'lucide-react'
 import PlaceDetailModal from './PlaceDetailModal'
 
@@ -14,7 +14,8 @@ export default function RestaurantsGrid({
   durationDays = 4,
   travellers = 4,
   onAddToBasket,
-  onRemoveFromBasket
+  onRemoveFromBasket,
+  onOpenPostcard
 }) {
   const [selectedPriceTier, setSelectedPriceTier] = useState('All')
   const [sortBy, setSortBy] = useState('tailored') // 'tailored' | 'rating' | 'priceAsc' | 'priceDesc'
@@ -261,6 +262,20 @@ export default function RestaurantsGrid({
                   </div>
 
                   <div className="place-card-actions">
+                    {onOpenPostcard && (
+                      <button
+                        className="btn-card-postcard"
+                        onClick={e => {
+                          e.stopPropagation()
+                          onOpenPostcard(restaurant)
+                        }}
+                        title="Check-in & Create Instagram Story Postcard / 打卡明信片"
+                      >
+                        <Camera size={14} />
+                        <span>打卡</span>
+                      </button>
+                    )}
+
                     <button
                       className="btn-view-details"
                       onClick={e => {
