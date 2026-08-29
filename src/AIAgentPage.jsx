@@ -160,6 +160,7 @@ export default function AIAgentPage({
   const [apiKey, setApiKey] = useState('')
   const [showKeyInput, setShowKeyInput] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [lastUpdatedNotice, setLastUpdatedNotice] = useState('')
 
   // AI Chat Concierge state
   const [chatMessages, setChatMessages] = useState([
@@ -218,11 +219,10 @@ export default function AIAgentPage({
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [chatMessages])
 
-  const handleSendMessage = async e => {
-    e.preventDefault()
-    if (!inputMessage.trim() || chatLoading) return
+  const handleSendMessageWithText = async (textToSend) => {
+    if (!textToSend || !textToSend.trim() || chatLoading) return
 
-    const message = inputMessage.trim()
+    const message = textToSend.trim()
     setInputMessage('')
     setChatMessages(prev => [...prev, { sender: 'user', text: message }])
     setChatLoading(true)
@@ -234,10 +234,22 @@ export default function AIAgentPage({
         body: JSON.stringify({
           message,
           currentPlan: itineraryPlan,
+          destination,
+          durationDays,
+          travelParty,
+          travellers,
+          budgetAmount,
           apiKey
         })
       })
       const data = await res.json()
+      if (data.updatedPlan) {
+        setItineraryPlan({ ...data.updatedPlan, _updatedAt: Date.now() })
+      }
+      if (data.changesNotice) {
+        setLastUpdatedNotice(data.changesNotice)
+        setTimeout(() => setLastUpdatedNotice(''), 7000)
+      }
       setChatMessages(prev => [
         ...prev,
         { sender: 'agent', text: data.reply || "I've updated your travel preferences!" }
@@ -250,6 +262,11 @@ export default function AIAgentPage({
     } finally {
       setChatLoading(false)
     }
+  }
+
+  const handleSendMessage = e => {
+    e.preventDefault()
+    handleSendMessageWithText(inputMessage)
   }
 
   const copyAsMarkdown = () => {
@@ -377,9 +394,23 @@ export default function AIAgentPage({
             </div>
           ) : itineraryPlan ? (
             <div className="document-sheet">
+              {lastUpdatedNotice && (
+                <div className="ai-refine-success-banner">
+                  <Sparkles size={16} className="sparkle-spin" />
+                  <span>{lastUpdatedNotice}</span>
+                </div>
+              )}
+
               {/* Document Header */}
               <div className="doc-header">
-                <div className="doc-kicker">OFFICIAL TRIP ITINERARY</div>
+                <div className="doc-kicker-row">
+                  <div className="doc-kicker">OFFICIAL TRIP ITINERARY</div>
+                  {itineraryPlan.aiRefined && (
+                    <span className="doc-live-sync-badge">
+                      <Sparkles size={12} /> Live AI Refined & Synced
+                    </span>
+                  )}
+                </div>
                 <h2 className="doc-title">{itineraryPlan.tripTitle}</h2>
                 <p className="doc-summary">{itineraryPlan.summary}</p>
 
@@ -444,17 +475,25 @@ export default function AIAgentPage({
               {/* Day-by-Day Timetable */}
               <div className="doc-days-list">
                 {itineraryPlan.days?.map(day => (
-                  <div key={day.dayNumber} className="day-block">
+                  <div key={day.dayNumber} className={`day-block ${day.aiRefined ? 'ai-refined-day' : ''}`}>
                     <div className="day-title-bar">
                       <span className="day-num-tag">DAY {day.dayNumber}</span>
                       <strong className="day-theme">{day.theme}</strong>
+                      {day.aiRefined && (
+                        <span className="day-refined-pill">
+                          <Zap size={11} /> AI Refined
+                        </span>
+                      )}
                       <span className="day-date-tag">{day.date}</span>
                     </div>
 
                     <div className="day-slots-grid">
                       {/* Morning */}
-                      <div className="slot-item morning-slot">
-                        <div className="slot-time"><Clock size={13} /> {day.morning?.time}</div>
+                      <div className={`slot-item morning-slot ${day.morning?.aiRefined ? 'ai-refined-slot' : ''}`}>
+                        <div className="slot-time-row">
+                          <div className="slot-time"><Clock size={13} /> {day.morning?.time}</div>
+                          {day.morning?.aiRefined && <span className="slot-ai-refined-tag"><Sparkles size={10} /> AI Refined</span>}
+                        </div>
                         <div className="slot-heading">
                           <Compass size={14} className="slot-icon" />
                           <strong>{day.morning?.title}</strong>
@@ -465,8 +504,11 @@ export default function AIAgentPage({
                       </div>
 
                       {/* Lunch */}
-                      <div className="slot-item dining-slot">
-                        <div className="slot-time"><Clock size={13} /> {day.lunch?.time}</div>
+                      <div className={`slot-item dining-slot ${day.lunch?.aiRefined ? 'ai-refined-slot' : ''}`}>
+                        <div className="slot-time-row">
+                          <div className="slot-time"><Clock size={13} /> {day.lunch?.time}</div>
+                          {day.lunch?.aiRefined && <span className="slot-ai-refined-tag"><Sparkles size={10} /> AI Refined</span>}
+                        </div>
                         <div className="slot-heading">
                           <Utensils size={14} className="slot-icon dining" />
                           <strong>{day.lunch?.name}</strong>
@@ -477,8 +519,11 @@ export default function AIAgentPage({
                       </div>
 
                       {/* Afternoon */}
-                      <div className="slot-item afternoon-slot">
-                        <div className="slot-time"><Clock size={13} /> {day.afternoon?.time}</div>
+                      <div className={`slot-item afternoon-slot ${day.afternoon?.aiRefined ? 'ai-refined-slot' : ''}`}>
+                        <div className="slot-time-row">
+                          <div className="slot-time"><Clock size={13} /> {day.afternoon?.time}</div>
+                          {day.afternoon?.aiRefined && <span className="slot-ai-refined-tag"><Sparkles size={10} /> AI Refined</span>}
+                        </div>
                         <div className="slot-heading">
                           <Compass size={14} className="slot-icon" />
                           <strong>{day.afternoon?.title}</strong>
@@ -489,8 +534,11 @@ export default function AIAgentPage({
                       </div>
 
                       {/* Dinner */}
-                      <div className="slot-item dining-slot">
-                        <div className="slot-time"><Clock size={13} /> {day.dinner?.time}</div>
+                      <div className={`slot-item dining-slot ${day.dinner?.aiRefined ? 'ai-refined-slot' : ''}`}>
+                        <div className="slot-time-row">
+                          <div className="slot-time"><Clock size={13} /> {day.dinner?.time}</div>
+                          {day.dinner?.aiRefined && <span className="slot-ai-refined-tag"><Sparkles size={10} /> AI Refined</span>}
+                        </div>
                         <div className="slot-heading">
                           <Utensils size={14} className="slot-icon dining" />
                           <strong>{day.dinner?.name}</strong>
@@ -501,8 +549,11 @@ export default function AIAgentPage({
                       </div>
 
                       {/* Evening */}
-                      <div className="slot-item evening-slot">
-                        <div className="slot-time"><Clock size={13} /> {day.evening?.time}</div>
+                      <div className={`slot-item evening-slot ${day.evening?.aiRefined ? 'ai-refined-slot' : ''}`}>
+                        <div className="slot-time-row">
+                          <div className="slot-time"><Clock size={13} /> {day.evening?.time}</div>
+                          {day.evening?.aiRefined && <span className="slot-ai-refined-tag"><Sparkles size={10} /> AI Refined</span>}
+                        </div>
                         <div className="slot-heading">
                           <Sparkles size={14} className="slot-icon evening" />
                           <strong>{day.evening?.title}</strong>
@@ -591,35 +642,59 @@ export default function AIAgentPage({
             </div>
 
             <div className="quick-prompts-bar">
-              <button
-                className="btn-quick-prompt"
-                onClick={() => setInputMessage('Add more authentic local street food spots to Day 2')}
-              >
-                🍜 More street food on Day 2
-              </button>
-              <button
-                className="btn-quick-prompt"
-                onClick={() => setInputMessage('Adjust the afternoon schedule for a relaxing cafe break')}
-              >
-                ☕ Afternoon cafe break
-              </button>
-              <button
-                className="btn-quick-prompt"
-                onClick={() => setInputMessage('Make Day 3 morning more relaxed for sleeping in')}
-              >
-                🌴 Relaxed morning on Day 3
-              </button>
+              <div className="quick-prompts-header">
+                <Sparkles size={13} className="text-cyan" />
+                <small>1-Click Smart Refinement Suggestions:</small>
+              </div>
+              <div className="quick-prompts-chips">
+                <button
+                  className="btn-quick-prompt"
+                  onClick={() => handleSendMessageWithText('Add more authentic local street food & night market to Day 2')}
+                >
+                  🍜 Local street food on Day 2
+                </button>
+                <button
+                  className="btn-quick-prompt"
+                  onClick={() => handleSendMessageWithText('Add a scenic sunset viewpoint & sky deck on Day 2')}
+                >
+                  🌅 Sunset viewpoint on Day 2
+                </button>
+                <button
+                  className="btn-quick-prompt"
+                  onClick={() => handleSendMessageWithText('Add famous heritage coffee & breakfast on Day 3')}
+                >
+                  ☕ Heritage coffee & brunch on Day 3
+                </button>
+                <button
+                  className="btn-quick-prompt"
+                  onClick={() => handleSendMessageWithText('Add fresh local seafood dining on Day 1')}
+                >
+                  🦞 Fresh seafood feast on Day 1
+                </button>
+                <button
+                  className="btn-quick-prompt"
+                  onClick={() => handleSendMessageWithText('Make Day 3 morning more relaxed for sleeping in')}
+                >
+                  🌴 Relaxed morning on Day 3
+                </button>
+                <button
+                  className="btn-quick-prompt"
+                  onClick={() => handleSendMessageWithText('Add more nature, parks & cultural heritage walks')}
+                >
+                  🌿 Nature & heritage walks
+                </button>
+              </div>
             </div>
 
             <form className="chat-input-form" onSubmit={handleSendMessage}>
               <input
                 type="text"
-                placeholder="Ask AI to customize or swap anything..."
+                placeholder="Ask AI: e.g., 'Make Day 2 halal', 'Add sunset view'..."
                 value={inputMessage}
                 onChange={e => setInputMessage(e.target.value)}
                 disabled={chatLoading}
               />
-              <button type="submit" disabled={chatLoading || !inputMessage.trim()}>
+              <button type="submit" disabled={chatLoading || !inputMessage.trim()} title="Send to AI Assistant">
                 <Send size={16} />
               </button>
             </form>

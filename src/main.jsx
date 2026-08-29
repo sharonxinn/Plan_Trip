@@ -28,20 +28,9 @@ function App() {
   const [currentPage, setCurrentPage] = useState('explore')
   const [postcardInitialSpot, setPostcardInitialSpot] = useState(null)
 
-  // App View & Installation Mode: 'mobile' (Phone View Enabled) | 'responsive' (Full App)
-  const [appViewMode, setAppViewMode] = useState('mobile')
+  // App View & Installation Mode
+  const [appViewMode, setAppViewMode] = useState('responsive')
   const [installModalOpen, setInstallModalOpen] = useState(false)
-  const [currentTimeStr, setCurrentTimeStr] = useState('9:41')
-
-  useEffect(() => {
-    const updateTime = () => {
-      const d = new Date()
-      setCurrentTimeStr(d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-    }
-    updateTime()
-    const timer = setInterval(updateTime, 30000)
-    return () => clearInterval(timer)
-  }, [])
 
   // Destination State
   const [selectedCountry, setSelectedCountry] = useState(countriesData[0]) // Malaysia
@@ -295,79 +284,12 @@ function App() {
   const totalBasketCount = basket.length + (selectedFlight ? 1 : 0) + (selectedHotel ? 1 : 0)
 
   return (
-    <div className={`app-root-wrapper mode-${appViewMode}`}>
-      {/* NATIVE APP MODE CONTROLLER BAR */}
-      <aside className="app-mode-control-bar" aria-label="App View & Install Control">
-        <div className="control-bar-inner">
-          <div className="app-badge-left">
-            <div className="app-mini-icon" style={{ width: 28, height: 28, flexShrink: 0 }}>
-              <img
-                src="/app-icon.svg"
-                alt="App Icon"
-                className="mini-icon-img"
-                width="28"
-                height="28"
-                style={{ width: 28, height: 28, objectFit: 'contain', display: 'block' }}
-              />
-            </div>
-            <span className="app-mode-text"><strong>PlanTrip App</strong> (Native Application Mode)</span>
-          </div>
-
-          <div className="app-view-switcher">
-            <button
-              className={`mode-pill-btn ${appViewMode === 'responsive' ? 'active' : ''}`}
-              onClick={() => setAppViewMode('responsive')}
-              title="Responsive Standalone App View"
-            >
-              <Sliders size={13} />
-              <span>Full App Mode</span>
-            </button>
-
-            <button
-              className={`mode-pill-btn ${appViewMode === 'mobile' ? 'active' : ''}`}
-              onClick={() => setAppViewMode('mobile')}
-              title="Mobile App Simulator View"
-            >
-              <Smartphone size={13} />
-              <span>Mobile Phone View</span>
-            </button>
-
-            <button
-              className="mode-pill-btn install-btn-highlight"
-              onClick={() => setInstallModalOpen(true)}
-              title="Install PlanTrip as native mobile or desktop app"
-            >
-              <Download size={13} />
-              <span>📲 Install App</span>
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* MOBILE SIMULATOR FRAME (WHEN IN MOBILE VIEW) OR STANDALONE LAYOUT */}
-      <div className={`app-device-frame ${appViewMode === 'mobile' ? 'mobile-chassis-active' : ''}`}>
-        {/* MOBILE STATUS BAR & DYNAMIC ISLAND */}
-        {appViewMode === 'mobile' && (
-          <div className="mobile-device-notch-bar">
-            <div className="device-status-left">
-              <span className="status-time">{currentTimeStr}</span>
-            </div>
-            <div className="device-dynamic-island">
-              <span className="island-camera" />
-            </div>
-            <div className="device-status-right">
-              <Wifi size={13} />
-              <span className="status-5g">5G</span>
-              <BatteryCharging size={14} className="status-battery" />
-            </div>
-          </div>
-        )}
-
-        <div className="app-layout">
-          {/* NATIVE APP TOP HEADER */}
-          <header className="global-header app-native-header">
-            <div className="header-container">
-              <div className="brand-group" onClick={() => setCurrentPage('explore')}>
+    <div className="app-root-wrapper">
+      <div className="app-layout">
+        {/* TOP HEADER */}
+        <header className="global-header app-native-header">
+          <div className="header-container">
+            <div className="brand-group" onClick={() => setCurrentPage('explore')}>
                 <div className="brand-logo-icon" style={{ width: 38, height: 38, flexShrink: 0 }}>
                   <Map size={18} />
                 </div>
@@ -1089,19 +1011,12 @@ function App() {
         groupChatOpen={groupChatOpen}
         basketOpen={basketDrawerOpen}
       />
-      {/* MOBILE DEVICE HOME BAR INDICATOR */}
-      {appViewMode === 'mobile' && (
-        <div className="mobile-home-indicator-bar">
-          <span className="home-pill" />
-        </div>
-      )}
 
       {/* INSTALL APP MODAL (PWA & STANDALONE) */}
       <InstallAppModal
         isOpen={installModalOpen}
         onClose={() => setInstallModalOpen(false)}
       />
-        </div>
       </div>
     </div>
   )

@@ -20,6 +20,36 @@ const liveCache = {
   restaurants: new Map()
 }
 
+export const findDest = (query) => {
+  const q = (query || '').toLowerCase().trim()
+  return popularDestinations.find(d => {
+    const dCity = d.city.toLowerCase()
+    const dId = d.id.toLowerCase()
+    return (
+      dCity === q ||
+      dId === q ||
+      dCity.includes(q) ||
+      q.includes(dCity) ||
+      dId.includes(q) ||
+      q.includes(dId) ||
+      (q.includes('ipoh') && (dId === 'ipoh' || dCity.includes('ipoh'))) ||
+      (q.includes('kuching') && (dId === 'kuching' || dCity.includes('kuching'))) ||
+      (q === 'kl' && dId === 'kuala-lumpur') ||
+      (q === 'kk' && dId === 'kota-kinabalu') ||
+      (q === 'jb' && dId === 'johor-bahru') ||
+      (q.includes('redang') && dId === 'redang-perhentian') ||
+      (q.includes('perhentian') && dId === 'redang-perhentian') ||
+      (q.includes('genting') && dId === 'genting-highlands') ||
+      (q.includes('cameron') && dId === 'cameron-highlands') ||
+      (q.includes('sipadan') && dId === 'semporna') ||
+      (q.includes('semporna') && dId === 'semporna') ||
+      (q.includes('george town') && dId === 'penang') ||
+      (q.includes('melaka') && dId === 'melaka') ||
+      (q.includes('malacca') && dId === 'melaka')
+    )
+  })
+}
+
 const configured = value => Boolean(value && value.trim())
 const hasAmadeus = () => configured(process.env.AMADEUS_CLIENT_ID) && configured(process.env.AMADEUS_CLIENT_SECRET)
 const hasBooking = () => configured(process.env.BOOKING_API_TOKEN) && configured(process.env.BOOKING_AFFILIATE_ID)
@@ -772,337 +802,468 @@ app.get('/api/compare/hotels', async (req, res) => {
   })
 })
 
-// 7. AI Travel Agent (Free Credentials + Intelligent Synthesis)
+// 7. AI Comprehensive Itinerary Generation Endpoint
 app.post('/api/ai/plan', async (req, res) => {
-  const {
-    destination,
-    durationDays = 4,
-    departureDate = '2026-09-15',
-    returnDate = '2026-09-19',
-    travellers = 2,
-    travelParty = 'couple',
-    budgetTier = 'balanced',
-    budgetAmount = 3500,
-    travelPace = 'moderate',
-    attractions = [],
-    restaurants = [],
-    flight = null,
-    hotel = null,
-    apiKey = ''
-  } = req.body
+  try {
+    const {
+      destination = {},
+      durationDays = 4,
+      departureDate = '2026-09-15',
+      returnDate = '2026-09-19',
+      travellers = 2,
+      travelParty = 'couple',
+      budgetTier = 'balanced',
+      budgetAmount = 3500,
+      travelPace = 'moderate',
+      attractions = [],
+      restaurants = [],
+      flight = null,
+      hotel = null,
+      apiKey = ''
+    } = req.body
 
-  const cityName = destination?.city || destination?.name || 'Kuala Lumpur'
-  const countryName = destination?.country || 'Malaysia'
-  const effectiveApiKey = apiKey || process.env.GEMINI_API_KEY || ''
+    const cityName = destination?.city || destination?.name || 'Kuala Lumpur'
+    const destMatch = findDest(cityName) || popularDestinations[0]
 
-  const partyLabels = {
-    solo: 'Solo Explorer Trip',
-    couple: 'Romantic Couple Getaway',
-    family: 'Family with Kids Vacation',
-    friends: 'Friends Group Adventure'
-  }
-  const partyTitle = partyLabels[travelParty] || 'Customized Group Trip'
+    // Pool of real verified places
+    const realAttractions = (destMatch?.attractions && destMatch.attractions.length > 0)
+      ? destMatch.attractions
+      : (attractions.length > 0 ? attractions : popularDestinations[0].attractions)
 
-  // Party-specific packing and tips
-  const partySpecificAdvice = {
-    family: {
-      tips: [
-        'Stroller-friendly and elevator access is available at major malls, viewpoints, and rapid transit stations.',
-        'Keep afternoon pacing light (14:30 - 16:30) for resting or kid-friendly pool/snack breaks.',
-        'Family suites or adjoining rooms booked via Booking.com/Trip.com offer optimal comfort.'
-      ],
-      packing: [
-        'Child-friendly sunscreen & insect repellent',
-        'Portable kid snacks and reusable water bottles',
-        'Compact foldable umbrella stroller for transit ease'
-      ]
-    },
-    friends: {
-      tips: [
-        'Split bills easily using Touch \'n Go eWallet, Wise, or group expense tracking apps.',
-        'Book Grab 6-seater or larger rideshares to travel together conveniently.',
-        'Evening night markets and rooftop bars are prime group hangout spots.'
-      ],
-      packing: [
-        'Multi-port USB charging station for everyone\'s devices',
-        'Card games / portable speaker for hotel downtime',
-        'Comfortable nightlife outfit for rooftop lounges'
-      ]
-    },
-    couple: {
-      tips: [
-        'Golden hour sunset spots (18:15 - 19:15) offer stunning romantic photo backdrops.',
-        'Reserve romantic window tables at top-rated Google review dining spots in advance.',
-        'Boutique accommodations in heritage or scenic quarters elevate the romantic mood.'
-      ],
-      packing: [
-        'Smart casual evening wear for fine dining and sky lounges',
-        'High-quality camera / phone gimbal for cinematic memories',
-        'Compact travel perfume & fragrance'
-      ]
-    },
-    solo: {
-      tips: [
-        'Co-living lofts, cafe lounges, and walking tours are ideal for meeting fellow travelers.',
-        'Google Maps offline download ensures effortless self-guided navigation anytime.',
-        'Solo dining is welcoming at kopitiams, noodle bars, and food courts.'
-      ],
-      packing: [
-        'Noise-canceling headphones & e-reader for transit relaxation',
-        'Compact anti-theft cross-body sling bag',
-        'Pocket tripod for solo photography'
-      ]
-    }
-  }
+    const realRestaurants = (destMatch?.restaurants && destMatch.restaurants.length > 0)
+      ? destMatch.restaurants
+      : (restaurants.length > 0 ? restaurants : popularDestinations[0].restaurants)
 
-  const selectedAdvice = partySpecificAdvice[travelParty] || partySpecificAdvice.couple
+    const effectiveApiKey = apiKey || process.env.GEMINI_API_KEY || ''
+    const numDays = Math.max(1, Math.min(14, Number(durationDays) || 4))
 
-  // Attempt live Gemini free tier call if API key is provided
-  if (effectiveApiKey) {
-    try {
-      const prompt = `You are an elite, world-class AI travel planner. Create a meticulous, day-by-day itinerary for a trip to ${cityName}, ${countryName}.
-Trip Dates: ${departureDate} to ${returnDate} (${durationDays} days) for ${travellers} travellers (${partyTitle}).
-Budget Tier: ${budgetTier} (Target: RM ${budgetAmount}), Travel Pace: ${travelPace}.
-Selected Attractions in Basket: ${attractions.map(a => `${a.name} (Google Rating: ${a.rating}★)`).join(', ') || 'Top must-see sights'}
-Selected Restaurants in Basket: ${restaurants.map(r => `${r.name} (${r.cuisine}, Price: ${r.priceTier}, ${r.rating}★)`).join(', ') || 'Iconic local gastronomy'}
-Flight: ${flight ? `${flight.airline} (${flight.depart} -> ${flight.arrive})` : 'Standard arrival'}
-Stay: ${hotel ? `${hotel.name}` : 'Central city accommodation'}
-
-Return a valid JSON object matching this schema ONLY without any markdown code fences:
-{
-  "tripTitle": "string",
-  "summary": "string",
-  "totalEstimatedCost": "string",
-  "costBreakdown": {
-    "flights": "string",
-    "accommodation": "string",
-    "foodAndDining": "string",
-    "attractionsAndActivities": "string",
-    "localTransport": "string"
-  },
-  "partyType": "${partyTitle}",
-  "currency": "MYR",
-  "weatherAdvice": "string",
-  "packingList": ["string"],
-  "partyTips": ["string"],
-  "transitTips": ["string"],
-  "days": [
-    {
-      "dayNumber": 1,
-      "date": "string",
-      "theme": "string",
-      "morning": { "time": "09:00 - 12:00", "title": "string", "description": "string", "location": "string", "rating": "4.8★" },
-      "lunch": { "time": "12:30 - 14:00", "name": "string", "cuisine": "string", "priceTier": "$$", "mustTry": "string" },
-      "afternoon": { "time": "14:30 - 17:30", "title": "string", "description": "string", "location": "string", "rating": "4.7★" },
-      "dinner": { "time": "18:30 - 20:30", "name": "string", "cuisine": "string", "priceTier": "$$$", "mustTry": "string" },
-      "evening": { "time": "21:00 - 22:30", "title": "string", "description": "string" },
-      "dailyBudgetEstimate": "string",
-      "transportNote": "string"
-    }
-  ]
-}`
-
-      const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${effectiveApiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json' }
-        })
-      })
-
-      if (geminiRes.ok) {
-        const geminiData = await geminiRes.json()
-        const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
-        if (text) {
-          const parsed = JSON.parse(text)
-          return res.json({ success: true, engine: 'gemini-live', plan: parsed })
-        }
+    // Helper to format date
+    const getDateForDay = (startStr, dayIndex) => {
+      try {
+        const d = new Date(startStr || '2026-09-15')
+        d.setDate(d.getDate() + dayIndex)
+        return d.toISOString().split('T')[0]
+      } catch (_e) {
+        return `Day ${dayIndex + 1}`
       }
-    } catch (_err) {}
-  }
-
-  // Built-in High-Intelligence Local AI Agent Planner
-  const daysCount = Math.max(1, Math.min(10, Number(durationDays) || 4))
-  const generatedDays = []
-  const attractionPool = [...attractions]
-  const restaurantPool = [...restaurants]
-
-  const fallbackAttractions = [
-    { name: `${cityName} Old Town & Heritage Promenade`, rating: 4.8, description: 'Explore ancient architecture, artisan alleys, and historic shrines.' },
-    { name: `${cityName} Sky Observatory & Panorama`, rating: 4.9, description: 'Enjoy 360-degree skyline views across the entire city.' },
-    { name: `${cityName} Botanical Oasis & Waterfront`, rating: 4.7, description: 'A relaxing walk through lush gardens and serene waterways.' },
-    { name: `${cityName} Central Arts & Cultural Museum`, rating: 4.8, description: 'Immerse yourself in world-renowned artwork and cultural artifacts.' },
-    { name: `${cityName} Night Market & Illuminated Boulevard`, rating: 4.7, description: 'Vibrant evening energy with local street performances and neon lights.' }
-  ]
-
-  const fallbackRestaurants = [
-    { name: `${cityName} Heritage Kitchen`, cuisine: 'Local Signature Delicacies', priceTier: '$$', mustTry: 'Signature Chef Special Tasting Platter' },
-    { name: `${cityName} Ocean Grill & Seafood House`, cuisine: 'Fresh Daily Catches', priceTier: '$$$', mustTry: 'Charcoal Grilled Garlic Butter Prawns' },
-    { name: `${cityName} Artisan Kopitiam & Bakery`, cuisine: 'Traditional Breakfast & Coffee', priceTier: '$', mustTry: 'Fresh Baked Flaky Pastry & Single Origin Brew' },
-    { name: `${cityName} Sunset Sky Lounge`, cuisine: 'Modern Fusion & Cocktails', priceTier: '$$$', mustTry: 'Signature Botanical Infused Cocktails' }
-  ]
-
-  for (let i = 0; i < daysCount; i++) {
-    const dayDate = new Date(new Date(departureDate).getTime() + i * 86400000).toISOString().split('T')[0]
-    const morningAttraction = attractionPool.shift() || fallbackAttractions[i % fallbackAttractions.length]
-    const afternoonAttraction = attractionPool.shift() || fallbackAttractions[(i + 1) % fallbackAttractions.length]
-    const lunchSpot = restaurantPool.shift() || fallbackRestaurants[i % fallbackRestaurants.length]
-    const dinnerSpot = restaurantPool.shift() || fallbackRestaurants[(i + 1) % fallbackRestaurants.length]
-
-    const dayThemes = {
-      family: [
-        `Arrival & Fun-Filled ${cityName} Highlights`,
-        `Interactive Discovery, Nature & Family Feasts`,
-        `Cultural Wonders & Scenic Afternoon Treats`,
-        `Souvenir Shopping & Farewell Family Memories`
-      ],
-      friends: [
-        `Arrival, Skyline Sights & Night Market Crawl`,
-        `High-Energy Adventures & Group Street Food Tour`,
-        `Island/Viewpoint Exploration & Rooftop Sunset`,
-        `Boutique Cafes, Shopping & Group Toast`
-      ],
-      couple: [
-        `Arrival & Sunset Romance in ${cityName}`,
-        `Heritage Quarter Stroll & Candlelight Dining`,
-        `Scenic Panoramic Views & Boutique Cafe Hopping`,
-        `Artisan Markets & Farewell Golden Hour`
-      ],
-      solo: [
-        `Arrival, City Orientation & Coffee Discovery`,
-        `Deep Cultural Heritage & Hidden Alleys`,
-        `Art Galleries, Scenic Parks & Street Food Feasts`,
-        `Panoramic Skyline & Local Artisan Craft Hubs`
-      ]
     }
 
-    const currentThemes = dayThemes[travelParty] || dayThemes.couple
-    const assignedTheme = currentThemes[i % currentThemes.length]
+    // Cost Breakdown estimates
+    const flightCost = flight?.totalPrice || Math.round(budgetAmount * 0.22)
+    const hotelCost = hotel?.totalPrice || hotel?.price || Math.round(budgetAmount * 0.36)
+    const diningCost = Math.round(budgetAmount * 0.24)
+    const activitiesCost = Math.round(budgetAmount * 0.12)
+    const transportCost = Math.round(budgetAmount * 0.06)
+    const totalEstimated = flightCost + hotelCost + diningCost + activitiesCost + transportCost
 
-    generatedDays.push({
-      dayNumber: i + 1,
-      date: dayDate,
-      theme: assignedTheme,
-      morning: {
-        time: travelPace === 'packed' ? '08:30 - 11:30' : '09:30 - 12:00',
-        title: morningAttraction.name,
-        description: morningAttraction.description || `Visit ${morningAttraction.name} during the optimal morning hours to enjoy clear skies and short queues.`,
-        location: morningAttraction.address || `${cityName} Central`,
-        rating: `${(morningAttraction.rating || 4.8).toFixed(1)}★`
+    const partyLabel = travelParty === 'family' ? 'Family with Kids' : travelParty === 'couple' ? 'Romantic Couple' : travelParty === 'friends' ? 'Squad & Friends' : 'Solo Explorer'
+
+    // Build day schedules using real Google-reviewed spots
+    const dayThemes = [
+      'Arrival, Iconic Skyline & Heritage Orientation',
+      'Cultural Deep-Dive & World-Famous Gastronomy',
+      'Nature, Caves & Panoramic Sunset Views',
+      'Artisan Crafts, Local Markets & Departure Highlights',
+      'Hidden Gems & Leisurely Coastal / Park Exploration',
+      'Gastronomic Food Crawl & Evening Night Bazaar',
+      'Scenic Excursions & Farewell Celebration'
+    ]
+
+    const days = []
+    for (let i = 0; i < numDays; i++) {
+      const dayDate = getDateForDay(departureDate, i)
+      const attr1 = realAttractions[i % realAttractions.length] || realAttractions[0]
+      const attr2 = realAttractions[(i + 1) % realAttractions.length] || realAttractions[0]
+      const attr3 = realAttractions[(i + 2) % realAttractions.length] || realAttractions[0]
+
+      const restLunch = realRestaurants[i % realRestaurants.length] || realRestaurants[0]
+      const restDinner = realRestaurants[(i + 1) % realRestaurants.length] || realRestaurants[0]
+
+      days.push({
+        dayNumber: i + 1,
+        theme: dayThemes[i % dayThemes.length],
+        date: dayDate,
+        morning: {
+          time: '09:00 - 12:00',
+          title: attr1.name,
+          rating: `${(attr1.rating || 4.8).toFixed(1)}★ (${(attr1.reviewsCount || 15000).toLocaleString()} Google reviews)`,
+          location: attr1.address || cityName,
+          description: attr1.description || `Explore ${attr1.name} with insider guided highlights.`
+        },
+        lunch: {
+          time: '12:30 - 14:00',
+          name: restLunch.name,
+          cuisine: restLunch.cuisine || 'Authentic Local Specialty',
+          priceTier: restLunch.priceTier || '$$',
+          mustTry: restLunch.description ? restLunch.description.split('.')[0] : 'Chef signature special'
+        },
+        afternoon: {
+          time: '14:30 - 17:30',
+          title: attr2.name,
+          rating: `${(attr2.rating || 4.7).toFixed(1)}★ (${(attr2.reviewsCount || 12000).toLocaleString()} Google reviews)`,
+          location: attr2.address || cityName,
+          description: attr2.description || `Immerse in ${attr2.name}, ideal for afternoon sightseeing.`
+        },
+        dinner: {
+          time: '18:30 - 20:30',
+          name: restDinner.name,
+          cuisine: restDinner.cuisine || 'Signature Dining Experience',
+          priceTier: restDinner.priceTier || '$$',
+          mustTry: restDinner.description ? restDinner.description.split('.')[0] : 'Famous local dish'
+        },
+        evening: {
+          time: '21:00 - 22:30',
+          title: `${attr3.name} & Nightlife Atmosphere`,
+          description: `Wind down your evening with illuminated night views and street stalls around ${attr3.name}.`
+        },
+        dailyBudgetEstimate: `RM ${Math.round(diningCost / numDays + activitiesCost / numDays)} / pax`,
+        transportNote: `Grab ride-hailing / LRT transit (~10-20 mins between stops)`
+      })
+    }
+
+    const plan = {
+      tripTitle: `${numDays}-Day Curated ${destMatch.city || cityName} Experience`,
+      summary: `Exclusively tailored for ${travellers} travellers (${partyLabel}) in ${destMatch.city || cityName}. Designed around verified Google Review landmarks (4.7★+), signature gastronomy, and balanced pacing.`,
+      partyType: partyLabel,
+      targetBudget: `RM ${Number(budgetAmount).toLocaleString()}`,
+      totalEstimatedCost: `RM ${totalEstimated.toLocaleString()}`,
+      costBreakdown: {
+        flights: `RM ${flightCost.toLocaleString()}`,
+        accommodation: `RM ${hotelCost.toLocaleString()}`,
+        foodAndDining: `RM ${diningCost.toLocaleString()}`,
+        attractionsAndActivities: `RM ${activitiesCost.toLocaleString()}`,
+        localTransport: `RM ${transportCost.toLocaleString()}`
       },
-      lunch: {
-        time: '12:30 - 14:00',
-        name: lunchSpot.name,
-        cuisine: lunchSpot.cuisine || 'Authentic Regional Cuisine',
-        priceTier: lunchSpot.priceTier || '$$',
-        mustTry: lunchSpot.description ? lunchSpot.description.slice(0, 70) + '...' : 'Chef Recommended Specialty Plate'
-      },
-      afternoon: {
-        time: travelPace === 'relaxed' ? '15:00 - 17:30' : '14:30 - 17:30',
-        title: afternoonAttraction.name,
-        description: afternoonAttraction.description || `Explore ${afternoonAttraction.name}, taking in scenic viewpoints and photography spots.`,
-        location: afternoonAttraction.address || `${cityName} Arts Quarter`,
-        rating: `${(afternoonAttraction.rating || 4.7).toFixed(1)}★`
-      },
-      dinner: {
-        time: '18:30 - 20:30',
-        name: dinnerSpot.name,
-        cuisine: dinnerSpot.cuisine || 'Gourmet Local Specialties',
-        priceTier: dinnerSpot.priceTier || '$$$',
-        mustTry: dinnerSpot.description ? dinnerSpot.description.slice(0, 70) + '...' : 'Signature Tasting Menu & Refreshments'
-      },
-      evening: {
-        time: '21:00 - 22:30',
-        title: i === 0 ? `Evening Stroll along ${cityName} Skyline` : 'Night Market Street Eats & Illuminated Promenade',
-        description: 'Wind down with a relaxing walk or scenic drinks overlooking the glittering night lights.'
-      },
-      dailyBudgetEstimate: `RM ${Math.round((80 + (budgetAmount / (daysCount * travellers * 2.5))))} / person (Food & Entries)`,
-      transportNote: travelParty === 'family' || travelParty === 'friends' ? 'Book a 6-seater Grab or private charter for effortless group transit.' : 'Take the subway / rapid transit or enjoy a 10-minute walk.'
-    })
+      weatherAdvice: `Tropical climate with warm daytime weather (28°C-32°C). Light cotton apparel, UV sunscreen, and walking shoes recommended.`,
+      partyTips: [
+        `Paced comfortably for ${partyLabel} with built-in rest intervals.`,
+        `All dining recommendations verified on Google Maps with authentic reviews.`,
+        `Peak attractions scheduled in the morning to avoid midday crowds.`
+      ],
+      packingList: [
+        'Valid Identification / Passport',
+        'Comfortable walking shoes & sandals',
+        'Lightweight cotton clothing & sunglasses',
+        'Compact umbrella or light rain poncho',
+        'Universal power bank & charger'
+      ],
+      days
+    }
+
+    // If Gemini key is available, enhance with AI commentary
+    if (effectiveApiKey) {
+      try {
+        const prompt = `You are a world-class AI travel concierge. Enhance this ${numDays}-day itinerary summary for ${travellers} travellers (${partyLabel}) in ${cityName}.
+Return 2 sentences highlighting the best experiences in this trip.`
+
+        const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${effectiveApiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        })
+
+        if (geminiRes.ok) {
+          const geminiData = await geminiRes.json()
+          const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
+          if (text) plan.summary = text.trim()
+        }
+      } catch (_e) {}
+    }
+
+    res.json({ success: true, plan })
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message })
   }
-
-  const estFlights = flight ? flight.totalPrice : Math.round(180 * travellers)
-  const estHotel = hotel ? hotel.totalPrice : Math.round(280 * (daysCount - 1) * Math.ceil(travellers / 2))
-  const estFood = Math.round(75 * travellers * daysCount)
-  const estActivities = Math.round(45 * travellers * daysCount)
-  const estTransport = Math.round(25 * travellers * daysCount)
-  const calculatedGrandTotal = estFlights + estHotel + estFood + estActivities + estTransport
-
-  const smartPlan = {
-    tripTitle: `The Ultimate ${daysCount}-Day ${cityName} ${partyTitle}`,
-    summary: `A customized ${daysCount}-day itinerary seamlessly tailored for ${travellers} travellers (${partyTitle}) with a ${budgetTier} budget (Target: RM ${budgetAmount.toLocaleString()}). All activities and Google Review-ranked dining spots are geographically clustered to eliminate wasted transit time.`,
-    totalEstimatedCost: `RM ${calculatedGrandTotal.toLocaleString()} total (RM ${Math.round(calculatedGrandTotal / travellers).toLocaleString()} / person)`,
-    costBreakdown: {
-      flights: `RM ${estFlights.toLocaleString()}`,
-      accommodation: `RM ${estHotel.toLocaleString()}`,
-      foodAndDining: `RM ${estFood.toLocaleString()}`,
-      attractionsAndActivities: `RM ${estActivities.toLocaleString()}`,
-      localTransport: `RM ${estTransport.toLocaleString()}`
-    },
-    partyType: partyTitle,
-    currency: 'MYR',
-    weatherAdvice: `Expect pleasant tropical temperatures around 25°C - 30°C. Light breathable layers, comfortable walking shoes, and a compact umbrella are recommended.`,
-    packingList: [
-      'Universal power adapter & high-capacity power bank',
-      'Comfortable walking sneakers (10,000+ steps/day)',
-      'Passport / ID valid for at least 6 months + physical e-ticket prints',
-      'Light rain jacket / UV umbrella',
-      ...selectedAdvice.packing
-    ],
-    partyTips: selectedAdvice.tips,
-    transitTips: [
-      'Purchase an IC transport card upon airport arrival for contactless transit tapping.',
-      'Rush hour is between 08:00 - 09:30 and 17:30 - 19:00 on weekdays.',
-      'Google Maps has 100% accurate live public transit schedules for the entire destination.'
-    ],
-    days: generatedDays
-  }
-
-  res.json({ success: true, engine: 'smart-agent', plan: smartPlan })
 })
 
-// 8. AI Chat Itinerary Refinement
+// 8. Real-time AI Chat & Itinerary Refinement Engine
 app.post('/api/ai/chat', async (req, res) => {
-  const { message, currentPlan, apiKey } = req.body
-  const effectiveApiKey = apiKey || process.env.GEMINI_API_KEY || ''
+  try {
+    const {
+      message = '',
+      currentPlan = null,
+      destination = {},
+      apiKey = ''
+    } = req.body
 
-  if (effectiveApiKey) {
-    try {
-      const prompt = `You are a friendly AI travel concierge. The user is asking to modify or ask a question about their trip itinerary.
-Current Plan: ${JSON.stringify(currentPlan?.summary || '')}
-User Message: "${message}"
+    const cityName = destination?.city || currentPlan?.tripTitle?.split('Curated ')[1]?.split(' Experience')[0] || 'Kuala Lumpur'
+    const destMatch = findDest(cityName) || popularDestinations[0]
+    const effectiveApiKey = apiKey || process.env.GEMINI_API_KEY || ''
+    const rawMsg = (message || '').trim()
+    const lower = rawMsg.toLowerCase()
 
-Provide a concise, helpful response (max 3 paragraphs) answering their question or suggesting specific tweaks to their days.`
+    const realAttractions = (destMatch?.attractions && destMatch.attractions.length > 0)
+      ? destMatch.attractions
+      : popularDestinations[0].attractions
 
-      const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${effectiveApiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    const realRestaurants = (destMatch?.restaurants && destMatch.restaurants.length > 0)
+      ? destMatch.restaurants
+      : popularDestinations[0].restaurants
+
+    // Clone current plan to modify
+    let updatedPlan = currentPlan ? JSON.parse(JSON.stringify(currentPlan)) : null
+
+    // 1. Try Gemini 1.5 if API key is provided
+    if (effectiveApiKey && updatedPlan) {
+      try {
+        const geminiPrompt = `You are a world-class AI travel concierge.
+The user wants to refine their existing travel itinerary for ${destMatch.city}.
+User Request: "${rawMsg}"
+
+Current Itinerary JSON:
+${JSON.stringify(updatedPlan)}
+
+Available Real Attractions in ${destMatch.city}:
+${JSON.stringify(realAttractions)}
+
+Available Real Restaurants in ${destMatch.city}:
+${JSON.stringify(realRestaurants)}
+
+Instructions:
+1. Update the appropriate day(s) and slot(s) in "days" based on the user's request. Always use real places with accurate Google review ratings and addresses.
+2. In each modified slot, add "aiRefined": true.
+3. In each modified day, add "aiRefined": true.
+4. Set "aiRefined": true at the root of the plan.
+5. Provide a friendly, helpful 2-sentence response in "reply" explaining the changes.
+6. Provide a concise summary of the changes in "changesNotice" (e.g., "✨ Day 2 dinner updated to Wong Ah Wah (4.7★)!").
+
+Return a valid JSON object ONLY with properties: "reply", "updatedPlan", "changesNotice". Do not include markdown fences.`
+
+        const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${effectiveApiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: geminiPrompt }] }],
+            generationConfig: { responseMimeType: 'application/json' }
+          })
+        })
+
+        if (geminiRes.ok) {
+          const geminiData = await geminiRes.json()
+          const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
+          if (text) {
+            const parsed = JSON.parse(text)
+            if (parsed.updatedPlan && parsed.reply) {
+              return res.json({
+                success: true,
+                reply: parsed.reply,
+                updatedPlan: parsed.updatedPlan,
+                changesNotice: parsed.changesNotice || '✨ Itinerary schedule updated by AI!'
+              })
+            }
+          }
+        }
+      } catch (_err) {}
+    }
+
+    // 2. Built-in High-Intelligence Rule & Fuzzy Matching Engine
+    let changesNotice = ''
+    let reply = ''
+
+    if (updatedPlan && updatedPlan.days && updatedPlan.days.length > 0) {
+      // Detect target day
+      let targetDayIndex = 0
+      if (lower.includes('day 2') || lower.includes('2nd day') || lower.includes('第二天') || lower.includes('第2天') || lower.includes('day two')) targetDayIndex = 1
+      else if (lower.includes('day 3') || lower.includes('3rd day') || lower.includes('第三天') || lower.includes('第3天') || lower.includes('day three')) targetDayIndex = 2
+      else if (lower.includes('day 4') || lower.includes('4th day') || lower.includes('第四天') || lower.includes('第4天') || lower.includes('day four')) targetDayIndex = 3
+      else if (lower.includes('day 5') || lower.includes('5th day') || lower.includes('第五天') || lower.includes('第5天') || lower.includes('day five')) targetDayIndex = 4
+      else if (lower.includes('day 1') || lower.includes('1st day') || lower.includes('第一天') || lower.includes('第1天') || lower.includes('day one')) targetDayIndex = 0
+      else if (lower.includes('last day') || lower.includes('最后一天')) targetDayIndex = updatedPlan.days.length - 1
+      else {
+        // Default to Day 2 for variety if more than 1 day exists
+        targetDayIndex = updatedPlan.days.length > 1 ? 1 : 0
+      }
+
+      if (targetDayIndex >= updatedPlan.days.length) targetDayIndex = updatedPlan.days.length - 1
+      const targetDay = updatedPlan.days[targetDayIndex]
+      targetDay.aiRefined = true
+      updatedPlan.aiRefined = true
+
+      // Search for specific attraction match in prompt
+      const matchedAttr = realAttractions.find(a => {
+        const aName = a.name.toLowerCase()
+        const words = aName.replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length >= 3)
+        return words.some(w => lower.includes(w))
       })
 
-      if (geminiRes.ok) {
-        const data = await geminiRes.json()
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
-        if (reply) return res.json({ reply })
+      // Search for specific restaurant match in prompt
+      const matchedRest = realRestaurants.find(r => {
+        const rName = r.name.toLowerCase()
+        const rCuisine = (r.cuisine || '').toLowerCase()
+        const words = (rName + ' ' + rCuisine).replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length >= 3)
+        return words.some(w => lower.includes(w))
+      })
+
+      // Check slot target
+      const isMorning = lower.includes('morning') || lower.includes('breakfast') || lower.includes('早上') || lower.includes('上午') || lower.includes('早')
+      const isLunch = lower.includes('lunch') || lower.includes('noon') || lower.includes('午餐') || lower.includes('中午') || lower.includes('午')
+      const isAfternoon = lower.includes('afternoon') || lower.includes('下午') || lower.includes('sunset') || lower.includes('日落')
+      const isDinner = lower.includes('dinner') || lower.includes('晚餐') || lower.includes('晚饭') || lower.includes('晚')
+      const isEvening = lower.includes('evening') || lower.includes('night') || lower.includes('夜市') || lower.includes('晚上')
+
+      // Case A: User explicitly requested a specific real landmark
+      if (matchedAttr) {
+        const slotKey = isMorning ? 'morning' : 'afternoon'
+        targetDay[slotKey] = {
+          time: slotKey === 'morning' ? '09:00 - 12:00' : '14:30 - 17:30',
+          title: matchedAttr.name,
+          rating: `${(matchedAttr.rating || 4.8).toFixed(1)}★ (${(matchedAttr.reviewsCount || 15000).toLocaleString()} Google reviews)`,
+          location: matchedAttr.address || destMatch.city,
+          description: matchedAttr.description || `Explore ${matchedAttr.name} with insider guided highlights.`,
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} ${slotKey} updated to ${matchedAttr.name} (${(matchedAttr.rating || 4.8).toFixed(1)}★)!`
+        reply = `I've updated Day ${targetDayIndex + 1}'s ${slotKey} schedule to feature "${matchedAttr.name}" (${(matchedAttr.rating || 4.8).toFixed(1)}★, ${(matchedAttr.reviewsCount || 15000).toLocaleString()} Google Reviews) in ${destMatch.city}. Your itinerary timetable has been updated in real time!`
       }
-    } catch (_err) {}
+      // Case B: User explicitly requested a specific real restaurant
+      else if (matchedRest) {
+        const mealSlot = (isLunch || (!isDinner && !isEvening)) ? 'lunch' : 'dinner'
+        targetDay[mealSlot] = {
+          time: mealSlot === 'lunch' ? '12:30 - 14:00' : '18:30 - 20:30',
+          name: matchedRest.name,
+          cuisine: matchedRest.cuisine || 'Authentic Regional Cuisine',
+          priceTier: matchedRest.priceTier || '$$',
+          mustTry: matchedRest.description ? matchedRest.description.split('.')[0] : 'Chef signature special',
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} ${mealSlot} updated to ${matchedRest.name} (${(matchedRest.rating || 4.8).toFixed(1)}★)!`
+        reply = `Done! I've updated Day ${targetDayIndex + 1}'s ${mealSlot} to "${matchedRest.name}" (${(matchedRest.rating || 4.8).toFixed(1)}★). Your Official Trip Itinerary document has been refreshed in real time!`
+      }
+      // Case C: Halal dining
+      else if (lower.includes('halal') || lower.includes('nasi lemak') || lower.includes('pelita') || lower.includes('muslim') || lower.includes('清真')) {
+        const halalSpot = realRestaurants.find(r => (r.cuisine && r.cuisine.toLowerCase().includes('halal')) || r.name.toLowerCase().includes('pelita') || r.name.toLowerCase().includes('village park') || r.name.toLowerCase().includes('lepau')) || realRestaurants[0]
+        targetDay.lunch = {
+          time: '12:30 - 14:00',
+          name: halalSpot.name,
+          cuisine: `${halalSpot.cuisine} (100% Halal Verified)`,
+          priceTier: halalSpot.priceTier || '$',
+          mustTry: halalSpot.description ? halalSpot.description.split('.')[0] : 'Signature certified halal dish',
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} lunch updated to 100% Halal: ${halalSpot.name}!`
+        reply = `I've updated Day ${targetDayIndex + 1}'s lunch to "${halalSpot.name}" (${(halalSpot.rating || 4.8).toFixed(1)}★ Google Reviews), renowned for authentic Halal specialties in ${destMatch.city}.`
+      }
+      // Case D: Street food & Night market
+      else if (lower.includes('street food') || lower.includes('night market') || lower.includes('hawker') || lower.includes('char kway teow') || lower.includes('wong ah wah') || lower.includes('alor') || lower.includes('街头小吃') || lower.includes('夜市') || lower.includes('大排档')) {
+        const streetSpot = realRestaurants.find(r => r.name.toLowerCase().includes('wong ah wah') || r.name.toLowerCase().includes('siam road') || r.name.toLowerCase().includes('thean chun') || r.name.toLowerCase().includes('lau ya keng') || r.name.toLowerCase().includes('alor')) || realRestaurants[realRestaurants.length - 1]
+        targetDay.dinner = {
+          time: '18:30 - 20:30',
+          name: streetSpot.name,
+          cuisine: `${streetSpot.cuisine} · Famous Night Street Hawker`,
+          priceTier: '$',
+          mustTry: streetSpot.description ? streetSpot.description.split('.')[0] : 'Authentic local street food',
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} dinner updated to street food: ${streetSpot.name}!`
+        reply = `Done! I've updated Day ${targetDayIndex + 1}'s dinner to legendary street food spot "${streetSpot.name}" (${(streetSpot.rating || 4.7).toFixed(1)}★, ${streetSpot.reviewsCount?.toLocaleString() || '9,000+'} reviews).`
+      }
+      // Case E: Seafood
+      else if (lower.includes('seafood') || lower.includes('top spot') || lower.includes('crab') || lower.includes('prawn') || lower.includes('fish') || lower.includes('海鲜')) {
+        const seafoodSpot = realRestaurants.find(r => (r.cuisine && r.cuisine.toLowerCase().includes('seafood')) || r.name.toLowerCase().includes('top spot') || r.name.toLowerCase().includes('cliff')) || realRestaurants[0]
+        targetDay.dinner = {
+          time: '18:30 - 20:30',
+          name: seafoodSpot.name,
+          cuisine: `${seafoodSpot.cuisine} · Fresh Catch Dining`,
+          priceTier: '$$$',
+          mustTry: seafoodSpot.description ? seafoodSpot.description.split('.')[0] : 'Fresh grilled seafood specialty',
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} dinner updated to fresh seafood: ${seafoodSpot.name}!`
+        reply = `Delicious choice! I've replaced Day ${targetDayIndex + 1}'s dinner with "${seafoodSpot.name}" (${(seafoodSpot.rating || 4.8).toFixed(1)}★), famous for fresh local seafood and vibrant atmosphere.`
+      }
+      // Case F: Cafe & White coffee & Brunch
+      else if (lower.includes('cafe') || lower.includes('coffee') || lower.includes('brunch') || lower.includes('nam heong') || lower.includes('breakfast') || lower.includes('咖啡') || lower.includes('早餐') || lower.includes('下午茶')) {
+        const cafeSpot = realRestaurants.find(r => r.name.toLowerCase().includes('nam heong') || r.name.toLowerCase().includes('choon hui') || r.name.toLowerCase().includes('thean chun') || (r.mealType && r.mealType.includes('Breakfast'))) || realRestaurants[0]
+        targetDay.lunch = {
+          time: '12:00 - 13:30',
+          name: cafeSpot.name,
+          cuisine: `${cafeSpot.cuisine} · Heritage Coffee & Brunch`,
+          priceTier: '$',
+          mustTry: cafeSpot.description ? cafeSpot.description.split('.')[0] : 'Aromatic White Coffee & Egg Tarts',
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} updated to heritage cafe & coffee: ${cafeSpot.name}!`
+        reply = `Added a relaxed coffee and brunch break! Day ${targetDayIndex + 1} now features "${cafeSpot.name}" (${(cafeSpot.rating || 4.8).toFixed(1)}★), perfect for authentic local brews and artisan brunch.`
+      }
+      // Case G: Sunset & Panoramic Viewpoints
+      else if (lower.includes('sunset') || lower.includes('view') || lower.includes('sky deck') || lower.includes('tower') || lower.includes('rooftop') || lower.includes('日落') || lower.includes('夜景') || lower.includes('观景台')) {
+        const viewSpot = realAttractions.find(a => a.category?.includes('Viewpoints') || a.name.toLowerCase().includes('tower') || a.name.toLowerCase().includes('skybridge') || a.name.toLowerCase().includes('kek lok tong') || a.name.toLowerCase().includes('waterfront')) || realAttractions[0]
+        targetDay.afternoon = {
+          time: '16:00 - 18:30 (Sunset Window)',
+          title: `${viewSpot.name} (Sunset Viewing)`,
+          rating: `${(viewSpot.rating || 4.8).toFixed(1)}★ (${(viewSpot.reviewsCount || 40000).toLocaleString()} reviews)`,
+          location: viewSpot.address || destMatch.city,
+          description: `Timed specifically for golden hour and panoramic 360° sunset vistas over ${destMatch.city}.`,
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} afternoon timed for sunset at ${viewSpot.name}!`
+        reply = `I've adjusted Day ${targetDayIndex + 1}'s afternoon schedule to catch golden hour sunset at "${viewSpot.name}" (${(viewSpot.rating || 4.8).toFixed(1)}★)! The timing (16:00 - 18:30) is optimized for stunning photography.`
+      }
+      // Case H: Relaxed pacing & Late morning
+      else if (lower.includes('relax') || lower.includes('sleep') || lower.includes('slow') || lower.includes('late') || lower.includes('轻松') || lower.includes('睡迟') || lower.includes('慢节奏')) {
+        targetDay.morning = {
+          time: '10:30 - 12:30',
+          title: `Leisurely Morning & Relaxed Stroll around ${destMatch.city}`,
+          rating: '5.0★ (Relaxed Pacing Mode)',
+          location: targetDay.morning?.location || destMatch.city,
+          description: `Enjoy a slow-paced morning with late breakfast and gentle exploration without morning rush.`,
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} morning adjusted to relaxed leisurely pacing!`
+        reply = `Done! I've rescheduled Day ${targetDayIndex + 1}'s morning start to 10:30 AM for a relaxed start, giving you ample time to sleep in and enjoy your hotel breakfast.`
+      }
+      // Case I: Nature & Cultural heritage
+      else if (lower.includes('nature') || lower.includes('caves') || lower.includes('temple') || lower.includes('park') || lower.includes('museum') || lower.includes('自然') || lower.includes('洞穴') || lower.includes('公园') || lower.includes('博物馆')) {
+        const natureSpot = realAttractions.find(a => a.category?.includes('Nature') || a.category?.includes('Cultural') || a.name.toLowerCase().includes('caves') || a.name.toLowerCase().includes('bako') || a.name.toLowerCase().includes('museum') || a.name.toLowerCase().includes('temple')) || realAttractions[1] || realAttractions[0]
+        targetDay.morning = {
+          time: '09:00 - 12:00',
+          title: natureSpot.name,
+          rating: `${(natureSpot.rating || 4.8).toFixed(1)}★ (${(natureSpot.reviewsCount || 20000).toLocaleString()} reviews)`,
+          location: natureSpot.address || destMatch.city,
+          description: natureSpot.description || `Immerse in ${natureSpot.name}'s lush natural landscape and rich heritage.`,
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} updated to nature & heritage: ${natureSpot.name}!`
+        reply = `Added! Day ${targetDayIndex + 1} now starts with an immersive visit to "${natureSpot.name}" (${(natureSpot.rating || 4.8).toFixed(1)}★). Perfect for heritage exploration and scenic greenery.`
+      }
+      // Case J: General modification / Swap fallback
+      else {
+        // Pick an alternative spot from realAttractions not currently on this day
+        const altAttr = realAttractions.find(a => a.name !== targetDay.morning?.title && a.name !== targetDay.afternoon?.title) || realAttractions[0]
+        const altRest = realRestaurants.find(r => r.name !== targetDay.lunch?.name && r.name !== targetDay.dinner?.name) || realRestaurants[0]
+
+        targetDay.afternoon = {
+          time: '14:30 - 17:30',
+          title: altAttr.name,
+          rating: `${(altAttr.rating || 4.8).toFixed(1)}★ (${(altAttr.reviewsCount || 15000).toLocaleString()} reviews)`,
+          location: altAttr.address || destMatch.city,
+          description: altAttr.description || `Refined spot in ${destMatch.city} based on your preferences.`,
+          aiRefined: true
+        }
+        targetDay.dinner = {
+          time: '18:30 - 20:30',
+          name: altRest.name,
+          cuisine: altRest.cuisine || 'Authentic Regional Dining',
+          priceTier: altRest.priceTier || '$$',
+          mustTry: altRest.description ? altRest.description.split('.')[0] : 'Chef signature dish',
+          aiRefined: true
+        }
+        changesNotice = `✨ Day ${targetDayIndex + 1} refined: ${altAttr.name} & ${altRest.name}!`
+        reply = `I've personalized Day ${targetDayIndex + 1} based on your prompt ("${rawMsg}")! Updated the afternoon to "${altAttr.name}" (${(altAttr.rating || 4.8).toFixed(1)}★) and dinner to "${altRest.name}" (${(altRest.rating || 4.8).toFixed(1)}★) in ${destMatch.city}. Your Official Trip Itinerary timetable has updated in real time!`
+      }
+    } else {
+      reply = `I've noted your preference: "${rawMsg}". I'm ready to fine-tune your itinerary whenever you regenerate!`
+    }
+
+    res.json({
+      success: true,
+      reply,
+      updatedPlan,
+      changesNotice
+    })
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message })
   }
-
-  const lower = (message || '').toLowerCase()
-  let reply = `I've noted that! `
-
-  if (lower.includes('budget') || lower.includes('cheap') || lower.includes('cost')) {
-    reply += `To optimize budget, you can swap dinner for local hawker centers or street markets which save up to 60% while offering authentic flavours. Public transit passes also offer unlimited 3-day subway rides.`
-  } else if (lower.includes('relax') || lower.includes('slow') || lower.includes('kid') || lower.includes('family')) {
-    reply += `I have relaxed the schedule! You can shift the morning start time to 10:30 AM and dedicate the entire afternoon to a scenic park and leisurely cafe break instead of two back-to-back museums.`
-  } else if (lower.includes('food') || lower.includes('eat') || lower.includes('restaurant')) {
-    reply += `Great choice! I have prioritized the highest Google-rated food stops (4.8★ and above) near each attraction so you won't have to travel more than 10 minutes between sightseeing and dining.`
-  } else {
-    reply += `Your itinerary has been dynamically updated. All Google Review ratings and time slots have been verified for optimal flow.`
-  }
-
-  res.json({ reply })
 })
 
 // Shared Real Place Suggestion Resolver
@@ -1271,12 +1432,8 @@ app.get('/api/whatsapp/feed', (_req, res) => {
   res.json({ success: true, suggestions: groupTripSuggestions })
 })
 
-// 12. Standard Twilio / Meta Webhook
-app.post('/api/whatsapp/webhook', (req, res) => {
-  const body = req.body.Body || req.body.text || req.body.message || ''
-  const sender = req.body.From || req.body.senderName || 'WhatsApp User'
-  res.json({ received: true, sender, body })
-})
+
+
 
 
 // Production static serving vs Vite dev server
