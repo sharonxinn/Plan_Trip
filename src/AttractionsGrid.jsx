@@ -200,7 +200,7 @@ export default function AttractionsGrid({
                 <span className="place-category-badge">{attraction.category}</span>
                 <div className="google-review-badge">
                   <Star size={14} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
-                  <strong>{(attraction.rating || 4.8).toFixed(1)}</strong>
+                  <strong>{typeof attraction.rating === 'number' ? attraction.rating.toFixed(1) : String(attraction.rating || '4.8').replace('★', '').trim()}</strong>
                   <span>({(attraction.reviewsCount || 12000).toLocaleString()} Google reviews)</span>
                 </div>
               </div>

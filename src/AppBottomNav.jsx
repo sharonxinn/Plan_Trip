@@ -1,5 +1,8 @@
 import React from 'react'
-import { Compass, Scale, Bot, Camera, MessageCircle, ShoppingBag, Sparkles } from 'lucide-react'
+import {
+  MapPin, DollarSign, Compass, Zap, Users, Luggage,
+  Scale, Bot, Camera, ShoppingBag
+} from 'lucide-react'
 
 export default function AppBottomNav({
   currentPage,
@@ -10,80 +13,42 @@ export default function AppBottomNav({
   groupChatOpen = false,
   basketOpen = false
 }) {
+  const navItems = [
+    { id: 'setup', label: '1. Setup', icon: MapPin },
+    { id: 'budget', label: '2. Budget', icon: DollarSign },
+    { id: 'explore', label: '3. Discover', icon: Compass },
+    { id: 'planb', label: '4. Plan B', icon: Zap, isHighlight: true },
+    { id: 'group', label: '5. Squad', icon: Users },
+    { id: 'pack', label: '6. Export', icon: Luggage }
+  ]
+
   return (
     <nav className="app-native-bottom-nav" aria-label="Mobile App Navigation">
       <div className="bottom-nav-inner">
-        {/* 1. Explore Tab */}
-        <button
-          className={`nav-tab-item ${currentPage === 'explore' && !groupChatOpen && !basketOpen ? 'active' : ''}`}
-          onClick={() => {
-            onSelectPage('explore')
-          }}
-        >
-          <div className="tab-icon-wrapper">
-            <Compass size={19} />
-          </div>
-          <span className="tab-label">Explore</span>
-        </button>
+        {navItems.map(item => {
+          const Icon = item.icon
+          const isActive = currentPage === item.id && !groupChatOpen && !basketOpen
+          return (
+            <button
+              key={item.id}
+              className={`nav-tab-item ${isActive ? 'active' : ''} ${item.isHighlight ? 'center-highlight' : ''}`}
+              onClick={() => onSelectPage(item.id)}
+            >
+              <div className={`tab-icon-wrapper ${item.isHighlight ? 'center-badge' : ''}`}>
+                <Icon size={item.isHighlight ? 20 : 18} />
+              </div>
+              <span className="tab-label">{item.label}</span>
+            </button>
+          )
+        })}
 
-        {/* 2. Compare Tab */}
-        <button
-          className={`nav-tab-item ${currentPage === 'compare' && !groupChatOpen && !basketOpen ? 'active' : ''}`}
-          onClick={() => {
-            onSelectPage('compare')
-          }}
-        >
-          <div className="tab-icon-wrapper">
-            <Scale size={19} />
-          </div>
-          <span className="tab-label">Compare</span>
-        </button>
-
-        {/* 3. AI Planner (Center Action Tab) */}
-        <button
-          className={`nav-tab-item center-highlight ${currentPage === 'ai' && !groupChatOpen && !basketOpen ? 'active' : ''}`}
-          onClick={() => {
-            onSelectPage('ai')
-          }}
-        >
-          <div className="tab-icon-wrapper center-badge">
-            <Bot size={20} />
-          </div>
-          <span className="tab-label">AI Plan</span>
-        </button>
-
-        {/* 4. Postcard & Check-in Tab */}
-        <button
-          className={`nav-tab-item ${currentPage === 'postcard' && !groupChatOpen && !basketOpen ? 'active' : ''}`}
-          onClick={() => {
-            onSelectPage('postcard')
-          }}
-        >
-          <div className="tab-icon-wrapper">
-            <Camera size={19} />
-          </div>
-          <span className="tab-label">Postcard</span>
-        </button>
-
-        {/* 5. WhatsApp Hub */}
-        <button
-          className={`nav-tab-item ${groupChatOpen ? 'active' : ''}`}
-          onClick={onOpenGroupChat}
-        >
-          <div className="tab-icon-wrapper">
-            <MessageCircle size={19} />
-            <span className="live-nav-dot" />
-          </div>
-          <span className="tab-label">Hub</span>
-        </button>
-
-        {/* 6. Trip Basket */}
+        {/* Trip Basket Button */}
         <button
           className={`nav-tab-item ${basketOpen ? 'active' : ''}`}
           onClick={onOpenBasket}
         >
           <div className="tab-icon-wrapper">
-            <ShoppingBag size={19} />
+            <ShoppingBag size={18} />
             {basketCount > 0 && (
               <span className="nav-badge-count">{basketCount}</span>
             )}
@@ -94,3 +59,4 @@ export default function AppBottomNav({
     </nav>
   )
 }
+

@@ -228,7 +228,7 @@ export default function RestaurantsGrid({
                 </div>
                 <div className="google-review-badge">
                   <Star size={14} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
-                  <strong>{(restaurant.rating || 4.8).toFixed(1)}</strong>
+                  <strong>{typeof restaurant.rating === 'number' ? restaurant.rating.toFixed(1) : String(restaurant.rating || '4.8').replace('★', '').trim()}</strong>
                   <span>({(restaurant.reviewsCount || 8500).toLocaleString()} Google reviews)</span>
                 </div>
               </div>

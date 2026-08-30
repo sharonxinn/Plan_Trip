@@ -57,7 +57,7 @@ export default function PlaceDetailModal({
             <div className="modal-rating-row">
               <div className="google-stars-pill">
                 <Star size={16} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
-                <span className="rating-score">{(item.rating || 4.8).toFixed(1)}</span>
+                <span className="rating-score">{typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('★', '').trim()}</span>
                 <span className="reviews-count">
                   ({(item.reviewsCount || 15000).toLocaleString()} verified Google Reviews)
                 </span>

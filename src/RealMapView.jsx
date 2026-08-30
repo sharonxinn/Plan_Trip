@@ -6,6 +6,8 @@ import {
 
 export default function RealMapView({
   destination,
+  selectedCity,
+  places = [],
   attractions = [],
   restaurants = [],
   basket = [],
@@ -16,19 +18,31 @@ export default function RealMapView({
   const [selectedPin, setSelectedPin] = useState(null)
   const [mapZoom, setMapZoom] = useState(13)
 
-  const lat = destination?.lat || 3.1390
-  const lng = destination?.lng || 101.6869
-  const cityName = destination?.city || 'Kuala Lumpur'
-  const countryName = destination?.country || 'Malaysia'
+  const activeDest = destination || selectedCity || {}
+  const lat = activeDest.lat || 3.1390
+  const lng = activeDest.lng || 101.6869
+  const cityName = activeDest.city || 'Kuala Lumpur'
+  const countryName = activeDest.country || 'Malaysia'
 
   // Construct Google Maps embed URL
   const googleMapEmbedUrl = `https://maps.google.com/maps?q=${lat},${lng}&hl=en&z=${mapZoom}&output=embed`
   const googleMapsLiveLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cityName + ' ' + countryName)}`
 
-  const allPins = [
-    ...attractions.map(a => ({ ...a, pinType: 'attraction' })),
-    ...restaurants.map(r => ({ ...r, pinType: 'restaurant' }))
-  ]
+  // Resolve attractions & restaurants with automatic fallbacks
+  const rawAttractions = (attractions && attractions.length > 0)
+    ? attractions
+    : (activeDest.attractions || [])
+
+  const rawRestaurants = (restaurants && restaurants.length > 0)
+    ? restaurants
+    : (activeDest.restaurants || [])
+
+  const allPins = places.length > 0 && rawAttractions.length === 0 && rawRestaurants.length === 0
+    ? places.map(p => ({ ...p, pinType: p.type === 'restaurant' || p.cuisine ? 'restaurant' : 'attraction' }))
+    : [
+        ...rawAttractions.map(a => ({ ...a, pinType: 'attraction' })),
+        ...rawRestaurants.map(r => ({ ...r, pinType: 'restaurant' }))
+      ]
 
   const filteredPins = activeTab === 'all'
     ? allPins

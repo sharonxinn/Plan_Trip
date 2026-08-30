@@ -110,7 +110,7 @@ export default function GroupChatDrawer({
 
   // Generate WhatsApp Share Message with Real Destination Data
   const generateWhatsAppMessage = () => {
-    const attractionsList = basket.filter(b => b.type === 'attraction' || b.category).map(a => `• 🏛️ ${a.name} (${(a.rating || 4.8).toFixed(1)}★)`).join('\n') || `• 🏛️ Top-rated Google review sights in ${cityName}`
+    const attractionsList = basket.filter(b => b.type === 'attraction' || b.category).map(a => `• 🏛️ ${a.name} (${typeof a.rating === 'number' ? a.rating.toFixed(1) : String(a.rating || '4.8').replace('★', '').trim()}★)`).join('\n') || `• 🏛️ Top-rated Google review sights in ${cityName}`
     const diningList = basket.filter(b => b.type === 'restaurant' || b.cuisine).map(r => `• 🍽️ ${r.name} (${r.priceTier || '$$'} · ${r.cuisine || 'Local'})`).join('\n') || `• 🍽️ Google 4.8★+ verified food spots in ${cityName}`
 
     const membersListStr = members.map(m => m.name).join(', ')
@@ -553,7 +553,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
                               <div className="item-preview-info">
                                 <strong>{sug.suggestedItem.name}</strong>
                                 <small>
-                                  {(sug.suggestedItem.rating || 4.8).toFixed(1)}★ ({sug.suggestedItem.reviewsCount?.toLocaleString() || sug.suggestedItem.reviewCount?.toLocaleString() || '15,000+'} reviews) · {sug.suggestedItem.category || sug.suggestedItem.cuisine}
+                                  {typeof sug.suggestedItem.rating === 'number' ? sug.suggestedItem.rating.toFixed(1) : String(sug.suggestedItem.rating || '4.8').replace('★', '').trim()}★ ({sug.suggestedItem.reviewsCount?.toLocaleString() || sug.suggestedItem.reviewCount?.toLocaleString() || '15,000+'} reviews) · {sug.suggestedItem.category || sug.suggestedItem.cuisine}
                                 </small>
                               </div>
                             </div>
@@ -690,7 +690,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
                       <div className="bubble-wish-card">
                         <div className="wish-tag">
                           <Sparkles size={12} />
-                          <span>AI Matched Real Spot: <strong>{msg.wish.name}</strong> ({(msg.wish.rating || 4.8).toFixed(1)}★)</span>
+                          <span>AI Matched Real Spot: <strong>{msg.wish.name}</strong> ({typeof msg.wish.rating === 'number' ? msg.wish.rating.toFixed(1) : String(msg.wish.rating || '4.8').replace('★', '').trim()}★)</span>
                         </div>
                         <button
                           className="btn-add-wish"
