@@ -574,7 +574,7 @@ export default function PostcardCheckinPage({
     setGeneratedDataUrl(dataUrl)
     setIsGenerating(false)
     setPostcardModalOpen(true)
-    setExportSuccessMsg('✨ 电子明信片已成功生成！/ Postcard Generated Successfully!')
+    setExportSuccessMsg('✨ E-Postcard Generated Successfully!')
     setTimeout(() => setExportSuccessMsg(''), 4000)
   }
 
@@ -677,7 +677,7 @@ export default function PostcardCheckinPage({
                 </button>
               )}
             </div>
-            <h2>打卡电子明信片 · E-Postcard Studio</h2>
+            <h2>E-Postcard Studio</h2>
             <p>Check-in at verified spots, customize travel slogans, and export high-res 9:16 Instagram Stories!</p>
           </div>
 
@@ -691,7 +691,7 @@ export default function PostcardCheckinPage({
           <div className="studio-card-section">
             <div className="section-title-row">
               <span className="step-badge">1</span>
-              <h3>Choose Check-in Spot · 选择打卡地点</h3>
+              <h3>Choose Check-in Spot</h3>
             </div>
 
             {/* Spots Selector Carousel */}
@@ -743,7 +743,7 @@ export default function PostcardCheckinPage({
           <div className="studio-card-section">
             <div className="section-title-row">
               <span className="step-badge">2</span>
-              <h3>Photo & Visual Filter · 照片与滤镜</h3>
+              <h3>Photo & Visual Filter</h3>
             </div>
 
             <div className="photo-actions-row">
@@ -793,7 +793,7 @@ export default function PostcardCheckinPage({
             <div className="section-title-row">
               <div className="flex-title">
                 <span className="step-badge">3</span>
-                <h3>Travel Slogan & Caption · 专属打卡标语</h3>
+                <h3>Travel Slogan & Caption</h3>
               </div>
               <button className="btn-random-slogan" onClick={handlePickRandomSlogan}>
                 <Wand2 size={13} />
@@ -805,9 +805,9 @@ export default function PostcardCheckinPage({
             <div className="slogan-cat-tabs">
               {[
                 { id: 'vibes', label: '🌴 Travel Vibes' },
-                { id: 'food', label: '🍜 Foodie 吃货' },
-                { id: 'culture', label: '🏛️ Culture 探秘' },
-                { id: 'squad', label: '👯 Squad 闺蜜群' }
+                { id: 'food', label: '🍜 Foodie' },
+                { id: 'culture', label: '🏛️ Culture' },
+                { id: 'squad', label: '👯 Squad' }
               ].map(cat => (
                 <button
                   key={cat.id}
@@ -838,7 +838,7 @@ export default function PostcardCheckinPage({
 
             {/* Custom Slogan Textarea */}
             <div className="form-group mt-3">
-              <label>Edit Your Custom Slogan / 自由编辑标语</label>
+              <label>Edit Your Custom Slogan</label>
               <textarea
                 className="slogan-custom-textarea"
                 rows="2"
@@ -854,7 +854,7 @@ export default function PostcardCheckinPage({
           <div className="studio-card-section">
             <div className="section-title-row">
               <span className="step-badge">4</span>
-              <h3>Postcard Theme & Stamps · 主题与印章</h3>
+              <h3>Postcard Theme & Stamps</h3>
             </div>
 
             {/* Themes Grid */}
@@ -879,7 +879,7 @@ export default function PostcardCheckinPage({
 
             {/* Stamp Badges */}
             <div className="form-group mt-3">
-              <label>Passport Stamp Badge · 官方认证印章</label>
+              <label>Passport Stamp Badge</label>
               <div className="stamps-scroll-row">
                 {STAMPS.map(st => (
                   <button
@@ -924,7 +924,7 @@ export default function PostcardCheckinPage({
               disabled={isGenerating}
             >
               <Sparkles size={22} className="sparkle-spin" />
-              <span>{isGenerating ? '正在渲染高清明信片...' : '✨ 立即生成电子明信片 · Generate Postcard'}</span>
+              <span>{isGenerating ? 'Rendering HD Postcard...' : '✨ Generate Postcard'}</span>
             </button>
 
             <div className="generate-quick-row">
@@ -1076,7 +1076,7 @@ export default function PostcardCheckinPage({
                 disabled={isGenerating}
               >
                 <Sparkles size={18} />
-                <span>{isGenerating ? 'Rendering Story...' : '✨ 生成并预览电子明信片 / Generate'}</span>
+                <span>{isGenerating ? 'Rendering Story...' : '✨ Generate & Preview Postcard'}</span>
               </button>
 
               <div className="export-secondary-row">
@@ -1124,7 +1124,7 @@ export default function PostcardCheckinPage({
 
             <div className="modal-header-tag">
               <Sparkles size={18} className="text-cyan" />
-              <h3>Your E-Postcard is Ready! · 明信片已生成</h3>
+              <h3>Your E-Postcard is Ready!</h3>
             </div>
 
             <p className="modal-sub-desc">

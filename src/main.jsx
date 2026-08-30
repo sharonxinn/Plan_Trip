@@ -18,8 +18,7 @@ import SmartRouteTimeline from './SmartRouteTimeline'
 import ComparePage from './ComparePage'
 import AIAgentPage from './AIAgentPage'
 import PostcardCheckinPage from './PostcardCheckinPage'
-import AppBottomNav from './AppBottomNav'
-import InstallAppModal from './InstallAppModal'
+import WebFooter from './WebFooter'
 import StepSetupSync from './StepSetupSync'
 import StepBudgetSplitter from './StepBudgetSplitter'
 import StepPlanBStudio from './StepPlanBStudio'
@@ -107,7 +106,7 @@ function App() {
     if (place.city?.includes('Penang')) {
       hubName = 'Penang Sentral / Georgetown Ferry Hub'
     } else if (place.city?.includes('Ipoh')) {
-      hubName = 'Ipoh Railway Station (怡保火车站)'
+      hubName = 'Ipoh Railway Station'
     } else if (place.city?.includes('Kuala Lumpur')) {
       hubName = 'KL Sentral / Railway Station'
     } else if (place.city?.includes('Tokyo')) {
@@ -557,7 +556,7 @@ function App() {
               <button
                 className="btn-link-collector-header"
                 onClick={() => setLinkCollectorOpen(true)}
-                title="群聊自动收藏 · Drop Google Maps Links & Chat Wishes"
+                title="Drop Google Maps Links & Chat Wishes"
               >
                 <Link2 size={15} />
                 <span className="desktop-only">Link Collector</span>
@@ -568,7 +567,7 @@ function App() {
               <button
                 className="btn-smart-route-header"
                 onClick={() => setSmartRouteWizardOpen(true)}
-                title="一键智能行程生成器 · Generate Smart Route"
+                title="1-Click Generate Smart Route"
               >
                 <Zap size={15} />
                 <span>⚡ Smart Route</span>
@@ -676,21 +675,21 @@ function App() {
               <div className="explore-hero-actions-row">
                 <div>
                   <h1 className="step-main-title">
-                    {selectedCity.city} 智能行程生成器 (Smart Route Generator)
+                    {selectedCity.city} Smart Route Generator
                   </h1>
                   <p className="step-subtitle">
-                    从群聊自动收集 Google Maps 链接，一键生成不走回头路、避开休息日的多日时间轴与地图导航路线。
+                    Auto-collect Google Maps links from group chat and generate optimal, non-backtracking multi-day timelines and turn-by-turn navigation.
                   </p>
                 </div>
 
                 <div className="hero-quick-actions">
                   <button className="auto-plan-magic-btn" onClick={() => setSmartRouteWizardOpen(true)}>
                     <Zap size={17} />
-                    <span>⚡ 一键生成智能行程 (Generate Smart Route)</span>
+                    <span>⚡ Generate Smart Route</span>
                   </button>
                   <button className="compare-fares-quick-btn" onClick={() => setLinkCollectorOpen(true)}>
                     <Link2 size={17} />
-                    <span>🔗 群聊自动收藏 ({bucketList.length} Spots)</span>
+                    <span>🔗 Link Collector ({bucketList.length} Spots)</span>
                   </button>
                   <button className="compare-fares-quick-btn" onClick={() => setCurrentPage('compare')}>
                     <Scale size={17} />
@@ -959,26 +958,22 @@ function App() {
           }}
         />
 
-        {/* NATIVE PERSISTENT MOBILE BOTTOM NAVIGATION TAB BAR */}
-        <AppBottomNav
-          currentPage={currentPage}
+        {/* MODERN RESPONSIVE WEBSITE FOOTER */}
+        <WebFooter
           onSelectPage={page => {
             setCurrentPage(page)
             setGroupChatOpen(false)
             setBasketDrawerOpen(false)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
-          basketCount={totalBasketCount}
-          onOpenBasket={() => setBasketDrawerOpen(true)}
-          onOpenGroupChat={() => setGroupChatOpen(true)}
-          groupChatOpen={groupChatOpen}
-          basketOpen={basketDrawerOpen}
-        />
-
-        {/* INSTALL APP MODAL */}
-        <InstallAppModal
-          isOpen={installModalOpen}
-          onClose={() => setInstallModalOpen(false)}
+          onSelectCity={cityName => {
+            const foundCountry = countriesData.find(c => c.places.some(p => p.city.toLowerCase().includes(cityName.toLowerCase())))
+            if (foundCountry) {
+              const foundPlace = foundCountry.places.find(p => p.city.toLowerCase().includes(cityName.toLowerCase()))
+              if (foundPlace) handleSelectCity(foundPlace, foundCountry)
+            }
+          }}
+          countriesData={countriesData}
         />
       </div>
     </div>

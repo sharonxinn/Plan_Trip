@@ -49,7 +49,7 @@ export default function SmartRouteWizard({
 
   // Step 3: Starting Point & Arrival Time
   const defaultHubs = {
-    'Ipoh': { name: 'Ipoh Railway Station (怡保火车站)', lat: 4.5975, lng: 101.0734 },
+    'Ipoh': { name: 'Ipoh Railway Station', lat: 4.5975, lng: 101.0734 },
     'Penang': { name: 'Penang Sentral / Georgetown Ferry Hub', lat: 5.4164, lng: 100.3327 },
     'Kuala Lumpur': { name: 'KL Sentral / KLIA Terminal 1', lat: 3.1343, lng: 101.6865 },
     'Tokyo': { name: 'Tokyo Station / Haneda Airport', lat: 35.6812, lng: 139.7671 },
@@ -131,7 +131,7 @@ export default function SmartRouteWizard({
               <Sparkles size={20} />
             </div>
             <div>
-              <h2 className="wizard-modal-title">⚡ Generate Smart Route 一键智能行程</h2>
+              <h2 className="wizard-modal-title">⚡ Generate Smart Route</h2>
               <p className="wizard-subtitle">
                 3-Step non-backtracking route optimization for {cityName}, {countryName}
               </p>
@@ -146,17 +146,17 @@ export default function SmartRouteWizard({
         <div className="wizard-stepper-bar">
           <div className={`wizard-step-node ${wizardStep >= 1 ? 'active' : ''} ${wizardStep === 1 ? 'current' : ''}`}>
             <span className="step-badge">1</span>
-            <span className="step-title">出行日期与天数</span>
+            <span className="step-title">Dates & Duration</span>
           </div>
           <div className="wizard-step-line" />
           <div className={`wizard-step-node ${wizardStep >= 2 ? 'active' : ''} ${wizardStep === 2 ? 'current' : ''}`}>
             <span className="step-badge">2</span>
-            <span className="step-title">确认愿望清单</span>
+            <span className="step-title">Confirm Bucket List</span>
           </div>
           <div className="wizard-step-line" />
           <div className={`wizard-step-node ${wizardStep >= 3 ? 'active' : ''} ${wizardStep === 3 ? 'current' : ''}`}>
             <span className="step-badge">3</span>
-            <span className="step-title">起点与抵达时间</span>
+            <span className="step-title">Start Hub & Time</span>
           </div>
         </div>
 
@@ -165,14 +165,14 @@ export default function SmartRouteWizard({
           {/* ================= STEP 1: DATES & DURATION ================= */}
           {wizardStep === 1 && (
             <div className="wizard-step-panel fade-in">
-              <h3 className="panel-section-title">📅 第一步：输入出行日期与游玩天数</h3>
+              <h3 className="panel-section-title">📅 Step 1: Input Travel Dates & Duration</h3>
               <p className="panel-section-desc">
-                选择你的出发与返程日期，系统将根据天数自动优化每日游玩节奏。
+                Select your departure and return dates. The engine will balance daily paces automatically.
               </p>
 
               <div className="dates-inputs-grid">
                 <div className="date-input-box">
-                  <label>出发日期 (Departure)</label>
+                  <label>Departure Date</label>
                   <input
                     type="date"
                     value={departureDate}
@@ -181,7 +181,7 @@ export default function SmartRouteWizard({
                   />
                 </div>
                 <div className="date-input-box">
-                  <label>返程日期 (Return)</label>
+                  <label>Return Date</label>
                   <input
                     type="date"
                     value={returnDate}
@@ -205,13 +205,13 @@ export default function SmartRouteWizard({
             <div className="wizard-step-panel fade-in">
               <div className="panel-header-flex">
                 <div>
-                  <h3 className="panel-section-title">📍 第二步：确认与勾选群里丢过的地点</h3>
+                  <h3 className="panel-section-title">📍 Step 2: Confirm Places Dropped in Chat</h3>
                   <p className="panel-section-desc">
-                    勾选 Confirm 哪些一定要去、哪些想排在第几天，或点击交由 AI 推荐安排。
+                    Check off which spots are Must-Visit, assign specific days, or click AI Auto-Assign.
                   </p>
                 </div>
                 <button className="btn-ai-auto-assign" onClick={handleAIAutoAssign}>
-                  <Sparkles size={14} /> AI 推荐智能分配
+                  <Sparkles size={14} /> AI Auto-Assign
                 </button>
               </div>
 
@@ -245,7 +245,7 @@ export default function SmartRouteWizard({
                           title="Mark as Must-Visit"
                         >
                           <Star size={13} fill={spot.isMustVisit ? '#f59e0b' : 'none'} color={spot.isMustVisit ? '#f59e0b' : '#94a3b8'} />
-                          <span>{spot.isMustVisit ? '必去 ⭐' : '可选'}</span>
+                          <span>{spot.isMustVisit ? 'Must-Visit ⭐' : 'Optional'}</span>
                         </button>
 
                         <select
@@ -253,7 +253,7 @@ export default function SmartRouteWizard({
                           onChange={e => handleAssignDay(spot.id, e.target.value)}
                           className="spot-day-select"
                         >
-                          <option value="auto">🤖 AI 智能安排</option>
+                          <option value="auto">🤖 AI Auto-Assign</option>
                           {Array.from({ length: durationDays }, (_, i) => i + 1).map(d => (
                             <option key={d} value={d.toString()}>Day {d}</option>
                           ))}
@@ -269,13 +269,13 @@ export default function SmartRouteWizard({
           {/* ================= STEP 3: STARTING POINT & ARRIVAL TIME ================= */}
           {wizardStep === 3 && (
             <div className="wizard-step-panel fade-in">
-              <h3 className="panel-section-title">🚀 第三步：输入起点枢纽与抵达时间</h3>
+              <h3 className="panel-section-title">🚀 Step 3: Starting Point Hub & Arrival Time</h3>
               <p className="panel-section-desc">
-                系统将以此为起点，计算经纬度距离，绝不走回头路，避开未开门时段！
+                The engine will optimize sequence from this hub with zero backtracking and synchronized opening hours!
               </p>
 
               <div className="form-group-field">
-                <label>起点 / 抵步枢纽 (Starting Point Hub)</label>
+                <label>Starting Point / Arrival Hub</label>
                 <div className="input-with-icon">
                   <MapPin size={16} className="text-cyan input-icon" />
                   <input
@@ -290,7 +290,7 @@ export default function SmartRouteWizard({
 
               <div className="form-row-2col">
                 <div className="form-group-field">
-                  <label>Day 1 抵达 / 出发时间 (Arrival Time)</label>
+                  <label>Day 1 Arrival / Start Time</label>
                   <div className="input-with-icon">
                     <Clock size={16} className="text-amber input-icon" />
                     <select
@@ -309,7 +309,7 @@ export default function SmartRouteWizard({
                 </div>
 
                 <div className="form-group-field">
-                  <label>行程节奏 (Trip Pace)</label>
+                  <label>Trip Pace</label>
                   <div className="input-with-icon">
                     <Sliders size={16} className="text-cyan input-icon" />
                     <select
@@ -317,9 +317,9 @@ export default function SmartRouteWizard({
                       onChange={e => setPace(e.target.value)}
                       className="wizard-select"
                     >
-                      <option value="relaxed">☕ 轻松休闲 (Relaxed 2-3 spots/day)</option>
-                      <option value="balanced">⚡ 黄金平衡 (Balanced 4 spots/day)</option>
-                      <option value="packed">🚀 高效特种兵 (High Pace 5-6 spots/day)</option>
+                      <option value="relaxed">☕ Relaxed (2-3 spots/day)</option>
+                      <option value="balanced">⚡ Balanced (4 spots/day)</option>
+                      <option value="packed">🚀 Packed (5-6 spots/day)</option>
                     </select>
                   </div>
                 </div>
@@ -328,12 +328,12 @@ export default function SmartRouteWizard({
               <div className="smart-optimizer-summary-box">
                 <div className="summary-icon-title">
                   <Zap size={18} className="text-cyan" />
-                  <strong>智能排程引擎准备就绪：</strong>
+                  <strong>Smart Routing Engine Ready:</strong>
                 </div>
                 <ul>
-                  <li>✅ 自动计算每个地点的经纬度距离，按最短非循环路径排定（不走回头路）。</li>
-                  <li>✅ 对齐营业时间与用餐时段（早茶 ➔ 上午景点 ➔ 午餐 ➔ 下午茶/室内 ➔ 日落 ➔ 晚餐）。</li>
-                  <li>✅ 一键生成完整多日时间轴与 Google Maps 导航连线路网！</li>
+                  <li>✅ Nearest-Neighbor spatial distance sequencing (zero backtracking).</li>
+                  <li>✅ Synchronized meal and activity time slots (Breakfast ➔ Morning Sights ➔ Lunch ➔ Cafe/Indoor ➔ Sunset ➔ Dinner).</li>
+                  <li>✅ 1-Click Multi-Stop Google Maps navigation deep links!</li>
                 </ul>
               </div>
             </div>
@@ -344,17 +344,17 @@ export default function SmartRouteWizard({
         <div className="wizard-footer-row">
           {wizardStep > 1 ? (
             <button className="btn-wizard-back" onClick={() => setWizardStep(prev => prev - 1)}>
-              <ArrowLeft size={16} /> 上一步
+              <ArrowLeft size={16} /> Back
             </button>
           ) : (
             <button className="btn-wizard-cancel" onClick={onClose}>
-              取消
+              Cancel
             </button>
           )}
 
           {wizardStep < 3 ? (
             <button className="btn-wizard-next" onClick={() => setWizardStep(prev => prev + 1)}>
-              下一步 <ArrowRight size={16} />
+              Next Step <ArrowRight size={16} />
             </button>
           ) : (
             <button
@@ -363,7 +363,7 @@ export default function SmartRouteWizard({
               disabled={isGenerating}
             >
               {isGenerating ? <Zap size={16} className="spin" /> : <Sparkles size={16} />}
-              {isGenerating ? 'AI 正在计算最优路线...' : '⚡ 一键生成智能行程 (Generate Smart Route)'}
+              {isGenerating ? 'Calculating Optimal Route...' : '⚡ Generate Smart Route'}
             </button>
           )}
         </div>

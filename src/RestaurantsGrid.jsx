@@ -269,10 +269,10 @@ export default function RestaurantsGrid({
                           e.stopPropagation()
                           onOpenPostcard(restaurant)
                         }}
-                        title="Check-in & Create Instagram Story Postcard / 打卡明信片"
+                        title="Check-in & Create Story Postcard"
                       >
                         <Camera size={14} />
-                        <span>打卡</span>
+                        <span>Postcard</span>
                       </button>
                     )}
 

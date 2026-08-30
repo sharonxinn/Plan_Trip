@@ -240,10 +240,10 @@ export default function AttractionsGrid({
                           e.stopPropagation()
                           onOpenPostcard(attraction)
                         }}
-                        title="Check-in & Create Instagram Story Postcard / 打卡明信片"
+                        title="Check-in & Create Story Postcard"
                       >
                         <Camera size={14} />
-                        <span>打卡</span>
+                        <span>Postcard</span>
                       </button>
                     )}
 

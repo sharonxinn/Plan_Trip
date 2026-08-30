@@ -323,17 +323,17 @@ export default function StepSetupSync({
               </div>
             </div>
 
-            {/* 群聊自动收藏 & 智能行程生成器 Launch Card */}
+            {/* Link Collector & Smart Route Generator Launch Card */}
             <div className="setup-card link-collector-promo-card">
               <div className="card-header-row">
                 <div className="card-icon-title">
                   <Sparkles className="text-cyan" size={20} />
-                  <h3>群聊自动收藏 & 一键生成行程</h3>
+                  <h3>Group Chat Link Collector & Smart Route</h3>
                 </div>
                 <span className="badge-highlight">{bucketListCount || 5} Spots Collected</span>
               </div>
               <p className="promo-desc-text">
-                丢 Google Maps 链接或粘贴整段 WhatsApp 聊天记录，App 自动提取存入心愿单，一键生成不走回头路的优化行程！
+                Drop Google Maps links or paste entire WhatsApp chat transcripts. The app auto-extracts places into your Bucket List and generates optimized multi-day routes!
               </p>
               <div className="promo-buttons-row">
                 <button
@@ -341,14 +341,14 @@ export default function StepSetupSync({
                   className="btn-promo-collector"
                   onClick={onOpenLinkCollector}
                 >
-                  🔗 打开群聊收藏 (Link Collector)
+                  🔗 Open Link Collector ({bucketListCount || 5} Spots)
                 </button>
                 <button
                   type="button"
                   className="btn-promo-smart-route"
                   onClick={onOpenSmartRouteWizard}
                 >
-                  ⚡ 一键生成智能行程 (Smart Route)
+                  ⚡ Generate Smart Route
                 </button>
               </div>
             </div>

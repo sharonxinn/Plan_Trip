@@ -157,9 +157,9 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
               <Link2 size={20} />
             </div>
             <div>
-              <h2 className="collector-modal-title">群聊自动收藏 · Link Collector</h2>
+              <h2 className="collector-modal-title">Group Chat Link Collector</h2>
               <p className="collector-subtitle">
-                Paste Google Maps links or chat conversations from WhatsApp/WeChat to auto-collect places into {cityName}'s Bucket List.
+                Paste Google Maps links or chat conversations from WhatsApp/messaging apps to auto-collect places into {cityName}'s Bucket List.
               </p>
             </div>
           </div>
