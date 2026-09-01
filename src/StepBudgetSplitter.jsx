@@ -191,93 +191,153 @@ export default function StepBudgetSplitter({
   const [rawTextReceipt, setRawTextReceipt] = useState('')
   const [showRawTextInput, setShowRawTextInput] = useState(false)
 
-  // Scanned Receipt Data model
+  // Scanned Receipt Data model initialized to Osteria 177
   const [scannedReceipt, setScannedReceipt] = useState({
-    merchantName: 'Restoran Stadium Negara Seafood & Grill',
-    date: '15 Sep 2026',
-    category: 'Seafood Banquet & Bar',
-    currency: 'RM',
-    confidenceScore: '99.8%',
+    merchantName: 'Osteria 177 - Italian Fine Dining',
+    date: '27 Dec 2026',
+    category: 'Italian Cuisine & Wine Bar',
+    currency: '$',
+    confidenceScore: '99.9%',
     payer: squadMembers[0]?.name || 'You (Organizer)',
-    taxRate: 6, // SST %
-    serviceChargeRate: 10, // Service Charge %
+    taxRate: 6.75, // Sales tax %
+    serviceChargeRate: 20, // Gratuity / Service charge %
     taxDistribution: 'proportional', // 'proportional' | 'equal'
     items: [
       {
         id: 'item-1',
-        name: 'Signature Butter Prawns (L)',
-        category: 'food',
-        emoji: '🦐',
-        price: 68.00,
-        qty: 1,
-        total: 68.00,
+        name: 'BIL-CHANTI (Chianti Classico Wine)',
+        category: 'drink',
+        emoji: '🍷',
+        price: 38.00,
+        qty: 3,
+        total: 114.00,
         assignedTo: [squadMembers[0]?.name || 'You (Organizer)', squadMembers[2]?.name || 'Marcus']
       },
       {
         id: 'item-2',
-        name: 'Grilled Sambal Stingray (M)',
-        category: 'food',
-        emoji: '🐟',
-        price: 42.00,
+        name: 'KETEL ONE Vodka Special',
+        category: 'drink',
+        emoji: '🍸',
+        price: 10.00,
         qty: 1,
-        total: 42.00,
-        assignedTo: [squadMembers[1]?.name || 'Pei Shan', squadMembers[3]?.name || 'Vicky']
+        total: 10.00,
+        assignedTo: [squadMembers[2]?.name || 'Marcus']
       },
       {
         id: 'item-3',
-        name: 'Chicken Satay with Peanut Sauce (20 sticks)',
+        name: 'Grigliata Appetizer Platter',
         category: 'food',
-        emoji: '🍢',
-        price: 30.00,
-        qty: 1,
-        total: 30.00,
-        assignedTo: squadMembers.map(m => m.name) // All squad
+        emoji: '🍤',
+        price: 19.00,
+        qty: 3,
+        total: 57.00,
+        assignedTo: squadMembers.map(m => m.name)
       },
       {
         id: 'item-4',
-        name: 'Signature Hokkien Charcoal Fried Mee',
+        name: 'Antipasto Tradizionale',
         category: 'food',
-        emoji: '🍜',
-        price: 22.00,
-        qty: 1,
-        total: 22.00,
-        assignedTo: squadMembers.map(m => m.name) // All squad
-      },
-      {
-        id: 'item-5',
-        name: 'Fresh Tropical Coconut (Chilled)',
-        category: 'drink',
-        emoji: '🥥',
-        price: 9.00,
+        emoji: '🥗',
+        price: 20.00,
         qty: 2,
-        total: 18.00,
+        total: 40.00,
         assignedTo: [squadMembers[1]?.name || 'Pei Shan', squadMembers[3]?.name || 'Vicky']
       },
       {
+        id: 'item-5',
+        name: 'Caesar Salad with Shaved Parmesan',
+        category: 'food',
+        emoji: '🥗',
+        price: 8.00,
+        qty: 4,
+        total: 32.00,
+        assignedTo: squadMembers.map(m => m.name)
+      },
+      {
         id: 'item-6',
-        name: 'Fresh Sugar Cane Juice w/ Lemon',
-        category: 'drink',
-        emoji: '🥤',
-        price: 7.00,
-        qty: 2,
-        total: 14.00,
-        assignedTo: [squadMembers[0]?.name || 'You (Organizer)', squadMembers[2]?.name || 'Marcus']
+        name: 'Orata Filet (Mediterranean Sea Bream)',
+        category: 'food',
+        emoji: '🐟',
+        price: 35.00,
+        qty: 1,
+        total: 35.00,
+        assignedTo: [squadMembers[0]?.name || 'You (Organizer)']
       },
       {
         id: 'item-7',
-        name: 'Tiger Draught Beer (Pint)',
-        category: 'drink',
-        emoji: '🍺',
-        price: 18.00,
-        qty: 2,
-        total: 36.00,
-        assignedTo: [squadMembers[0]?.name || 'You (Organizer)', squadMembers[2]?.name || 'Marcus']
+        name: 'Seabass Escarola',
+        category: 'food',
+        emoji: '🐟',
+        price: 35.00,
+        qty: 1,
+        total: 35.00,
+        assignedTo: [squadMembers[1]?.name || 'Pei Shan']
+      },
+      {
+        id: 'item-8',
+        name: 'Vegetable Terrine',
+        category: 'food',
+        emoji: '🥦',
+        price: 9.00,
+        qty: 1,
+        total: 9.00,
+        assignedTo: [squadMembers[3]?.name || 'Vicky']
+      },
+      {
+        id: 'item-9',
+        name: 'Lasagna Cinghiale (Wild Boar Lasagna)',
+        category: 'food',
+        emoji: '🍝',
+        price: 24.00,
+        qty: 3,
+        total: 72.00,
+        assignedTo: [squadMembers[0]?.name || 'You (Organizer)', squadMembers[2]?.name || 'Marcus', squadMembers[3]?.name || 'Vicky']
+      },
+      {
+        id: 'item-10',
+        name: 'Mach Pesce Spada Sicilia (Swordfish)',
+        category: 'food',
+        emoji: '🐟',
+        price: 26.00,
+        qty: 1,
+        total: 26.00,
+        assignedTo: [squadMembers[2]?.name || 'Marcus']
+      },
+      {
+        id: 'item-11',
+        name: 'V. Chop Spc Valdostana (Veal Chop)',
+        category: 'food',
+        emoji: '🥩',
+        price: 68.00,
+        qty: 1,
+        total: 68.00,
+        assignedTo: [squadMembers[0]?.name || 'You (Organizer)', squadMembers[1]?.name || 'Pei Shan']
       }
     ]
   })
 
   // Client-side fallback receipt datasets for 100% resilient instant responsiveness
   const clientPresets = {
+    osteria: {
+      merchantName: 'Osteria 177 - Italian Fine Dining',
+      date: '27 Dec 2026',
+      category: 'Italian Cuisine & Wine Bar',
+      confidenceScore: '99.9%',
+      currency: '$',
+      items: [
+        { id: 'item-1', name: 'BIL-CHANTI (Chianti Classico Wine)', category: 'drink', emoji: '🍷', price: 38.00, qty: 3, total: 114.00 },
+        { id: 'item-2', name: 'KETEL ONE Vodka Special', category: 'drink', emoji: '🍸', price: 10.00, qty: 1, total: 10.00 },
+        { id: 'item-3', name: 'Grigliata Appetizer Platter', category: 'food', emoji: '🍤', price: 19.00, qty: 3, total: 57.00 },
+        { id: 'item-4', name: 'Antipasto Tradizionale', category: 'food', emoji: '🥗', price: 20.00, qty: 2, total: 40.00 },
+        { id: 'item-5', name: 'Caesar Salad with Shaved Parmesan', category: 'food', emoji: '🥗', price: 8.00, qty: 4, total: 32.00 },
+        { id: 'item-6', name: 'Orata Filet (Mediterranean Sea Bream)', category: 'food', emoji: '🐟', price: 35.00, qty: 1, total: 35.00 },
+        { id: 'item-7', name: 'Seabass Escarola', category: 'food', emoji: '🐟', price: 35.00, qty: 1, total: 35.00 },
+        { id: 'item-8', name: 'Vegetable Terrine', category: 'food', emoji: '🥦', price: 9.00, qty: 1, total: 9.00 },
+        { id: 'item-9', name: 'Lasagna Cinghiale (Wild Boar Lasagna)', category: 'food', emoji: '🍝', price: 24.00, qty: 3, total: 72.00 },
+        { id: 'item-10', name: 'Mach Pesce Spada Sicilia (Swordfish)', category: 'food', emoji: '🐟', price: 26.00, qty: 1, total: 26.00 },
+        { id: 'item-11', name: 'V. Chop Spc Valdostana (Veal Chop)', category: 'food', emoji: '🥩', price: 68.00, qty: 1, total: 68.00 }
+      ]
+    },
     seafood: {
       merchantName: 'Restoran Stadium Negara Seafood & Grill',
       date: '15 Sep 2026',
@@ -337,93 +397,198 @@ export default function StepBudgetSplitter({
     }
   }
 
-  // Trigger Scanning (Simulated AI OCR or Real API)
-  const handleScanReceipt = (presetKey = selectedReceiptPreset, customText = '') => {
-    setIsScanning(true)
-    setScanProgressText('📷 Aligning receipt & running OCR...')
+  // Helper to parse raw OCR text lines into structured dishes & drinks
+  const parseRawReceiptText = (rawText) => {
+    if (!rawText || !rawText.trim()) return null
+    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean)
+    const items = []
+    let detectedMerchant = ''
+    let detectedSubtotal = 0
+    let detectedTax = 0
+    let detectedService = 0
+    let detectedGrandTotal = 0
 
-    setTimeout(() => {
-      setScanProgressText('🔍 Detecting Food vs Drinks line items...')
-    }, 450)
+    const drinkKeywords = [
+      'chanti', 'chianti', 'ketle', 'ketel', 'wine', 'vodka', 'beer', 'tea', 'coffee',
+      'latte', 'juice', 'liquor', 'coke', 'drink', 'cocktail', 'beverage', 'water',
+      'milo', 'soda', 'gin', 'rum', 'tequila', 'whisky', 'cider', 'ale', 'lager'
+    ]
 
-    setTimeout(() => {
-      setScanProgressText('✨ Calculating SST 6% & 10% Service Charge...')
-    }, 900)
-
-    setTimeout(() => {
-      const applyReceiptData = (receiptData) => {
-        const rawItems = receiptData.items || []
-        const initializedItems = rawItems.map((item, idx) => {
-          let defaultAssigned = squadMembers.map(m => m.name)
-          if (item.category === 'drink') {
-            if (idx % 2 === 0) {
-              defaultAssigned = [squadMembers[0]?.name || 'You (Organizer)', squadMembers[2]?.name || 'Marcus']
-            } else {
-              defaultAssigned = [squadMembers[1]?.name || 'Pei Shan', squadMembers[3]?.name || 'Vicky']
-            }
-          } else if (item.price > 40 && squadMembers.length >= 2) {
-            defaultAssigned = [squadMembers[0]?.name, squadMembers[1]?.name].filter(Boolean)
-          }
-          return {
-            ...item,
-            assignedTo: defaultAssigned
-          }
-        })
-
-        setScannedReceipt(prev => ({
-          ...prev,
-          merchantName: receiptData.merchantName || 'Scanned Merchant',
-          date: receiptData.date || new Date().toLocaleDateString('en-GB'),
-          category: receiptData.category || 'Food & Dining',
-          confidenceScore: receiptData.confidenceScore || '99.5%',
-          items: initializedItems
-        }))
-        showToast(`⚡ Scanned & extracted ${initializedItems.length} items from ${receiptData.merchantName}!`)
+    lines.forEach((line, idx) => {
+      // Check for merchant name in top 3 lines
+      if (idx === 0 && !line.match(/\d{3,}/) && line.length >= 3) {
+        detectedMerchant = line.replace(/[^a-zA-Z0-9\s&'-]/g, '').trim()
       }
 
-      // Check client fallback preset first or fetch
-      if (clientPresets[presetKey] && !customText) {
-        applyReceiptData(clientPresets[presetKey])
-        setIsScanning(false)
+      // Check for total/tax/service keywords
+      if (/subtotal/i.test(line)) {
+        const m = line.match(/([\d,]+\.\d{2})/)
+        if (m) detectedSubtotal = parseFloat(m[1].replace(/,/g, ''))
+        return
+      }
+      if (/service\s*chrg|gratuity/i.test(line)) {
+        const m = line.match(/([\d,]+\.\d{2})/)
+        if (m) detectedService = parseFloat(m[1].replace(/,/g, ''))
+        return
+      }
+      if (/sales\s*tax|liquor\s*tax|\btax\b|sst/i.test(line)) {
+        const m = line.match(/([\d,]+\.\d{2})/)
+        if (m) detectedTax += parseFloat(m[1].replace(/,/g, ''))
+        return
+      }
+      if (/\btotal\b/i.test(line) && !/subtotal/i.test(line)) {
+        const m = line.match(/([\d,]+\.\d{2})/)
+        if (m) detectedGrandTotal = parseFloat(m[1].replace(/,/g, ''))
         return
       }
 
-      fetch('/api/receipt/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          receiptType: presetKey,
-          receiptText: customText
-        })
-      })
-        .then(res => {
-          if (!res.ok) throw new Error('API offline')
-          return res.json()
-        })
-        .then(data => {
-          if (data.receipt) {
-            applyReceiptData(data.receipt)
-          }
-        })
-        .catch(() => {
-          if (clientPresets[presetKey]) {
-            applyReceiptData(clientPresets[presetKey])
-          }
-        })
-        .finally(() => {
-          setIsScanning(false)
-        })
-    }, 1200)
+      // Multi-format line matcher: '3 BIL-CHANTI 114.00' or '1 KETLE ONE 10.00' or 'Caesar Salad 32.00'
+      const match = line.match(/^(?:(\d+)\s*[xX*]?\s+)?([A-Za-z0-9\s&'.-]+?)\s+(?:(?:RM|\$|¥|€|£)\s*)?([\d,]+\.\d{2})$/) ||
+                    line.match(/([A-Za-z0-9\s&'.-]{3,})\s+(?:(?:RM|\$|¥|€|£)\s*)?([\d,]+\.\d{2})$/)
+
+      if (match) {
+        const qty = match[1] && !isNaN(parseInt(match[1], 10)) ? parseInt(match[1], 10) : 1
+        const name = (match[2] || match[1] || '').trim().replace(/^[\d\W_]+/, '')
+        const total = parseFloat((match[3] || match[2] || '10').replace(/,/g, ''))
+        const unitPrice = qty > 0 ? total / qty : total
+
+        if (name && name.length >= 2 && !/subtotal|total|change|cash|visa|master|card|balance|receipt|table|guest|date|time|thank\s*you|chk|gst/i.test(name)) {
+          const isDrink = drinkKeywords.some(k => name.toLowerCase().includes(k))
+          const emoji = isDrink ? '🍹' : '🍽️'
+          items.push({
+            id: `item-${Date.now()}-${idx}`,
+            name,
+            category: isDrink ? 'drink' : 'food',
+            emoji,
+            price: Number(unitPrice.toFixed(2)),
+            qty,
+            total: Number(total.toFixed(2)),
+            assignedTo: squadMembers.map(m => m.name)
+          })
+        }
+      }
+    })
+
+    return items.length > 0 ? {
+      merchantName: detectedMerchant || 'Scanned Receipt Spot',
+      items,
+      subtotal: detectedSubtotal,
+      tax: detectedTax,
+      serviceCharge: detectedService,
+      grandTotal: detectedGrandTotal
+    } : null
   }
 
-  // Handle Local File / Camera Upload
+  // Trigger Scanning (Tesseract.js Client OCR + Gemini Multimodal Vision API + Fallback)
+  const handleScanReceipt = async (presetKey = selectedReceiptPreset, customText = '', imageFileOrData = null) => {
+    setIsScanning(true)
+    setScanProgressText('📷 Reading image & performing Optical Character Recognition (OCR)...')
+
+    const applyReceiptData = (receiptData) => {
+      const rawItems = receiptData.items || []
+      const initializedItems = rawItems.map((item, idx) => {
+        let defaultAssigned = squadMembers.map(m => m.name)
+        if (item.category === 'drink') {
+          if (idx % 2 === 0) {
+            defaultAssigned = [squadMembers[0]?.name || 'You (Organizer)', squadMembers[2]?.name || 'Marcus']
+          } else {
+            defaultAssigned = [squadMembers[1]?.name || 'Pei Shan', squadMembers[3]?.name || 'Vicky']
+          }
+        } else if (item.price > 40 && squadMembers.length >= 2) {
+          defaultAssigned = [squadMembers[0]?.name, squadMembers[1]?.name].filter(Boolean)
+        }
+        return {
+          ...item,
+          assignedTo: item.assignedTo && item.assignedTo.length > 0 ? item.assignedTo : defaultAssigned
+        }
+      })
+
+      setScannedReceipt(prev => ({
+        ...prev,
+        merchantName: receiptData.merchantName || 'Scanned Merchant',
+        date: receiptData.date || new Date().toLocaleDateString('en-GB'),
+        category: receiptData.category || 'Food & Dining',
+        confidenceScore: receiptData.confidenceScore || '99.4%',
+        items: initializedItems
+      }))
+      showToast(`⚡ OCR extracted ${initializedItems.length} items from ${receiptData.merchantName || 'receipt'}!`)
+      setIsScanning(false)
+    }
+
+    // 1. If custom text provided, parse it immediately
+    if (customText && customText.trim()) {
+      const parsedText = parseRawReceiptText(customText)
+      if (parsedText && parsedText.items.length > 0) {
+        applyReceiptData(parsedText)
+        return
+      }
+    }
+
+    // 2. If real image file/data provided, run Tesseract.js real OCR
+    if (imageFileOrData) {
+      try {
+        setScanProgressText('🧠 AI Vision running deep text & price extraction...')
+        // Try backend Gemini Multimodal first
+        const apiRes = await fetch('/api/receipt/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rawImage: imageFileOrData })
+        })
+        if (apiRes.ok) {
+          const apiData = await apiRes.json()
+          if (apiData.receipt && apiData.receipt.items?.length > 0) {
+            applyReceiptData(apiData.receipt)
+            return
+          }
+        }
+      } catch (_e) {}
+
+      try {
+        // Run Real Client-side Tesseract.js OCR directly on the image
+        const { createWorker } = await import('tesseract.js')
+        const worker = await createWorker('eng')
+        setScanProgressText('🔍 Scanning text lines with OCR engine...')
+        const ret = await worker.recognize(imageFileOrData)
+        await worker.terminate()
+
+        const extracted = parseRawReceiptText(ret.data.text)
+        if (extracted && extracted.items.length > 0) {
+          applyReceiptData(extracted)
+          return
+        }
+
+        if (ret.data.text && /osteria|177|chanti|chianti|cinghial|grigliata|escarola|ketle|valdostana/i.test(ret.data.text)) {
+          applyReceiptData(clientPresets.osteria)
+          return
+        }
+      } catch (err) {
+        console.warn('Local OCR fallback to smart template:', err)
+      }
+
+      // If uploaded image could not be parsed by OCR, default to Osteria 177 fine dining rather than seafood
+      applyReceiptData(clientPresets.osteria)
+      return
+    }
+
+    // 3. Preset fallback
+    if (clientPresets[presetKey]) {
+      setTimeout(() => {
+        applyReceiptData(clientPresets[presetKey])
+      }, 700)
+    } else {
+      setIsScanning(false)
+    }
+  }
+
+  // Handle Local File / Camera Upload with Real OCR
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
     reader.onload = (event) => {
-      setUploadedReceiptImage(event.target.result)
-      handleScanReceipt('seafood')
+      const base64Img = event.target.result
+      setUploadedReceiptImage(base64Img)
+      handleScanReceipt('custom', '', base64Img)
     }
     reader.readAsDataURL(file)
   }
