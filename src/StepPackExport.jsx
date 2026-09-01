@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   Luggage, FileDown, Calendar, Share2, Printer, Check,
-  Sparkles, Camera, ShieldCheck, ArrowLeft, Download, Plus,
-  Trash2, ExternalLink, Sun, CloudRain, CheckCircle2, Copy, Wind, Droplets
+  Sparkles, ShieldCheck, ArrowLeft, Download, Plus,
+  Trash2, Sun, CloudRain, CheckCircle2, Copy, Wind, Droplets
 } from 'lucide-react'
 
 export default function StepPackExport({
@@ -16,7 +16,6 @@ export default function StepPackExport({
   basket = [],
   selectedFlight,
   selectedHotel,
-  onNavigateToPostcard,
   onAddToCalendar,
   onPrevStep
 }) {
@@ -347,16 +346,6 @@ END:VCALENDAR`
                   Source: {liveWeather.source}
                 </div>
               </div>
-            </div>
-
-            {/* Postcard Studio Banner */}
-            <div className="setup-card postcard-promo-card" onClick={onNavigateToPostcard}>
-              <div className="promo-badge">📸 Souvenir Studio</div>
-              <h3>AI Digital Memory Postcards</h3>
-              <p>Turn your favourite trip moments into custom stamps and downloadable aesthetic travel postcards!</p>
-              <button className="open-postcard-btn">
-                <Camera size={16} /> Open Postcard Studio <ExternalLink size={14} />
-              </button>
             </div>
           </div>
         </div>

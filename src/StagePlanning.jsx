@@ -485,7 +485,6 @@ export default function StagePlanning({
             basket={basket}
             selectedFlight={selectedFlight}
             selectedHotel={selectedHotel}
-            onNavigateToPostcard={() => {}}
             onAddToCalendar={onAddToCalendar}
             onPrevStep={() => {
               setCurrentStep('discover')
