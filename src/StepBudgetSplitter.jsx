@@ -223,46 +223,37 @@ export default function StepBudgetSplitter({
   }
 
   return (
-    <div className="step-budget-container fade-in">
-      {/* Hero Header */}
-      <div className="step-hero-card">
-        <div className="step-badge-row">
-          <span className="step-pill-number">Step 2 of 6</span>
-          <span className="step-pill-tag">💰 Smart Budgeting & Group Splitter</span>
-          <span className="step-mode-pill budget">
-            {curr.symbol} {Math.round(budgetAmount * curr.rate).toLocaleString()} Total ({curr.symbol} {Math.round(perPersonPlanned * curr.rate).toLocaleString()}/pax)
-          </span>
+    <div className="container step-budget-clean-container fade-in">
+      {/* SECTION TITLE & CONTROLS */}
+      <div className="setup-clean-heading-row">
+        <div>
+          <h1 className="step-clean-title">Trip Budget & Expense Splitter</h1>
+          <p className="step-clean-subtitle">
+            Plan your total budget with healthy category targets and 1-click debt settlement.
+          </p>
         </div>
-
-        <h1 className="step-main-title">
-          Smart Budgeting with Zero Financial Stress
-        </h1>
-        <p className="step-subtitle">
-          Allocate your trip funds across stays, dining, and activities with an automated 5% emergency buffer. Split group expenses with 1-click debt settlement so no one has awkward money talks.
-        </p>
 
         {/* Currency & Sub Tabs */}
         <div className="budget-top-controls-row">
-          <div className="sub-tab-group">
+          <div className="clean-tab-switch">
             <button
-              className={`sub-tab-btn ${activeTab === 'allocator' ? 'active' : ''}`}
+              className={`clean-tab-btn ${activeTab === 'allocator' ? 'active' : ''}`}
               onClick={() => setActiveTab('allocator')}
             >
-              <PieChart size={16} />
-              1. Budget Allocator & Targets
+              <PieChart size={15} />
+              <span>1. Allocator</span>
             </button>
             <button
-              className={`sub-tab-btn ${activeTab === 'splitter' ? 'active' : ''}`}
+              className={`clean-tab-btn ${activeTab === 'splitter' ? 'active' : ''}`}
               onClick={() => setActiveTab('splitter')}
             >
-              <Receipt size={16} />
-              2. Group Bill Splitter ({expenses.length} Logged)
+              <Receipt size={15} />
+              <span>2. Group Bill Splitter</span>
             </button>
           </div>
 
           <div className="currency-selector-box">
-            <Coins size={16} className="text-cyan" />
-            <span className="curr-label">Currency:</span>
+            <Coins size={15} className="text-cyan" />
             <select
               value={currency}
               onChange={e => setCurrency(e.target.value)}
@@ -270,7 +261,7 @@ export default function StepBudgetSplitter({
             >
               {Object.keys(currencySymbols).map(k => (
                 <option key={k} value={k}>
-                  {currencySymbols[k].symbol} ({k}) - {currencySymbols[k].name}
+                  {currencySymbols[k].symbol} ({k})
                 </option>
               ))}
             </select>

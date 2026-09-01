@@ -172,16 +172,6 @@ export default function RestaurantsGrid({
         </div>
       </div>
 
-      {/* ACTIVE SMART FILTER BANNER */}
-      <div className="tailored-active-banner dining">
-        <div className="tailored-banner-info">
-          <Utensils size={16} className="sparkle-gold" />
-          <span>
-            Showing <strong>{filteredAndSorted.length} eateries</strong>. Top <strong>{maxTripMeals} dining spots</strong> are matched for your <strong>{durationDays}-Day itinerary (Lunch & Dinner)</strong>.
-          </span>
-        </div>
-      </div>
-
       {/* Price Tier Filter Pills */}
       <div className="category-pills">
         {priceTiers.map(tier => (
@@ -197,16 +187,13 @@ export default function RestaurantsGrid({
 
       {/* Restaurant Cards Grid */}
       <div className="cards-grid">
-        {filteredAndSorted.map((restaurant, idx) => {
+        {filteredAndSorted.map((restaurant) => {
           const inBasket = isInBasket(restaurant.id)
-          const isTopDayPick = idx < maxTripMeals
-          const assignedDay = Math.floor(idx / 2) + 1
-          const mealType = idx % 2 === 0 ? 'Lunch' : 'Dinner'
 
           return (
             <article
               key={restaurant.id}
-              className={`place-card ${inBasket ? 'selected' : ''} ${isTopDayPick ? 'top-day-pick' : ''}`}
+              className={`place-card ${inBasket ? 'selected' : ''}`}
               onClick={() => setActiveModalItem(restaurant)}
             >
               <div
@@ -214,51 +201,34 @@ export default function RestaurantsGrid({
                 style={{ backgroundImage: `url(${restaurant.image})` }}
               >
                 <div className="image-overlay" />
-
-                {/* DAY BADGE */}
-                {isTopDayPick && (
-                  <span className="day-schedule-badge dining">
-                    <Calendar size={11} /> Ideal Day {assignedDay} {mealType}
-                  </span>
-                )}
-
                 <div className="dining-tags">
                   <span className="price-tier-pill">{restaurant.priceTier}</span>
-                  <span className="meal-type-pill">{restaurant.mealType || mealType}</span>
+                  <span className="meal-type-pill">{restaurant.cuisine?.split('&')[0]?.trim()}</span>
                 </div>
                 <div className="google-review-badge">
-                  <Star size={14} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
+                  <Star size={13} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
                   <strong>{typeof restaurant.rating === 'number' ? restaurant.rating.toFixed(1) : String(restaurant.rating || '4.8').replace('★', '').trim()}</strong>
-                  <span>({(restaurant.reviewsCount || 8500).toLocaleString()} Google reviews)</span>
                 </div>
               </div>
 
               <div className="place-body">
-                {/* SMART MATCH REASON TAG */}
-                <div className="smart-match-tag dining">
-                  <ThumbsUp size={12} />
-                  <span>{restaurant.partyMatchReason}</span>
-                </div>
-
-                <div className="cuisine-subtitle">{restaurant.cuisine}</div>
                 <h3 className="place-name">{restaurant.name}</h3>
                 <p className="place-desc">{restaurant.description}</p>
 
                 <div className="place-meta">
                   <div className="meta-item">
-                    <DollarSign size={14} />
+                    <DollarSign size={13} />
                     <span>{restaurant.priceRange}</span>
                   </div>
                   <div className="meta-item">
-                    <MapPin size={14} />
+                    <MapPin size={13} />
                     <span className="truncate">{restaurant.address}</span>
                   </div>
                 </div>
 
                 <div className="place-footer">
                   <div className="price-tag">
-                    <small>Price Tier</small>
-                    <strong>{restaurant.priceTier} · {restaurant.cuisine.split('&')[0]}</strong>
+                    <strong>{restaurant.priceTier} · {restaurant.cuisine?.split('&')[0]}</strong>
                   </div>
 
                   <div className="place-card-actions">
@@ -272,40 +242,32 @@ export default function RestaurantsGrid({
                         title="Check-in & Create Story Postcard"
                       >
                         <Camera size={14} />
-                        <span>Postcard</span>
                       </button>
                     )}
 
                     <button
-                      className="btn-view-details"
-                      onClick={e => {
-                        e.stopPropagation()
-                        setActiveModalItem(restaurant)
-                      }}
-                      title="View Details"
-                    >
-                      <Info size={15} />
-                      <span>Details</span>
-                    </button>
-
-                    <button
-                      className={`basket-action-btn ${inBasket ? 'in-basket' : ''}`}
+                      className={`btn-add-basket ${inBasket ? 'added' : ''}`}
                       onClick={e => {
                         e.stopPropagation()
                         if (inBasket) {
                           onRemoveFromBasket(restaurant.id)
                         } else {
-                          onAddToBasket({ ...restaurant, type: 'restaurant' })
+                          onAddToBasket({
+                            ...restaurant,
+                            type: 'restaurant'
+                          })
                         }
                       }}
                     >
                       {inBasket ? (
                         <>
-                          <Check size={15} /> In Basket
+                          <Check size={14} />
+                          <span>Added</span>
                         </>
                       ) : (
                         <>
-                          <Plus size={15} /> Add
+                          <Plus size={14} />
+                          <span>Add to Trip</span>
                         </>
                       )}
                     </button>

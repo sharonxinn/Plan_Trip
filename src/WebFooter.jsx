@@ -46,14 +46,12 @@ export default function WebFooter({ onSelectPage, onSelectCity, countriesData = 
 
           {/* QUICK LINKS COLS */}
           <div className="footer-links-col">
-            <h4>Plan Trip Flow</h4>
+            <h4>Trip Stages</h4>
             <ul>
-              <li><button onClick={() => onSelectPage('setup')}>1. Destination & Setup</button></li>
-              <li><button onClick={() => onSelectPage('budget')}>2. Budget & Splitter</button></li>
-              <li><button onClick={() => onSelectPage('explore')}>3. Smart Route & Discover</button></li>
-              <li><button onClick={() => onSelectPage('planb')}>4. ⚡ Plan B Contingency</button></li>
-              <li><button onClick={() => onSelectPage('group')}>5. Squad Chat Room</button></li>
-              <li><button onClick={() => onSelectPage('pack')}>6. Packing & Final Export</button></li>
+              <li><button onClick={() => onSelectPage('dashboard')}>🏠 Origin Dashboard</button></li>
+              <li><button onClick={() => onSelectPage('planning')}>1. Planning (Setup, Budget, Discover, Pack)</button></li>
+              <li><button onClick={() => onSelectPage('travelling')}>2. Travelling (Expense Splitter, Plan B)</button></li>
+              <li><button onClick={() => onSelectPage('memory')}>3. Memory (AI Postcard, Budget Summary)</button></li>
             </ul>
           </div>
 
@@ -65,7 +63,7 @@ export default function WebFooter({ onSelectPage, onSelectCity, countriesData = 
                   <button
                     onClick={() => {
                       if (onSelectCity) onSelectCity(c.city)
-                      onSelectPage('explore')
+                      onSelectPage('planning')
                     }}
                   >
                     {c.city} <small className="dest-tag-small">({c.tag})</small>
@@ -78,10 +76,10 @@ export default function WebFooter({ onSelectPage, onSelectCity, countriesData = 
           <div className="footer-links-col">
             <h4>Smart Tools</h4>
             <ul>
-              <li><button onClick={() => onSelectPage('compare')}>Compare Flights & Hotels</button></li>
-              <li><button onClick={() => onSelectPage('ai')}>AI Travel Agent Document</button></li>
-              <li><button onClick={() => onSelectPage('postcard')}>E-Postcard Check-in Studio</button></li>
-              <li><button onClick={() => onSelectPage('explore')}>Google Maps Radar Places</button></li>
+              <li><button onClick={() => onSelectPage('planning')}>Smart Route & Discover Hub</button></li>
+              <li><button onClick={() => onSelectPage('travelling')}>⚡ Plan B Contingency Studio</button></li>
+              <li><button onClick={() => onSelectPage('memory')}>E-Postcard Check-in Studio</button></li>
+              <li><button onClick={() => onSelectPage('memory')}>Budget vs Actual Variance</button></li>
             </ul>
           </div>
         </div>

@@ -17,6 +17,7 @@ export default function StepPackExport({
   selectedFlight,
   selectedHotel,
   onNavigateToPostcard,
+  onAddToCalendar,
   onPrevStep
 }) {
   const cityName = destination?.city || 'Kuala Lumpur'
@@ -25,6 +26,7 @@ export default function StepPackExport({
   const [activeTab, setActiveTab] = useState('pack') // 'pack' | 'export' | 'runsheet'
   const [copiedWhatsApp, setCopiedWhatsApp] = useState(false)
   const [downloadingDoc, setDownloadingDoc] = useState(false)
+  const [calendarSynced, setCalendarSynced] = useState(false)
   const [newItemText, setNewItemText] = useState('')
 
   // Live real-time weather state
@@ -195,7 +197,7 @@ _Generated with PlanTrip AI - Zero Stress Group Travel!_`
     setTimeout(() => setCopiedWhatsApp(false), 2500)
   }
 
-  // 1-Click Export .ics Calendar
+  // 1-Click Export .ics Calendar & Start Countdown
   const handleExportICS = () => {
     const icsData = `BEGIN:VCALENDAR
 VERSION:2.0
@@ -219,47 +221,46 @@ END:VCALENDAR`
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
+
+    setCalendarSynced(true)
+    if (onAddToCalendar) {
+      onAddToCalendar()
+    }
   }
 
   return (
-    <div className="step-pack-export-container fade-in">
-      {/* Hero Header */}
-      <div className="step-hero-card">
-        <div className="step-badge-row">
-          <span className="step-pill-number">Step 6 of 6</span>
-          <span className="step-pill-tag">🧳 Trip Companion & Export Studio</span>
-          <span className="step-mode-pill pack">{packPercent}% Packed & Trip Ready</span>
+    <div className="container step-pack-clean-container fade-in">
+      {/* SECTION TITLE & CONTROLS */}
+      <div className="setup-clean-heading-row">
+        <div>
+          <h1 className="step-clean-title">Packing Checklist & Export</h1>
+          <p className="step-clean-subtitle">
+            Prepare for takeoff with weather-aware packing, offline run-sheets, and 1-click itinerary export.
+          </p>
         </div>
 
-        <h1 className="step-main-title">
-          Ready for Takeoff with Zero Stress
-        </h1>
-        <p className="step-subtitle">
-          Complete your dynamic weather-aware packing list, export your polished itinerary to Word or Calendar, share the squad summary to WhatsApp, or create digital souvenir postcards!
-        </p>
-
         {/* Sub Tabs */}
-        <div className="sub-tab-group">
+        <div className="clean-tab-switch">
           <button
-            className={`sub-tab-btn ${activeTab === 'pack' ? 'active' : ''}`}
+            className={`clean-tab-btn ${activeTab === 'pack' ? 'active' : ''}`}
             onClick={() => setActiveTab('pack')}
           >
-            <Luggage size={16} />
-            1. Weather Packing Checklist ({packedItems}/{totalItems})
+            <Luggage size={15} />
+            <span>1. Packing ({packedItems}/{totalItems})</span>
           </button>
           <button
-            className={`sub-tab-btn ${activeTab === 'export' ? 'active' : ''}`}
+            className={`clean-tab-btn ${activeTab === 'export' ? 'active' : ''}`}
             onClick={() => setActiveTab('export')}
           >
-            <FileDown size={16} />
-            2. Multi-Format Export & Sharing
+            <FileDown size={15} />
+            <span>2. Export & Share</span>
           </button>
           <button
-            className={`sub-tab-btn ${activeTab === 'runsheet' ? 'active' : ''}`}
+            className={`clean-tab-btn ${activeTab === 'runsheet' ? 'active' : ''}`}
             onClick={() => setActiveTab('runsheet')}
           >
-            <Calendar size={16} />
-            3. Offline Day Run-Sheet
+            <Calendar size={15} />
+            <span>3. Run-Sheet</span>
           </button>
         </div>
       </div>
@@ -394,10 +395,11 @@ END:VCALENDAR`
             <div className="tile-icon-wrap emerald">
               <Calendar size={28} />
             </div>
-            <h3>Apple & Google Calendar</h3>
-            <p>Downloadable .ics calendar file to automatically add trip dates and time alerts to your calendar.</p>
-            <button className="export-action-btn" onClick={handleExportICS}>
-              <Calendar size={16} /> Download Calendar (.ics)
+            <h3>Add to Calendar & Start Countdown</h3>
+            <p>Downloadable .ics calendar file to add trip dates & time alerts to your calendar and activate live dashboard countdown.</p>
+            <button className={`export-action-btn ${calendarSynced ? 'synced' : ''}`} onClick={handleExportICS}>
+              {calendarSynced ? <Check size={16} className="text-emerald" /> : <Calendar size={16} />}
+              <span>{calendarSynced ? 'Added to Calendar · Countdown Live!' : 'Add to Calendar (.ics)'}</span>
             </button>
           </div>
 
@@ -472,13 +474,13 @@ END:VCALENDAR`
       {/* Bottom Step Actions */}
       <div className="step-bottom-bar">
         <button className="step-back-btn" onClick={onPrevStep}>
-          <ArrowLeft size={18} /> Back to Step 5: Group Room
+          <ArrowLeft size={18} /> Back to Step 3: Discover Hub
         </button>
         <div className="step-summary-text">
           Trip Status: <strong>{cityName} Trip 100% Complete & Exported</strong>
         </div>
-        <button className="step-next-primary-btn" onClick={onNavigateToPostcard}>
-          <Camera size={18} /> Create Souvenir Postcard
+        <button className="step-next-primary-btn" onClick={handleExportICS}>
+          <Calendar size={18} /> Add to Calendar & Start Countdown
         </button>
       </div>
     </div>

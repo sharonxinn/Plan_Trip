@@ -22,16 +22,22 @@ import WebFooter from './WebFooter'
 import StepSetupSync from './StepSetupSync'
 import StepBudgetSplitter from './StepBudgetSplitter'
 import StepPlanBStudio from './StepPlanBStudio'
-import StepGroupRoom from './StepGroupRoom'
 import StepPackExport from './StepPackExport'
+import OriginDashboard from './OriginDashboard'
+import StagePlanning from './StagePlanning'
+import StageTravelling from './StageTravelling'
+import StageMemory from './StageMemory'
 import { countriesData, popularDestinations } from './data/destinationsData'
 import { generateSmartItinerary } from './utils/routeOptimizer'
 import './styles.css'
 
 function App() {
-  // Navigation Flow: 'setup' (1) | 'budget' (2) | 'explore' (3) | 'planb' (4) | 'group' (5) | 'pack' (6)
+  // Navigation Flow: 'dashboard' (1st page) | 'planning' | 'travelling' | 'memory'
   // Deep-dive Views: 'compare' | 'ai' | 'postcard'
-  const [currentPage, setCurrentPage] = useState('setup')
+  const [currentPage, setCurrentPage] = useState('dashboard')
+  const [planningStep, setPlanningStep] = useState('setup')
+  const [planningDiscoverView, setPlanningDiscoverView] = useState('hub')
+  const [isCalendarAdded, setIsCalendarAdded] = useState(false)
   const [postcardInitialSpot, setPostcardInitialSpot] = useState(null)
   const [planBToast, setPlanBToast] = useState(null)
 
@@ -443,6 +449,7 @@ function App() {
 
   // Stepper Sequence Navigation
   const stepsOrder = ['setup', 'budget', 'explore', 'planb', 'group', 'pack']
+  const [exploreSubView, setExploreSubView] = useState('places') // 'places' | 'itinerary' | 'compare'
 
   const handleNextStep = () => {
     const currentIndex = stepsOrder.indexOf(currentPage)
@@ -463,125 +470,71 @@ function App() {
   return (
     <div className="app-root-wrapper">
       <div className="app-layout">
-        {/* TOP HEADER & GLOBAL 6-STEP NAVIGATION */}
+        {/* TOP HEADER & 3-STAGE NAVIGATION */}
         <header className="global-header app-native-header">
           <div className="header-container">
-            <div className="brand-group" onClick={() => setCurrentPage('setup')}>
-              <div className="brand-logo-icon" style={{ width: 38, height: 38, flexShrink: 0 }}>
+            {/* BRAND */}
+            <div className="brand-group" onClick={() => { setCurrentPage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+              <div className="brand-logo-icon">
                 <Map size={18} />
               </div>
               <div className="brand-text">
-                <div className="brand-title-row">
-                  <span className="brand-name">PlanTrip</span>
-                  <span className="app-pill-badge">PRO</span>
-                </div>
-                <span className="brand-tagline">Zero-Stress Travel AI</span>
+                <span className="brand-name">PlanTrip</span>
               </div>
             </div>
 
-            {/* QUICK DESTINATION & DATES PILL */}
-            <div className="header-dest-pill" onClick={() => setCurrentPage('setup')}>
-              <MapPin size={13} className="text-cyan" />
-              <span className="pill-dest-city">{selectedCity.city}</span>
-              <span className="pill-dot">·</span>
-              <span className="pill-dest-dur">{durationDays}D</span>
-              <span className="pill-dot">·</span>
-              <span className="pill-dest-party">{travellers} Pax</span>
-            </div>
-
-            {/* PROGRESSIVE 6-STEP NAVIGATION (DESKTOP & TABLET) */}
+            {/* 3-STAGE & DASHBOARD NAVIGATION */}
             <nav className="stepper-nav desktop-only">
               <button
-                className={`step-link ${currentPage === 'setup' ? 'active' : ''}`}
-                onClick={() => setCurrentPage('setup')}
+                className={`step-link ${currentPage === 'dashboard' ? 'active' : ''}`}
+                onClick={() => { setCurrentPage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+              >
+                <span>🏠 Dashboard</span>
+              </button>
+              <button
+                className={`step-link ${currentPage === 'planning' ? 'active' : ''}`}
+                onClick={() => { setCurrentPage('planning'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
               >
                 <span className="step-num">1</span>
-                <span className="step-label">1. Setup</span>
+                <span className="step-label">Planning</span>
               </button>
-
-              <div className="step-arrow"><ChevronRight size={13} /></div>
-
               <button
-                className={`step-link ${currentPage === 'budget' ? 'active' : ''}`}
-                onClick={() => setCurrentPage('budget')}
+                className={`step-link ${currentPage === 'travelling' ? 'active' : ''}`}
+                onClick={() => { setCurrentPage('travelling'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
               >
                 <span className="step-num">2</span>
-                <span className="step-label">2. Budget</span>
+                <span className="step-label">Travelling</span>
               </button>
-
-              <div className="step-arrow"><ChevronRight size={13} /></div>
-
               <button
-                className={`step-link ${currentPage === 'explore' ? 'active' : ''}`}
-                onClick={() => setCurrentPage('explore')}
+                className={`step-link ${currentPage === 'memory' ? 'active' : ''}`}
+                onClick={() => { setCurrentPage('memory'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
               >
                 <span className="step-num">3</span>
-                <span className="step-label">3. Discover</span>
-              </button>
-
-              <div className="step-arrow"><ChevronRight size={13} /></div>
-
-              <button
-                className={`step-link ${currentPage === 'planb' ? 'active' : ''}`}
-                onClick={() => setCurrentPage('planb')}
-              >
-                <span className="step-num highlight">4</span>
-                <span className="step-label highlight">4. ⚡ Plan B</span>
-              </button>
-
-              <div className="step-arrow"><ChevronRight size={13} /></div>
-
-              <button
-                className={`step-link ${currentPage === 'group' ? 'active' : ''}`}
-                onClick={() => setCurrentPage('group')}
-              >
-                <span className="step-num">5</span>
-                <span className="step-label">5. Squad</span>
-              </button>
-
-              <div className="step-arrow"><ChevronRight size={13} /></div>
-
-              <button
-                className={`step-link ${currentPage === 'pack' ? 'active' : ''}`}
-                onClick={() => setCurrentPage('pack')}
-              >
-                <span className="step-num">6</span>
-                <span className="step-label">6. Export</span>
+                <span className="step-label">Memory</span>
               </button>
             </nav>
 
             {/* HEADER RIGHT ACTIONS */}
             <div className="header-actions">
-              {/* LINK COLLECTOR / GROUP CHAT DROP BUTTON */}
+              {/* CURRENT DESTINATION PILL */}
               <button
-                className="btn-link-collector-header"
-                onClick={() => setLinkCollectorOpen(true)}
-                title="Drop Google Maps Links & Chat Wishes"
+                className="header-dest-pill"
+                onClick={() => { setCurrentPage('planning'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                title="Change Destination & Dates"
               >
-                <Link2 size={15} />
-                <span className="desktop-only">Link Collector</span>
-                <span className="collector-badge">{bucketList.length}</span>
+                <MapPin size={13} className="text-cyan" />
+                <span className="pill-dest-city">{selectedCity.city}</span>
+                <span className="pill-dest-dur">{durationDays}D</span>
               </button>
 
-              {/* 1-CLICK GENERATE SMART ROUTE BUTTON */}
+              {/* 1-CLICK SMART ROUTE BUTTON */}
               <button
                 className="btn-smart-route-header"
                 onClick={() => setSmartRouteWizardOpen(true)}
-                title="1-Click Generate Smart Route"
+                title="Generate Optimized Multi-Day Route"
               >
-                <Zap size={15} />
-                <span>⚡ Smart Route</span>
-              </button>
-
-              {/* GROUP SQUAD BUTTON */}
-              <button
-                className="btn-group-chat-header"
-                onClick={() => setGroupChatOpen(true)}
-                title="Squad Chat & Live Wishes"
-              >
-                <MessageCircle size={16} />
-                <span className="desktop-only">Squad</span>
-                <span className="chat-wishes-badge">{members.length}</span>
+                <Zap size={14} />
+                <span className="desktop-only">Smart Route</span>
               </button>
 
               {/* BASKET DRAWER BUTTON */}
@@ -590,7 +543,7 @@ function App() {
                 onClick={() => setBasketDrawerOpen(true)}
                 title="View Trip Basket"
               >
-                <ShoppingBag size={16} />
+                <ShoppingBag size={14} />
                 <span className="desktop-only">Basket</span>
                 {totalBasketCount > 0 && (
                   <span className="basket-counter-badge">{totalBasketCount}</span>
@@ -603,7 +556,7 @@ function App() {
         {/* TOAST FEEDBACK NOTIFICATION */}
         {planBToast && (
           <div className="planb-toast-banner fade-in">
-            <Zap size={18} className="text-amber" />
+            <Zap size={16} className="text-amber" />
             <span>{planBToast}</span>
             <button className="toast-close-btn" onClick={() => setPlanBToast(null)}>
               <X size={14} />
@@ -611,9 +564,33 @@ function App() {
           </div>
         )}
 
-        {/* STEP 1: TRIP SETUP & GROUP PREFERENCE SYNC */}
-        {currentPage === 'setup' && (
-          <StepSetupSync
+        {/* 1. 🏠 ORIGIN DASHBOARD (ONLY PAGE ON 1ST LOAD) */}
+        {currentPage === 'dashboard' && (
+          <OriginDashboard
+            selectedCity={selectedCity}
+            selectedCountry={selectedCountry}
+            departureDate={departureDate}
+            returnDate={returnDate}
+            travellers={travellers}
+            travelParty={travelParty}
+            budgetAmount={budgetAmount}
+            basket={basket}
+            isCalendarAdded={isCalendarAdded}
+            onNavigateStage={(st) => {
+              setCurrentPage(st)
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            onOpenDateEditor={() => {
+              setCurrentPage('planning')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            onOpenSmartWizard={() => setSmartRouteWizardOpen(true)}
+          />
+        )}
+
+        {/* 2. 📋 PLANNING STAGE (SETUP, OVERALL BUDGET, DISCOVER 3-CARDS, PACK) */}
+        {currentPage === 'planning' && (
+          <StagePlanning
             selectedCountry={selectedCountry}
             selectedCity={selectedCity}
             onSelectCountry={handleSelectCountry}
@@ -630,218 +607,80 @@ function App() {
             setTravellers={setTravellers}
             budgetTier={budgetTier}
             setBudgetTier={setBudgetTier}
+            budgetAmount={budgetAmount}
+            setBudgetAmount={setBudgetAmount}
             travelPace={travelPace}
             setTravelPace={setTravelPace}
             groupPreferences={groupPreferences}
             setGroupPreferences={setGroupPreferences}
             members={members}
             setMembers={setMembers}
-            bucketListCount={bucketList.length}
-            onOpenLinkCollector={() => setLinkCollectorOpen(true)}
-            onOpenSmartRouteWizard={() => setSmartRouteWizardOpen(true)}
-            onNextStep={handleNextStep}
-          />
-        )}
-
-        {/* STEP 2: SMART BUDGETING & EXPENSE SPLITTER */}
-        {currentPage === 'budget' && (
-          <StepBudgetSplitter
-            budgetAmount={budgetAmount}
-            setBudgetAmount={setBudgetAmount}
-            budgetTier={budgetTier}
-            setBudgetTier={setBudgetTier}
-            travellers={travellers}
-            durationDays={durationDays}
-            members={members}
             basket={basket}
+            addToBasket={addToBasket}
+            removeFromBasket={removeFromBasket}
             selectedFlight={selectedFlight}
             selectedHotel={selectedHotel}
-            onNextStep={handleNextStep}
-            onPrevStep={handlePrevStep}
+            setSelectedFlight={setSelectedFlight}
+            setSelectedHotel={setSelectedHotel}
+            originAirport={originAirport}
+            smartItinerary={smartItinerary}
+            planningStep={planningStep}
+            setPlanningStep={setPlanningStep}
+            discoverCardView={planningDiscoverView}
+            setDiscoverCardView={setPlanningDiscoverView}
+            onOpenLinkCollector={() => setLinkCollectorOpen(true)}
+            onOpenSmartWizard={() => setSmartRouteWizardOpen(true)}
+            onAddToCalendar={() => {
+              setIsCalendarAdded(true)
+              setPlanBToast('📅 Added to Calendar! Countdown is live on your Dashboard.')
+              setTimeout(() => setPlanBToast(null), 5000)
+            }}
+            onBackToDashboard={() => {
+              setCurrentPage('dashboard')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
           />
         )}
 
-        {/* STEP 3: DISCOVER PLACES & LIVE ITINERARY BUILDER */}
-        {currentPage === 'explore' && (
-          <main className="explore-page fade-in">
-            {/* STEP 3 HERO BANNER */}
-            <div className="step-hero-card">
-              <div className="step-badge-row">
-                <span className="step-pill-number">Step 3 of 6</span>
-                <span className="step-pill-tag">🗺️ Smart Route & Discover</span>
-                <span className="step-mode-pill">{selectedCity.city}, {selectedCountry.country}</span>
-              </div>
-
-              <div className="explore-hero-actions-row">
-                <div>
-                  <h1 className="step-main-title">
-                    {selectedCity.city} Smart Route Generator
-                  </h1>
-                  <p className="step-subtitle">
-                    Auto-collect Google Maps links from group chat and generate optimal, non-backtracking multi-day timelines and turn-by-turn navigation.
-                  </p>
-                </div>
-
-                <div className="hero-quick-actions">
-                  <button className="auto-plan-magic-btn" onClick={() => setSmartRouteWizardOpen(true)}>
-                    <Zap size={17} />
-                    <span>⚡ Generate Smart Route</span>
-                  </button>
-                  <button className="compare-fares-quick-btn" onClick={() => setLinkCollectorOpen(true)}>
-                    <Link2 size={17} />
-                    <span>🔗 Link Collector ({bucketList.length} Spots)</span>
-                  </button>
-                  <button className="compare-fares-quick-btn" onClick={() => setCurrentPage('compare')}>
-                    <Scale size={17} />
-                    <span>Compare Flights & Hotels</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* SMART ROUTE TIMELINE VIEW (GENERATED MULTI-DAY SCHEDULE) */}
-            {smartItinerary && (
-              <section className="container smart-timeline-section">
-                <SmartRouteTimeline
-                  smartItinerary={smartItinerary}
-                  destination={selectedCity}
-                  onReopenWizard={() => setSmartRouteWizardOpen(true)}
-                  onAddToBasket={addToBasket}
-                />
-              </section>
-            )}
-
-            {/* SEARCH & REGION BAR */}
-            <section className="explore-search-section">
-              <div className="container">
-                <div className="search-filter-card">
-                  <div className="search-input-group">
-                    <Search size={18} className="search-icon" />
-                    <input
-                      type="text"
-                      className="search-input"
-                      placeholder={`Search attractions, foods, or districts in ${selectedCity.city}...`}
-                      value={placeSearchQuery}
-                      onChange={e => setPlaceSearchQuery(e.target.value)}
-                    />
-                    {placeSearchQuery && (
-                      <button className="clear-search-btn" onClick={() => setPlaceSearchQuery('')}>
-                        <X size={15} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* REAL MAP VIEW */}
-            <section className="container map-section-wrapper">
-              <RealMapView
-                destination={selectedCity}
-                selectedCity={selectedCity}
-                attractions={attractions.length > 0 ? attractions : selectedCity.attractions}
-                restaurants={restaurants.length > 0 ? restaurants : selectedCity.restaurants}
-                places={[...attractions, ...restaurants]}
-                basket={basket}
-                onAddToBasket={addToBasket}
-                onRemoveFromBasket={removeFromBasket}
-              />
-            </section>
-
-            {/* ATTRACTIONS GRID */}
-            <section className="container places-container">
-              <AttractionsGrid
-                city={selectedCity}
-                attractions={attractions}
-                basket={basket}
-                travelParty={travelParty}
-                budgetTier={budgetTier}
-                durationDays={durationDays}
-                travellers={travellers}
-                onAddToBasket={addToBasket}
-                onRemoveFromBasket={removeFromBasket}
-                onOpenPostcard={handleOpenPostcardWithSpot}
-              />
-            </section>
-
-            {/* RESTAURANTS GRID */}
-            <section className="container places-container">
-              <RestaurantsGrid
-                city={selectedCity}
-                restaurants={restaurants}
-                basket={basket}
-                travelParty={travelParty}
-                budgetTier={budgetTier}
-                durationDays={durationDays}
-                travellers={travellers}
-                onAddToBasket={addToBasket}
-                onRemoveFromBasket={removeFromBasket}
-                onOpenPostcard={handleOpenPostcardWithSpot}
-              />
-            </section>
-
-            {/* STEP 3 BOTTOM ACTIONS BAR */}
-            <div className="step-bottom-bar">
-              <button className="step-back-btn" onClick={handlePrevStep}>
-                <ArrowLeft size={18} /> Back to Step 2: Budget
-              </button>
-              <div className="step-summary-text">
-                Basket: <strong>{totalBasketCount} Items Selected</strong> · Est. RM {estimatedTotalCost.toLocaleString()}
-              </div>
-              <button className="step-next-primary-btn" onClick={handleNextStep}>
-                Proceed to Step 4: ⚡ Plan B Studio <ArrowRight size={18} />
-              </button>
-            </div>
-          </main>
-        )}
-
-        {/* STEP 4: ⚡ PLAN B & CONTINGENCY STUDIO */}
-        {currentPage === 'planb' && (
-          <StepPlanBStudio
-            destination={selectedCity}
-            travellers={travellers}
-            travelParty={travelParty}
+        {/* 3. 🚗 TRAVELLING STAGE (EXPENSE SPLITTER & PLAN B) */}
+        {currentPage === 'travelling' && (
+          <StageTravelling
+            selectedCity={selectedCity}
+            selectedCountry={selectedCountry}
             departureDate={departureDate}
             returnDate={returnDate}
             durationDays={durationDays}
+            travellers={travellers}
+            travelParty={travelParty}
             budgetAmount={budgetAmount}
+            budgetTier={budgetTier}
             basket={basket}
             onApplyPlanB={handleApplyPlanB}
-            onNextStep={handleNextStep}
-            onPrevStep={handlePrevStep}
+            onBackToDashboard={() => {
+              setCurrentPage('dashboard')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
           />
         )}
 
-        {/* STEP 5: GROUP COLLABORATION ROOM */}
-        {currentPage === 'group' && (
-          <StepGroupRoom
-            destination={selectedCity}
-            travellers={travellers}
-            travelParty={travelParty}
-            members={members}
-            setMembers={setMembers}
-            basket={basket}
-            onAddToBasket={addToBasket}
-            onNextStep={handleNextStep}
-            onPrevStep={handlePrevStep}
-          />
-        )}
-
-        {/* STEP 6: PACK, EXPORT & POSTCARDS */}
-        {currentPage === 'pack' && (
-          <StepPackExport
-            destination={selectedCity}
-            travellers={travellers}
-            travelParty={travelParty}
+        {/* 4. 📸 MEMORY STAGE (AI DIGITAL POSTCARD & BUDGET VS ACTUAL SUMMARY) */}
+        {currentPage === 'memory' && (
+          <StageMemory
+            selectedCity={selectedCity}
+            selectedCountry={selectedCountry}
             departureDate={departureDate}
             returnDate={returnDate}
             durationDays={durationDays}
+            travellers={travellers}
+            travelParty={travelParty}
             budgetAmount={budgetAmount}
+            budgetTier={budgetTier}
             basket={basket}
-            selectedFlight={selectedFlight}
-            selectedHotel={selectedHotel}
-            onNavigateToPostcard={() => setCurrentPage('postcard')}
-            onPrevStep={handlePrevStep}
+            smartItinerary={smartItinerary}
+            onBackToDashboard={() => {
+              setCurrentPage('dashboard')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
           />
         )}
 
@@ -860,7 +699,12 @@ function App() {
             onSelectFlight={setSelectedFlight}
             onSelectHotel={setSelectedHotel}
             onNavigateToAI={() => setCurrentPage('ai')}
-            onNavigateToExplore={() => setCurrentPage('explore')}
+            onNavigateToExplore={() => {
+              setPlanningStep('discover')
+              setPlanningDiscoverView('hub')
+              setCurrentPage('planning')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
           />
         )}
 
@@ -879,7 +723,12 @@ function App() {
             budgetTier={budgetTier}
             budgetAmount={budgetAmount}
             travelPace={travelPace}
-            onNavigateToExplore={() => setCurrentPage('explore')}
+            onNavigateToExplore={() => {
+              setPlanningStep('discover')
+              setPlanningDiscoverView('hub')
+              setCurrentPage('planning')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
             onNavigateToCompare={() => setCurrentPage('compare')}
           />
         )}
@@ -890,7 +739,10 @@ function App() {
             selectedCity={selectedCity}
             basket={basket}
             initialSpot={postcardInitialSpot}
-            onBackToExplore={() => setCurrentPage('explore')}
+            onBackToExplore={() => {
+              setCurrentPage('memory')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
             travellers={travellers}
             travelParty={travelParty}
           />
@@ -952,9 +804,12 @@ function App() {
           bucketList={bucketList}
           onGeneratedRoute={(newItinerary) => {
             setSmartItinerary(newItinerary)
-            setCurrentPage('explore')
+            setPlanningStep('discover')
+            setPlanningDiscoverView('timeline')
+            setCurrentPage('planning')
             setPlanBToast(`⚡ Generated ${newItinerary.totalDays}-Day optimized route with ${newItinerary.totalSpotsScheduled} stops (Total ${newItinerary.totalEstimatedKm} km, 0 backtracking)!`)
             setTimeout(() => setPlanBToast(null), 5000)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
         />
 
@@ -970,7 +825,10 @@ function App() {
             const foundCountry = countriesData.find(c => c.places.some(p => p.city.toLowerCase().includes(cityName.toLowerCase())))
             if (foundCountry) {
               const foundPlace = foundCountry.places.find(p => p.city.toLowerCase().includes(cityName.toLowerCase()))
-              if (foundPlace) handleSelectCity(foundPlace, foundCountry)
+              if (foundPlace) {
+                handleSelectCity(foundPlace, foundCountry)
+                setCurrentPage('planning')
+              }
             }
           }}
           countriesData={countriesData}

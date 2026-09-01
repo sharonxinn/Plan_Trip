@@ -256,43 +256,36 @@ export default function StepPlanBStudio({
   }
 
   return (
-    <div className="step-planb-container fade-in">
-      {/* Hero Header */}
-      <div className="step-hero-card">
-        <div className="step-badge-row">
-          <span className="step-pill-number">Step 4 of 6</span>
-          <span className="step-pill-tag">⚡ Plan B & Contingency Studio</span>
-          <span className="step-mode-pill contingency">Zero-Panic Contingency Engine</span>
+    <div className="container step-planb-clean-container fade-in">
+      {/* SECTION TITLE & SCENARIOS */}
+      <div className="setup-clean-heading-row">
+        <div>
+          <h1 className="step-clean-title">Plan B Contingency Studio</h1>
+          <p className="step-clean-subtitle">
+            Sudden rain, venue closure, or fatigue? 1-click swap your affected spots with zero stress.
+          </p>
         </div>
+      </div>
 
-        <h1 className="step-main-title">
-          When Things Don't Go as Expected? 1-Click Fix.
-        </h1>
-        <p className="step-subtitle">
-          Travel hiccup? Bad weather, venue closure, flight delay, or sudden exhaustion? PlanTrip automatically restructures your schedule and swaps affected spots so your holiday stays 100% stress-free.
-        </p>
-
-        {/* Emergency Scenario Selector Tabs */}
-        <div className="scenarios-pills-row">
-          {scenarios.map(s => {
-            const Icon = s.icon
-            const isSelected = selectedScenario === s.id
-            return (
-              <button
-                key={s.id}
-                className={`scenario-pill-btn ${isSelected ? 'active' : ''} ${s.color}`}
-                onClick={() => {
-                  setSelectedScenario(s.id)
-                  setAppliedSuccess(false)
-                }}
-              >
-                <Icon size={16} />
-                <span className="scenario-btn-text">{s.title}</span>
-                {isSelected && <span className="scenario-active-dot" />}
-              </button>
-            )
-          })}
-        </div>
+      {/* Scenario Pills */}
+      <div className="scenarios-pills-row">
+        {scenarios.map(s => {
+          const Icon = s.icon
+          const isSelected = selectedScenario === s.id
+          return (
+            <button
+              key={s.id}
+              className={`scenario-pill-btn ${isSelected ? 'active' : ''} ${s.color}`}
+              onClick={() => {
+                setSelectedScenario(s.id)
+                setAppliedSuccess(false)
+              }}
+            >
+              <Icon size={15} />
+              <span className="scenario-btn-text">{s.title}</span>
+            </button>
+          )
+        })}
       </div>
 
       {/* Main Diff & Actions Grid */}
