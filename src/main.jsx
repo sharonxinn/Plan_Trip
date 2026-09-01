@@ -652,6 +652,8 @@ function App() {
             durationDays={durationDays}
             travellers={travellers}
             travelParty={travelParty}
+            members={members}
+            setMembers={setMembers}
             budgetAmount={budgetAmount}
             budgetTier={budgetTier}
             basket={basket}
