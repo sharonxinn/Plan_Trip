@@ -24,9 +24,11 @@
     "cross-env": "latest",
     "dotenv": "latest",
     "express": "latest",
+    "gtfs-realtime-bindings": "^2.2.0",
     "lucide-react": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "tesseract.js": "^7.0.0",
     "three": "^0.185.1",
     "vite": "latest"
   }

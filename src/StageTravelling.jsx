@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import {
   DollarSign, Zap, ArrowLeft, ShieldCheck, CheckCircle2,
-  Calendar, MapPin, Umbrella, Clock, Phone, Share2
+  Calendar, MapPin, Umbrella, Clock, Phone, Share2, Train
 } from 'lucide-react'
 import StepBudgetSplitter from './StepBudgetSplitter'
+import StepMalaysiaTransit from './StepMalaysiaTransit'
 import StepPlanBStudio from './StepPlanBStudio'
 
 export default function StageTravelling({
@@ -22,7 +23,7 @@ export default function StageTravelling({
   onApplyPlanB,
   onBackToDashboard
 }) {
-  const [activeTab, setActiveTab] = useState('splitter') // 'splitter' | 'planb'
+  const [activeTab, setActiveTab] = useState('splitter') // 'splitter' | 'transit' | 'planb'
 
   return (
     <div className="stage-travelling-container fade-in">
@@ -35,9 +36,9 @@ export default function StageTravelling({
           </button>
           <div className="stage-headline-group">
             <span className="stage-phase-badge intrip">Stage 2 · Travelling Companion</span>
-            <h1 className="stage-headline-title">In-Trip Expenses, Receipt Scanner & Plan B</h1>
+            <h1 className="stage-headline-title">In-Trip Expenses, Transit Navigator & Plan B</h1>
             <p className="stage-headline-sub">
-              Scan restaurant receipts on the go, itemize food & drinks across squad members, settle debts with 1-click, and access zero-panic contingencies.
+              Scan restaurant receipts on the go, navigate Malaysia LRT/MRT and buses in real-time, settle debts with 1-click, and access zero-panic contingencies.
             </p>
           </div>
         </div>
@@ -52,11 +53,18 @@ export default function StageTravelling({
             <span>1. 🧾 Expense Splitter & Receipt Scanner</span>
           </button>
           <button
+            className={`travelling-tab-btn ${activeTab === 'transit' ? 'active' : ''}`}
+            onClick={() => setActiveTab('transit')}
+          >
+            <Train size={16} />
+            <span>2. 🚆 Malaysia Transit & Bus Live Navigator</span>
+          </button>
+          <button
             className={`travelling-tab-btn ${activeTab === 'planb' ? 'active' : ''}`}
             onClick={() => setActiveTab('planb')}
           >
             <Zap size={16} />
-            <span>2. ⚡ Plan B Contingency</span>
+            <span>3. ⚡ Plan B Contingency</span>
           </button>
         </div>
       </div>
@@ -78,8 +86,19 @@ export default function StageTravelling({
               selectedCity={selectedCity}
               travelParty={travelParty}
               basket={basket}
-              onNextStep={() => setActiveTab('planb')}
+              onNextStep={() => setActiveTab('transit')}
               onPrevStep={onBackToDashboard}
+            />
+          </div>
+        )}
+
+        {activeTab === 'transit' && (
+          <div className="travelling-tab-pane fade-in">
+            <StepMalaysiaTransit
+              selectedCity={selectedCity}
+              durationDays={durationDays}
+              onNextStep={() => setActiveTab('planb')}
+              onPrevStep={() => setActiveTab('splitter')}
             />
           </div>
         )}
@@ -97,7 +116,7 @@ export default function StageTravelling({
               basket={basket}
               onApplyPlanB={onApplyPlanB}
               onNextStep={() => {}}
-              onPrevStep={() => setActiveTab('splitter')}
+              onPrevStep={() => setActiveTab('transit')}
             />
           </div>
         )}
