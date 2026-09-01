@@ -14,6 +14,8 @@ export default function StageTravelling({
   durationDays,
   travellers,
   travelParty,
+  members = [],
+  setMembers,
   budgetAmount,
   budgetTier,
   basket = [],
@@ -33,9 +35,9 @@ export default function StageTravelling({
           </button>
           <div className="stage-headline-group">
             <span className="stage-phase-badge intrip">Stage 2 · Travelling Companion</span>
-            <h1 className="stage-headline-title">In-Trip Companion & Plan B</h1>
+            <h1 className="stage-headline-title">In-Trip Expenses, Receipt Scanner & Plan B</h1>
             <p className="stage-headline-sub">
-              Manage expenses on the go and access zero-panic contingencies for rain, venue closures, and emergencies.
+              Scan restaurant receipts on the go, itemize food & drinks across squad members, settle debts with 1-click, and access zero-panic contingencies.
             </p>
           </div>
         </div>
@@ -47,7 +49,7 @@ export default function StageTravelling({
             onClick={() => setActiveTab('splitter')}
           >
             <DollarSign size={16} />
-            <span>1. Expense Splitter</span>
+            <span>1. 🧾 Expense Splitter & Receipt Scanner</span>
           </button>
           <button
             className={`travelling-tab-btn ${activeTab === 'planb' ? 'active' : ''}`}
@@ -64,13 +66,18 @@ export default function StageTravelling({
         {activeTab === 'splitter' && (
           <div className="travelling-tab-pane fade-in">
             <StepBudgetSplitter
+              isTravellingMode={true}
               budgetAmount={budgetAmount}
               setBudgetAmount={() => {}}
               budgetTier={budgetTier}
               setBudgetTier={() => {}}
               travellers={travellers}
+              durationDays={durationDays}
+              members={members}
+              setMembers={setMembers}
               selectedCity={selectedCity}
               travelParty={travelParty}
+              basket={basket}
               onNextStep={() => setActiveTab('planb')}
               onPrevStep={onBackToDashboard}
             />
