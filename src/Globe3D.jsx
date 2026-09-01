@@ -19,16 +19,16 @@ function createEarthCanvasTexture() {
   canvas.height = 1024
   const ctx = canvas.getContext('2d')
 
-  // Deep ocean gradient
+  // Smooth light ocean gradient
   const oceanGrad = ctx.createLinearGradient(0, 0, 0, 1024)
-  oceanGrad.addColorStop(0, '#091b36')
-  oceanGrad.addColorStop(0.5, '#051126')
-  oceanGrad.addColorStop(1, '#091b36')
+  oceanGrad.addColorStop(0, '#D8E8F5')
+  oceanGrad.addColorStop(0.5, '#C6DDF0')
+  oceanGrad.addColorStop(1, '#D8E8F5')
   ctx.fillStyle = oceanGrad
   ctx.fillRect(0, 0, 2048, 1024)
 
   // Grid lines / latitude lines
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)'
+  ctx.strokeStyle = 'rgba(70, 120, 170, 0.12)'
   ctx.lineWidth = 1
   for (let y = 0; y <= 1024; y += 64) {
     ctx.beginPath()
@@ -43,10 +43,10 @@ function createEarthCanvasTexture() {
     ctx.stroke()
   }
 
-  // Draw continent landmass approximations
-  ctx.fillStyle = '#10395c'
-  ctx.shadowColor = '#38bdf8'
-  ctx.shadowBlur = 10
+  // Draw continent landmass approximations (Warm soft sand)
+  ctx.fillStyle = '#E8DFC8'
+  ctx.shadowColor = '#D5C6AC'
+  ctx.shadowBlur = 8
 
   const continents = [
     // Eurasia
@@ -58,29 +58,27 @@ function createEarthCanvasTexture() {
     // Africa
     [[950, 420], [1120, 420], [1180, 560], [1100, 750], [980, 620], [900, 480]],
     // North America
-    [[350, 200], [750, 240], [680, 450], [520, 480], [420, 380], [280, 300]],
+    [[350, 180], [680, 220], [750, 380], [620, 500], [450, 480], [300, 320]],
     // South America
-    [[520, 520], [680, 550], [640, 780], [540, 900], [480, 650]],
+    [[600, 520], [720, 580], [680, 780], [580, 900], [520, 680]],
     // Australia
-    [[1600, 680], [1780, 690], [1750, 840], [1580, 820]],
-    // Europe
-    [[960, 250], [1120, 240], [1100, 380], [940, 360]]
+    [[1600, 680], [1750, 690], [1720, 820], [1580, 800]]
   ]
 
-  continents.forEach(polygon => {
+  continents.forEach(poly => {
     ctx.beginPath()
-    ctx.moveTo(polygon[0][0], polygon[0][1])
-    for (let i = 1; i < polygon.length; i++) {
-      ctx.lineTo(polygon[i][0], polygon[i][1])
+    ctx.moveTo(poly[0][0], poly[0][1])
+    for (let i = 1; i < poly.length; i++) {
+      ctx.lineTo(poly[i][0], poly[i][1])
     }
     ctx.closePath()
     ctx.fill()
   })
 
-  // City glow clusters worldwide
-  ctx.fillStyle = '#38bdf8'
-  ctx.shadowColor = '#00f2fe'
-  ctx.shadowBlur = 15
+  // City glow clusters worldwide (Warm terracotta pins)
+  ctx.fillStyle = '#E06D53'
+  ctx.shadowColor = '#E89858'
+  ctx.shadowBlur = 10
   const cityDots = [
     [1620, 365], [1480, 530], [1495, 545], [1040, 310], [980, 280],
     [580, 360], [480, 380], [1530, 610], [1700, 750], [1220, 420],
@@ -152,10 +150,10 @@ export default function Globe3D({
     }
     starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
     const starMaterial = new THREE.PointsMaterial({
-      color: 0x93c5fd,
-      size: 0.08,
+      color: 0xD9C5B2,
+      size: 0.06,
       transparent: true,
-      opacity: 0.75
+      opacity: 0.5
     })
     const starField = new THREE.Points(starGeometry, starMaterial)
     scene.add(starField)
@@ -170,15 +168,15 @@ export default function Globe3D({
     const earthTexture = createEarthCanvasTexture()
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: earthTexture,
-      bumpScale: 0.05,
-      specular: new THREE.Color(0x1e3a8a),
-      shininess: 25
+      bumpScale: 0.02,
+      specular: new THREE.Color(0xFFF6EE),
+      shininess: 15
     })
     const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial)
     earthMesh.name = 'earth-sphere'
     globeGroup.add(earthMesh)
 
-    // Atmosphere Glow Layer
+    // Atmosphere Glow Layer (Warm soft peach-sky glow)
     const atmosphereGeometry = new THREE.SphereGeometry(2.1, 64, 64)
     const atmosphereMaterial = new THREE.ShaderMaterial({
       vertexShader: `
@@ -191,8 +189,8 @@ export default function Globe3D({
       fragmentShader: `
         varying vec3 vNormal;
         void main() {
-          float intensity = pow(0.65 - dot(vNormal, vec3(0, 0, 1.0)), 2.5);
-          gl_FragColor = vec4(0.22, 0.74, 0.97, 1.0) * intensity;
+          float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 2.2);
+          gl_FragColor = vec4(0.88, 0.55, 0.45, 0.6) * intensity;
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -207,17 +205,17 @@ export default function Globe3D({
     const cloudMaterial = new THREE.MeshPhongMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.15,
+      opacity: 0.25,
       blending: THREE.AdditiveBlending
     })
     const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial)
     globeGroup.add(cloudMesh)
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xdbeafe, 1.2)
+    // Lighting (Warm Daylight)
+    const ambientLight = new THREE.AmbientLight(0xfff8f0, 1.6)
     scene.add(ambientLight)
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.5)
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.0)
     sunLight.position.set(5, 3, 5)
     scene.add(sunLight)
 

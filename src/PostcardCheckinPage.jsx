@@ -62,49 +62,49 @@ const SLOGAN_PRESETS = {
 // 5 Aesthetic Postcard Themes
 const THEMES = [
   {
-    id: 'glass-dark',
-    name: 'Cyber Sapphire',
-    tag: 'Modern Glass',
-    accent: '#38bdf8',
-    bgGradient: 'linear-gradient(135deg, #070d18 0%, #0f2744 50%, #030712 100%)',
-    textColor: '#ffffff',
-    subColor: '#94a3b8'
+    id: 'cream-terracotta',
+    name: 'Warm Linen',
+    tag: 'Modern Cream',
+    accent: '#E06D53',
+    bgGradient: 'linear-gradient(135deg, #FAF7F2 0%, #F5ECE0 50%, #EFE5D5 100%)',
+    textColor: '#2C241E',
+    subColor: '#6E6156'
   },
   {
     id: 'vintage-airmail',
     name: 'Vintage Airmail',
     tag: 'Classic Postcard',
-    accent: '#dc2626',
-    bgGradient: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
-    textColor: '#1e293b',
-    subColor: '#64748b'
+    accent: '#D96B43',
+    bgGradient: 'linear-gradient(135deg, #FEF7EE 0%, #FDEED8 100%)',
+    textColor: '#2C241E',
+    subColor: '#786A5E'
   },
   {
     id: 'polaroid',
     name: 'Polaroid Instant',
     tag: 'Retro Film',
-    accent: '#f59e0b',
-    bgGradient: '#ffffff',
-    textColor: '#0f172a',
-    subColor: '#475569'
+    accent: '#D9822B',
+    bgGradient: '#FFFFFF',
+    textColor: '#2C241E',
+    subColor: '#6E6156'
   },
   {
-    id: 'vogue-magazine',
-    name: 'Editorial Vogue',
-    tag: 'Chic Aesthetic',
-    accent: '#f43f5e',
-    bgGradient: '#0a0a0a',
-    textColor: '#ffffff',
-    subColor: '#cbd5e1'
+    id: 'soft-sage',
+    name: 'Botanical Sage',
+    tag: 'Nature Aesthetic',
+    accent: '#477A5E',
+    bgGradient: 'linear-gradient(135deg, #FAF8F5 0%, #EBF4EE 50%, #E1EFE7 100%)',
+    textColor: '#2C241E',
+    subColor: '#527863'
   },
   {
     id: 'cute-pastel',
     name: 'Sweet Pastel',
-    tag: 'Kawaii Vibe',
-    accent: '#ec4899',
-    bgGradient: 'linear-gradient(135deg, #fbcfe8 0%, #ede9fe 50%, #bae6fd 100%)',
-    textColor: '#1e1b4b',
-    subColor: '#4338ca'
+    tag: 'Soft Dream',
+    accent: '#D97398',
+    bgGradient: 'linear-gradient(135deg, #FDF0F5 0%, #F5EEFD 50%, #E8F4FD 100%)',
+    textColor: '#2C241E',
+    subColor: '#6E5D78'
   }
 ]
 
@@ -311,22 +311,21 @@ export default function PostcardCheckinPage({
       const theme = THEMES.find(t => t.id === selectedTheme) || THEMES[0]
 
       // 1. Background
-      if (theme.id === 'glass-dark') {
+      if (theme.id === 'cream-terracotta') {
         const grad = ctx.createLinearGradient(0, 0, width, height)
-        grad.addColorStop(0, '#030814')
-        grad.addColorStop(0.3, '#0c1a30')
-        grad.addColorStop(0.7, '#07101f')
-        grad.addColorStop(1, '#02050b')
+        grad.addColorStop(0, '#FAF7F2')
+        grad.addColorStop(0.5, '#F5ECE0')
+        grad.addColorStop(1, '#EFE5D5')
         ctx.fillStyle = grad
         ctx.fillRect(0, 0, width, height)
       } else if (theme.id === 'vintage-airmail') {
-        ctx.fillStyle = '#faf5e8'
+        ctx.fillStyle = '#FEF7EE'
         ctx.fillRect(0, 0, width, height)
 
         const stripeSize = 40
         ctx.save()
         for (let i = 0; i < width + height; i += stripeSize * 2) {
-          ctx.fillStyle = '#ef4444'
+          ctx.fillStyle = '#E06D53'
           ctx.beginPath()
           ctx.moveTo(i, 0)
           ctx.lineTo(i + stripeSize, 0)
@@ -334,7 +333,7 @@ export default function PostcardCheckinPage({
           ctx.lineTo(0, i)
           ctx.fill()
 
-          ctx.fillStyle = '#2563eb'
+          ctx.fillStyle = '#477A5E'
           ctx.beginPath()
           ctx.moveTo(i + stripeSize, 0)
           ctx.lineTo(i + stripeSize * 2, 0)
@@ -343,19 +342,23 @@ export default function PostcardCheckinPage({
           ctx.fill()
         }
         ctx.restore()
-        ctx.fillStyle = '#faf5e8'
+        ctx.fillStyle = '#FEF7EE'
         ctx.fillRect(24, 24, width - 48, height - 48)
       } else if (theme.id === 'polaroid') {
-        ctx.fillStyle = '#0f172a'
+        ctx.fillStyle = '#F3EFE6'
         ctx.fillRect(0, 0, width, height)
-      } else if (theme.id === 'vogue-magazine') {
-        ctx.fillStyle = '#050505'
+      } else if (theme.id === 'soft-sage') {
+        const grad = ctx.createLinearGradient(0, 0, width, height)
+        grad.addColorStop(0, '#FAF8F5')
+        grad.addColorStop(0.5, '#EBF4EE')
+        grad.addColorStop(1, '#E1EFE7')
+        ctx.fillStyle = grad
         ctx.fillRect(0, 0, width, height)
       } else if (theme.id === 'cute-pastel') {
         const grad = ctx.createLinearGradient(0, 0, width, height)
-        grad.addColorStop(0, '#fbcfe8')
-        grad.addColorStop(0.5, '#ede9fe')
-        grad.addColorStop(1, '#bae6fd')
+        grad.addColorStop(0, '#FDF0F5')
+        grad.addColorStop(0.5, '#F5EEFD')
+        grad.addColorStop(1, '#E8F4FD')
         ctx.fillStyle = grad
         ctx.fillRect(0, 0, width, height)
       }

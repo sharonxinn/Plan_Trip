@@ -26,10 +26,12 @@ export default function TripBasketDrawer({
   const perPersonBudget = Math.round(budgetAmount / Math.max(1, travellers))
   const budgetPercentage = Math.min(100, Math.round((estimatedTotalCost / Math.max(1, budgetAmount)) * 100))
 
+  if (!isOpen) return null
+
   return (
     <>
       {/* Backdrop */}
-      {isOpen && <div className="drawer-backdrop" onClick={onClose} />}
+      <div className="drawer-backdrop" onClick={onClose} />
 
       {/* Drawer */}
       <aside className={`basket-drawer ${isOpen ? 'open' : ''}`}>
