@@ -92,7 +92,7 @@ export default function StagePlanning({
             onClick={() => setCurrentStep('budget')}
           >
             <span className="step-num">2</span>
-            <span>Budget (Overall)</span>
+            <span>Trip Budget</span>
           </button>
           <button
             className={`stage-step-pill ${currentStep === 'discover' ? 'active' : ''}`}
@@ -286,6 +286,7 @@ export default function StagePlanning({
                 <h3>Transportation Options for {selectedCity?.city}</h3>
               </div>
               <ComparePage
+                mode="flights"
                 destination={selectedCity}
                 originAirport={originAirport}
                 departureDate={departureDate}
@@ -313,6 +314,7 @@ export default function StagePlanning({
                 <h3>Accommodation & Stays in {selectedCity?.city}</h3>
               </div>
               <ComparePage
+                mode="hotels"
                 destination={selectedCity}
                 originAirport={originAirport}
                 departureDate={departureDate}

@@ -31,5 +31,8 @@
     "tesseract.js": "^7.0.0",
     "three": "^0.185.1",
     "vite": "latest"
+  },
+  "allowScripts": {
+    "tesseract.js@7.0.0": true
   }
 }
