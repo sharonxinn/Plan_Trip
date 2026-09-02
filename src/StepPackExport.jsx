@@ -4,6 +4,7 @@ import {
   Sparkles, ShieldCheck, ArrowLeft, Download, Plus,
   Trash2, Sun, CloudRain, CheckCircle2, Copy, Wind, Droplets
 } from 'lucide-react'
+import { addTripToGoogleCalendar } from './utils/googleCalendar'
 
 export default function StepPackExport({
   destination,
@@ -25,7 +26,8 @@ export default function StepPackExport({
   const [activeTab, setActiveTab] = useState('pack') // 'pack' | 'export' | 'runsheet'
   const [copiedWhatsApp, setCopiedWhatsApp] = useState(false)
   const [downloadingDoc, setDownloadingDoc] = useState(false)
-  const [calendarSynced, setCalendarSynced] = useState(false)
+  const [googleCalendarStatus, setGoogleCalendarStatus] = useState('idle') // 'idle' | 'connecting' | 'synced' | 'error'
+  const [googleCalendarError, setGoogleCalendarError] = useState('')
   const [newItemText, setNewItemText] = useState('')
 
   // Live real-time weather state
@@ -221,9 +223,24 @@ END:VCALENDAR`
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
 
-    setCalendarSynced(true)
     if (onAddToCalendar) {
       onAddToCalendar()
+    }
+  }
+
+  // 1-Click Add to Google Calendar & Start Countdown
+  const handleAddToGoogleCalendar = async () => {
+    setGoogleCalendarStatus('connecting')
+    setGoogleCalendarError('')
+    try {
+      await addTripToGoogleCalendar({ cityName, countryName, departureDate, returnDate })
+      setGoogleCalendarStatus('synced')
+      if (onAddToCalendar) {
+        onAddToCalendar()
+      }
+    } catch (err) {
+      setGoogleCalendarStatus('error')
+      setGoogleCalendarError(err.message || 'Could not add this trip to Google Calendar.')
     }
   }
 
@@ -454,10 +471,25 @@ END:VCALENDAR`
         </button>
         <div className="step-summary-text">
           Trip Status: <strong>{cityName} Trip 100% Complete & Exported</strong>
+          {googleCalendarStatus === 'error' && (
+            <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: 4 }}>{googleCalendarError}</div>
+          )}
         </div>
-        <button className="step-next-primary-btn" onClick={handleExportICS}>
-          <Calendar size={18} /> Add to Calendar & Start Countdown
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <button className="step-back-btn" onClick={handleExportICS}>
+            Download .ics instead
+          </button>
+          <button
+            className="step-next-primary-btn"
+            onClick={handleAddToGoogleCalendar}
+            disabled={googleCalendarStatus === 'connecting'}
+          >
+            {googleCalendarStatus === 'synced' ? <Check size={18} /> : <Calendar size={18} />}
+            {googleCalendarStatus === 'connecting' && 'Connecting to Google…'}
+            {googleCalendarStatus === 'synced' && 'Added to Google Calendar'}
+            {(googleCalendarStatus === 'idle' || googleCalendarStatus === 'error') && 'Add to Calendar & Start Countdown'}
+          </button>
+        </div>
       </div>
     </div>
   )
