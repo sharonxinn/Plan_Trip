@@ -535,9 +535,6 @@ export default function StepPlanBStudio({
         <div className="step-summary-text">
           Contingency Mode: <strong>{scenarios.find(s => s.id === selectedScenario)?.title}</strong> Ready
         </div>
-        <button className="step-next-primary-btn" onClick={onNextStep}>
-          Proceed to Step 5: Group Room <ArrowRight size={18} />
-        </button>
       </div>
     </div>
   )

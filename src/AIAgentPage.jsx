@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-  Sparkles, Bot, FileDown, Send, CheckCircle2, Clock, MapPin,
-  Utensils, Compass, Plane, BedDouble, Calendar, Key, AlertCircle,
-  HelpCircle, RefreshCw, ChevronRight, Download, Printer, Copy, Check,
-  Users, DollarSign, Heart, User, Users2, ShieldCheck, Zap
+  Sparkles, FileDown, Clock, MapPin,
+  Utensils, Compass, BedDouble, Calendar, AlertCircle,
+  RefreshCw, Printer, Copy, Check,
+  DollarSign, ShieldCheck, Zap
 } from 'lucide-react'
 
 // Document generator helpers for Microsoft Word (.doc)
@@ -157,21 +157,8 @@ export default function AIAgentPage({
 }) {
   const [itineraryPlan, setItineraryPlan] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [apiKey, setApiKey] = useState('')
-  const [showKeyInput, setShowKeyInput] = useState(false)
   const [copied, setCopied] = useState(false)
   const [lastUpdatedNotice, setLastUpdatedNotice] = useState('')
-
-  // AI Chat Concierge state
-  const [chatMessages, setChatMessages] = useState([
-    {
-      sender: 'agent',
-      text: `Hello! I'm your AI Travel Agent. I've tailored a ${durationDays}-day itinerary for ${travellers} travellers (${travelParty}) in ${destination?.city || 'your destination'}. Want to swap any sights, add dietary preferences, or adjust daily pacing?`
-    }
-  ])
-  const [inputMessage, setInputMessage] = useState('')
-  const [chatLoading, setChatLoading] = useState(false)
-  const chatBottomRef = useRef(null)
 
   const attractions = basket.filter(i => i.type === 'attraction' || i.category)
   const restaurants = basket.filter(i => i.type === 'restaurant' || i.cuisine)
@@ -196,8 +183,7 @@ export default function AIAgentPage({
           attractions,
           restaurants,
           flight: selectedFlight,
-          hotel: selectedHotel,
-          apiKey
+          hotel: selectedHotel
         })
       })
       const data = await res.json()
@@ -214,60 +200,6 @@ export default function AIAgentPage({
   useEffect(() => {
     generatePlan()
   }, [destination, durationDays, travelParty, budgetTier, budgetAmount, travelPace])
-
-  useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [chatMessages])
-
-  const handleSendMessageWithText = async (textToSend) => {
-    if (!textToSend || !textToSend.trim() || chatLoading) return
-
-    const message = textToSend.trim()
-    setInputMessage('')
-    setChatMessages(prev => [...prev, { sender: 'user', text: message }])
-    setChatLoading(true)
-
-    try {
-      const res = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message,
-          currentPlan: itineraryPlan,
-          destination,
-          durationDays,
-          travelParty,
-          travellers,
-          budgetAmount,
-          apiKey
-        })
-      })
-      const data = await res.json()
-      if (data.updatedPlan) {
-        setItineraryPlan({ ...data.updatedPlan, _updatedAt: Date.now() })
-      }
-      if (data.changesNotice) {
-        setLastUpdatedNotice(data.changesNotice)
-        setTimeout(() => setLastUpdatedNotice(''), 7000)
-      }
-      setChatMessages(prev => [
-        ...prev,
-        { sender: 'agent', text: data.reply || "I've updated your travel preferences!" }
-      ])
-    } catch (_err) {
-      setChatMessages(prev => [
-        ...prev,
-        { sender: 'agent', text: "I've noted that! Adjusting your itinerary schedule to balance convenience and sightseeing pacing." }
-      ])
-    } finally {
-      setChatLoading(false)
-    }
-  }
-
-  const handleSendMessage = e => {
-    e.preventDefault()
-    handleSendMessageWithText(inputMessage)
-  }
 
   const copyAsMarkdown = () => {
     if (!itineraryPlan) return
@@ -293,14 +225,11 @@ export default function AIAgentPage({
               2. ✈️ Compare Stays & Flights
             </button>
             <span className="crumb-divider">/</span>
-            <span className="crumb-active">3. 🤖 AI Agent & Itinerary Document</span>
+            <span className="crumb-active">3. Itinerary Document</span>
           </div>
 
           <div className="ai-title-row">
             <div>
-              <div className="ai-badge">
-                <Sparkles size={16} /> Autonomous AI Travel Agent
-              </div>
               <h1 className="page-title">
                 Your Tailored {destination?.city || 'Trip'} Itinerary
               </h1>
@@ -341,55 +270,20 @@ export default function AIAgentPage({
             )}
           </div>
 
-          {/* Credentials Toggle Bar */}
-          <div className="credentials-bar">
-            <div className="cred-info">
-              <Key size={15} />
-              <span>AI Credentials: <strong>Free Intelligence Agent Active (Zero Setup Required)</strong></span>
-            </div>
-            <button
-              className="cred-toggle-btn"
-              onClick={() => setShowKeyInput(!showKeyInput)}
-            >
-              {showKeyInput ? 'Hide Settings' : 'Use Custom Gemini Free API Key'}
-            </button>
-          </div>
-
-          {showKeyInput && (
-            <div className="key-input-card">
-              <label>
-                <span>Google Gemini API Key (Free tier via Google AI Studio):</span>
-                <div className="input-with-button">
-                  <input
-                    type="password"
-                    placeholder="AIzaSy..."
-                    value={apiKey}
-                    onChange={e => setApiKey(e.target.value)}
-                  />
-                  <button className="btn-save-key" onClick={generatePlan}>
-                    Apply & Re-generate
-                  </button>
-                </div>
-              </label>
-              <small>
-                Get a free API key at <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">aistudio.google.com</a> (Takes 10 seconds).
-              </small>
-            </div>
-          )}
         </div>
       </div>
 
-      <div className="container ai-main-grid">
-        {/* LEFT COLUMN: ITINERARY DOCUMENT PREVIEW */}
-        <div className="itinerary-preview-col">
+      <div className="container ai-main-grid single-column-preview">
+        {/* ITINERARY DOCUMENT PREVIEW */}
+        <div className="itinerary-preview-col full-width-preview">
           {loading ? (
             <div className="ai-generating-card">
               <div className="ai-orb-pulse">
-                <Bot size={40} />
+                <Sparkles size={40} />
               </div>
-              <h3>AI Agent is tailoring your itinerary...</h3>
+              <h3>Preparing your itinerary...</h3>
               <p>
-                Clustering geographic routes, timing Google review sights, and factoring in your travel party ({travelParty}) and budget (RM {budgetAmount.toLocaleString()}).
+                Building your day-by-day plan for {travelParty} travelers with a total budget of RM {budgetAmount.toLocaleString()}.
               </p>
             </div>
           ) : itineraryPlan ? (
@@ -609,97 +503,6 @@ export default function AIAgentPage({
           )}
         </div>
 
-        {/* RIGHT COLUMN: AI CONCIERGE CHAT & ASSISTANT */}
-        <div className="ai-chat-col">
-          <div className="chat-card">
-            <div className="chat-header">
-              <div className="agent-avatar">
-                <Bot size={20} />
-              </div>
-              <div>
-                <h3>AI Concierge Assistant</h3>
-                <small className="online-status">● Live & Ready to Refine</small>
-              </div>
-            </div>
-
-            <div className="chat-messages-container">
-              {chatMessages.map((msg, idx) => (
-                <div key={idx} className={`chat-bubble ${msg.sender}`}>
-                  {msg.sender === 'agent' && (
-                    <div className="bubble-sender-label">PlanTrip AI</div>
-                  )}
-                  <p>{msg.text}</p>
-                </div>
-              ))}
-              {chatLoading && (
-                <div className="chat-bubble agent typing">
-                  <div className="typing-indicator">
-                    <span /><span /><span />
-                  </div>
-                </div>
-              )}
-              <div ref={chatBottomRef} />
-            </div>
-
-            <div className="quick-prompts-bar">
-              <div className="quick-prompts-header">
-                <Sparkles size={13} className="text-cyan" />
-                <small>1-Click Smart Refinement Suggestions:</small>
-              </div>
-              <div className="quick-prompts-chips">
-                <button
-                  className="btn-quick-prompt"
-                  onClick={() => handleSendMessageWithText('Add more authentic local street food & night market to Day 2')}
-                >
-                  🍜 Local street food on Day 2
-                </button>
-                <button
-                  className="btn-quick-prompt"
-                  onClick={() => handleSendMessageWithText('Add a scenic sunset viewpoint & sky deck on Day 2')}
-                >
-                  🌅 Sunset viewpoint on Day 2
-                </button>
-                <button
-                  className="btn-quick-prompt"
-                  onClick={() => handleSendMessageWithText('Add famous heritage coffee & breakfast on Day 3')}
-                >
-                  ☕ Heritage coffee & brunch on Day 3
-                </button>
-                <button
-                  className="btn-quick-prompt"
-                  onClick={() => handleSendMessageWithText('Add fresh local seafood dining on Day 1')}
-                >
-                  🦞 Fresh seafood feast on Day 1
-                </button>
-                <button
-                  className="btn-quick-prompt"
-                  onClick={() => handleSendMessageWithText('Make Day 3 morning more relaxed for sleeping in')}
-                >
-                  🌴 Relaxed morning on Day 3
-                </button>
-                <button
-                  className="btn-quick-prompt"
-                  onClick={() => handleSendMessageWithText('Add more nature, parks & cultural heritage walks')}
-                >
-                  🌿 Nature & heritage walks
-                </button>
-              </div>
-            </div>
-
-            <form className="chat-input-form" onSubmit={handleSendMessage}>
-              <input
-                type="text"
-                placeholder="Ask AI: e.g., 'Make Day 2 halal', 'Add sunset view'..."
-                value={inputMessage}
-                onChange={e => setInputMessage(e.target.value)}
-                disabled={chatLoading}
-              />
-              <button type="submit" disabled={chatLoading || !inputMessage.trim()} title="Send to AI Assistant">
-                <Send size={16} />
-              </button>
-            </form>
-          </div>
-        </div>
       </div>
     </div>
   )
