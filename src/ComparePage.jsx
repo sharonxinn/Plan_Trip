@@ -16,9 +16,14 @@ export default function ComparePage({
   selectedFlight,
   selectedHotel,
   onNavigateToAI,
-  onNavigateToExplore
+  onNavigateToExplore,
+  // 'flights' -> Transportation only, 'hotels' -> Accommodation only, 'both' -> legacy combined view
+  mode = 'both'
 }) {
-  const [activeTab, setActiveTab] = useState('flights') // 'flights' | 'hotels'
+  const showFlights = mode !== 'hotels'
+  const showHotels = mode !== 'flights'
+
+  const [activeTab, setActiveTab] = useState(mode === 'hotels' ? 'hotels' : 'flights') // 'flights' | 'hotels'
   const [tripType, setTripType] = useState('Round trip')
   const [flightResults, setFlightResults] = useState([])
   const [hotelResults, setHotelResults] = useState([])
@@ -36,31 +41,35 @@ export default function ComparePage({
     setLoading(true)
     setError('')
     try {
-      // 1. Fetch flights comparison
-      const flightParams = new URLSearchParams({
-        origin: originAirport.code || 'KUL',
-        destination: destCode,
-        departureDate: departureDate || '2026-09-15',
-        returnDate: returnDate || '2026-09-20',
-        tripType,
-        adults: travellers,
-        currency: 'MYR'
-      })
-      const fRes = await fetch(`/api/compare/flights?${flightParams}`)
-      const fData = await fRes.json()
-      setFlightResults(fData.providers || [])
+      // 1. Fetch flights comparison (Transportation view only)
+      if (showFlights) {
+        const flightParams = new URLSearchParams({
+          origin: originAirport.code || 'KUL',
+          destination: destCode,
+          departureDate: departureDate || '2026-09-15',
+          returnDate: returnDate || '2026-09-20',
+          tripType,
+          adults: travellers,
+          currency: 'MYR'
+        })
+        const fRes = await fetch(`/api/compare/flights?${flightParams}`)
+        const fData = await fRes.json()
+        setFlightResults(fData.providers || [])
+      }
 
-      // 2. Fetch hotels comparison
-      const hotelParams = new URLSearchParams({
-        city: cityName,
-        checkin: departureDate || '2026-09-15',
-        checkout: returnDate || '2026-09-20',
-        guests: travellers,
-        currency: 'MYR'
-      })
-      const hRes = await fetch(`/api/compare/hotels?${hotelParams}`)
-      const hData = await hRes.json()
-      setHotelResults(hData.hotels || [])
+      // 2. Fetch hotels comparison (Accommodation view only)
+      if (showHotels) {
+        const hotelParams = new URLSearchParams({
+          city: cityName,
+          checkin: departureDate || '2026-09-15',
+          checkout: returnDate || '2026-09-20',
+          guests: travellers,
+          currency: 'MYR'
+        })
+        const hRes = await fetch(`/api/compare/hotels?${hotelParams}`)
+        const hData = await hRes.json()
+        setHotelResults(hData.hotels || [])
+      }
     } catch (err) {
       setError('Unable to fetch live provider rates. Showing verified direct booking links.')
     } finally {
@@ -74,6 +83,25 @@ export default function ComparePage({
   const tripFlightLink = `https://www.trip.com/flights/showfarefirst?dcity=${originAirport.code.toLowerCase()}&acity=${destCode.toLowerCase()}&ddate=${departureDate}&rdate=${returnDate}&quantity=${travellers}&curr=MYR`
   const tripHotelLink = `https://www.trip.com/hotels/list?city=${encodeURIComponent(cityName)}&checkIn=${departureDate}&checkOut=${returnDate}&adult=${travellers}&curr=MYR`
 
+  // Mode-aware copy so Transportation and Accommodation never bleed into each other
+  const breadcrumbLabel = mode === 'flights'
+    ? '2. ✈️ Compare Tickets'
+    : mode === 'hotels'
+      ? '2. 🏨 Compare Stays'
+      : '2. ✈️ Compare Tickets & Stays'
+
+  const pageTitle = mode === 'flights'
+    ? 'Compare Real Fares across Top Providers'
+    : mode === 'hotels'
+      ? 'Compare Real Stays across Top Providers'
+      : 'Compare Real Fares & Stays across Top Providers'
+
+  const pageSubtitle = mode === 'flights'
+    ? <>Real-time price matrix and verified deep-links for <strong>AirAsia</strong> and <strong>Trip.com</strong>.</>
+    : mode === 'hotels'
+      ? <>Real-time price matrix and verified deep-links for <strong>Booking.com</strong> and <strong>Trip.com</strong>.</>
+      : <>Real-time price matrix and verified deep-links for <strong>AirAsia</strong>, <strong>Booking.com</strong>, and <strong>Trip.com</strong>.</>
+
   return (
     <div className="compare-page">
       {/* Header Banner */}
@@ -84,7 +112,7 @@ export default function ComparePage({
               1. 🌍 Explore {cityName}
             </button>
             <span className="crumb-divider">/</span>
-            <span className="crumb-active">2. ✈️ Compare Tickets & Stays</span>
+            <span className="crumb-active">{breadcrumbLabel}</span>
             <span className="crumb-divider">/</span>
             <button onClick={onNavigateToAI} className="crumb-btn">
               3. 🤖 AI Itinerary
@@ -92,18 +120,27 @@ export default function ComparePage({
           </div>
 
           <h1 className="page-title">
-            Compare Real Fares & Stays across Top Providers
+            {pageTitle}
           </h1>
           <p className="page-subtitle">
-            Real-time price matrix and verified deep-links for <strong>AirAsia</strong>, <strong>Booking.com</strong>, and <strong>Trip.com</strong>.
+            {pageSubtitle}
           </p>
 
           {/* Quick Route Summary Card */}
           <div className="route-summary-bar">
-            <div className="route-info-cell">
-              <span className="cell-label">ROUTE</span>
-              <strong>{originAirport.code} ({originAirport.city}) ➔ {destCode} ({cityName})</strong>
-            </div>
+            {showFlights && (
+              <div className="route-info-cell">
+                <span className="cell-label">ROUTE</span>
+                <strong>{originAirport.code} ({originAirport.city}) ➔ {destCode} ({cityName})</strong>
+              </div>
+            )}
+
+            {!showFlights && (
+              <div className="route-info-cell">
+                <span className="cell-label">DESTINATION</span>
+                <strong>{cityName}</strong>
+              </div>
+            )}
 
             <div className="route-info-cell">
               <span className="cell-label">DATES</span>
@@ -126,23 +163,25 @@ export default function ComparePage({
       </div>
 
       <div className="container main-compare-body">
-        {/* Navigation Tabs */}
-        <div className="compare-nav-tabs">
-          <button
-            className={`tab-btn ${activeTab === 'flights' ? 'active' : ''}`}
-            onClick={() => setActiveTab('flights')}
-          >
-            <Plane size={18} />
-            <span>Compare Flight Tickets (AirAsia vs Trip.com vs Skyscanner)</span>
-          </button>
-          <button
-            className={`tab-btn ${activeTab === 'hotels' ? 'active' : ''}`}
-            onClick={() => setActiveTab('hotels')}
-          >
-            <BedDouble size={18} />
-            <span>Compare Accommodations (Booking.com vs Trip.com)</span>
-          </button>
-        </div>
+        {/* Navigation Tabs — only rendered when this page covers both categories (legacy 'both' mode) */}
+        {mode === 'both' && (
+          <div className="compare-nav-tabs">
+            <button
+              className={`tab-btn ${activeTab === 'flights' ? 'active' : ''}`}
+              onClick={() => setActiveTab('flights')}
+            >
+              <Plane size={18} />
+              <span>Compare Flight Tickets (AirAsia vs Trip.com vs Skyscanner)</span>
+            </button>
+            <button
+              className={`tab-btn ${activeTab === 'hotels' ? 'active' : ''}`}
+              onClick={() => setActiveTab('hotels')}
+            >
+              <BedDouble size={18} />
+              <span>Compare Accommodations (Booking.com vs Trip.com)</span>
+            </button>
+          </div>
+        )}
 
         {/* Live Provider Direct Links Hub */}
         <div className="provider-links-hub">
@@ -151,26 +190,30 @@ export default function ComparePage({
             <span>Direct 1-Click Search with Exact Dates & Route:</span>
           </div>
           <div className="hub-grid">
-            <a href={airasiaLink} target="_blank" rel="noreferrer" className="hub-card airasia-hub">
-              <div>
-                <strong>AirAsia.com</strong>
-                <small>Official Direct Booking · Best Low Fare</small>
-              </div>
-              <ExternalLink size={16} />
-            </a>
+            {showFlights && (
+              <a href={airasiaLink} target="_blank" rel="noreferrer" className="hub-card airasia-hub">
+                <div>
+                  <strong>AirAsia.com</strong>
+                  <small>Official Direct Booking · Best Low Fare</small>
+                </div>
+                <ExternalLink size={16} />
+              </a>
+            )}
 
-            <a href={bookingLink} target="_blank" rel="noreferrer" className="hub-card booking-hub">
-              <div>
-                <strong>Booking.com</strong>
-                <small>Live Global Stays · Free Cancellation</small>
-              </div>
-              <ExternalLink size={16} />
-            </a>
+            {showHotels && (
+              <a href={bookingLink} target="_blank" rel="noreferrer" className="hub-card booking-hub">
+                <div>
+                  <strong>Booking.com</strong>
+                  <small>Live Global Stays · Free Cancellation</small>
+                </div>
+                <ExternalLink size={16} />
+              </a>
+            )}
 
             <a href={activeTab === 'flights' ? tripFlightLink : tripHotelLink} target="_blank" rel="noreferrer" className="hub-card trip-hub">
               <div>
                 <strong>Trip.com</strong>
-                <small>Flight + Hotel Bundles · Trip Coins Cashback</small>
+                <small>{mode === 'flights' ? 'Flight Deals · Trip Coins Cashback' : mode === 'hotels' ? 'Hotel Deals · Trip Coins Cashback' : 'Flight + Hotel Bundles · Trip Coins Cashback'}</small>
               </div>
               <ExternalLink size={16} />
             </a>
@@ -180,12 +223,18 @@ export default function ComparePage({
         {loading && (
           <div className="loading-state">
             <Loader2 size={32} className="spin" />
-            <p>Comparing live rates across AirAsia, Booking.com, and Trip.com...</p>
+            <p>
+              {mode === 'flights'
+                ? 'Comparing live fares across AirAsia and Trip.com...'
+                : mode === 'hotels'
+                  ? 'Comparing live rates across Booking.com and Trip.com...'
+                  : 'Comparing live rates across AirAsia, Booking.com, and Trip.com...'}
+            </p>
           </div>
         )}
 
         {/* FLIGHTS TAB */}
-        {!loading && activeTab === 'flights' && (
+        {!loading && showFlights && activeTab === 'flights' && (
           <div className="comparison-content">
             <div className="matrix-heading">
               <h2>Flight Ticket Comparison Matrix</h2>
@@ -276,7 +325,7 @@ export default function ComparePage({
         )}
 
         {/* HOTELS TAB */}
-        {!loading && activeTab === 'hotels' && (
+        {!loading && showHotels && activeTab === 'hotels' && (
           <div className="comparison-content">
             <div className="matrix-heading">
               <h2>Accommodation Price Comparison (Booking.com vs Trip.com)</h2>

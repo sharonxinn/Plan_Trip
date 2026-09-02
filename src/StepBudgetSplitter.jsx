@@ -928,7 +928,7 @@ export default function StepBudgetSplitter({
         <div>
           <div className="budget-hero-title-wrap">
             <h1 className="step-clean-title">
-              {isTravellingMode ? 'In-Trip Receipt Scanner & Expense Splitter' : 'Trip Budget & Expense Splitter'}
+              {isTravellingMode ? 'In-Trip Receipt Scanner & Expense Splitter' : 'Trip Budget'}
             </h1>
             {isTravellingMode && (
               <span className="live-camera-indicator">
@@ -939,7 +939,7 @@ export default function StepBudgetSplitter({
           <p className="step-clean-subtitle">
             {isTravellingMode
               ? 'Scan restaurant & cafe bills, automatically separate food & drinks per member, and settle debts with 1-click.'
-              : 'Plan your total budget with healthy category targets and 1-click debt settlement.'}
+              : 'Plan your total trip budget with healthy, automated category targets.'}
           </p>
         </div>
 
@@ -970,24 +970,7 @@ export default function StepBudgetSplitter({
                 <span>3. Debt Settlement</span>
               </button>
             </div>
-          ) : (
-            <div className="clean-tab-switch">
-              <button
-                className={`clean-tab-btn ${activeTab === 'allocator' ? 'active' : ''}`}
-                onClick={() => setActiveTab('allocator')}
-              >
-                <PieChart size={15} />
-                <span>1. Allocator</span>
-              </button>
-              <button
-                className={`clean-tab-btn ${activeTab === 'splitter' ? 'active' : ''}`}
-                onClick={() => setActiveTab('splitter')}
-              >
-                <Receipt size={15} />
-                <span>2. Group Bill Splitter</span>
-              </button>
-            </div>
-          )}
+          ) : null}
 
           {/* CURRENCY SELECTOR */}
           <div className="currency-selector-box">
@@ -1412,9 +1395,9 @@ export default function StepBudgetSplitter({
       )}
 
       {/* ========================================================================= */}
-      {/* --- TRAVELLING MODE TAB 2 OR PLANNING SPLITTER TAB: GROUP EXPENSE LEDGER - */}
+      {/* --- TRAVELLING MODE TAB 2: GROUP EXPENSE LEDGER (not shown in Planning) --- */}
       {/* ========================================================================= */}
-      {((isTravellingMode && activeTab === 'ledger') || (!isTravellingMode && activeTab === 'splitter')) && (
+      {isTravellingMode && activeTab === 'ledger' && (
         <div className="budget-splitter-grid fade-in">
           {/* Left Column: Logged Expenses */}
           <div className="setup-card">

@@ -483,37 +483,6 @@ function App() {
               </div>
             </div>
 
-            {/* 3-STAGE & DASHBOARD NAVIGATION */}
-            <nav className="stepper-nav desktop-only">
-              <button
-                className={`step-link ${currentPage === 'dashboard' ? 'active' : ''}`}
-                onClick={() => { setCurrentPage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-              >
-                <span>🏠 Dashboard</span>
-              </button>
-              <button
-                className={`step-link ${currentPage === 'planning' ? 'active' : ''}`}
-                onClick={() => { setCurrentPage('planning'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-              >
-                <span className="step-num">1</span>
-                <span className="step-label">Planning</span>
-              </button>
-              <button
-                className={`step-link ${currentPage === 'travelling' ? 'active' : ''}`}
-                onClick={() => { setCurrentPage('travelling'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-              >
-                <span className="step-num">2</span>
-                <span className="step-label">Travelling</span>
-              </button>
-              <button
-                className={`step-link ${currentPage === 'memory' ? 'active' : ''}`}
-                onClick={() => { setCurrentPage('memory'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-              >
-                <span className="step-num">3</span>
-                <span className="step-label">Memory</span>
-              </button>
-            </nav>
-
             {/* HEADER RIGHT ACTIONS */}
             <div className="header-actions">
               {/* CURRENT DESTINATION PILL */}
