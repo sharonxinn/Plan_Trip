@@ -126,10 +126,11 @@ export default function StepSetupSync({
         </div>
       </div>
 
-      {/* 2-COLUMN MAIN SETUP LAYOUT */}
-      <div className="setup-clean-grid">
-        {/* LEFT COLUMN: DESTINATION & DATES */}
-        <div className="setup-clean-col">
+      {/* MAIN SETUP LAYOUT */}
+      <div className="setup-clean-stack">
+        <div className="setup-clean-grid">
+          {/* LEFT COLUMN: DESTINATION */}
+          <div className="setup-clean-col">
           {/* CARD 1: DESTINATION SELECTOR */}
           <div className="clean-card">
             <div className="clean-card-header">
@@ -182,60 +183,10 @@ export default function StepSetupSync({
               })}
             </div>
           </div>
-
-          {/* CARD 2: DATES & DURATION */}
-          <div className="clean-card">
-            <div className="clean-card-header">
-              <div className="clean-card-title-wrap">
-                <Calendar size={18} className="text-cyan" />
-                <h2>2. Travel Dates & Duration</h2>
-              </div>
-              <span className="clean-badge">{durationDays} Days / {Math.max(1, durationDays - 1)} Nights</span>
-            </div>
-
-            <div className="date-fields-grid">
-              <div className="date-field-box">
-                <label>Departure Date</label>
-                <input
-                  type="date"
-                  value={departureDate}
-                  onChange={e => onDepartureDateChange(e.target.value)}
-                  className="clean-date-input"
-                />
-              </div>
-              <div className="date-field-box">
-                <label>Return Date</label>
-                <input
-                  type="date"
-                  value={returnDate}
-                  onChange={e => onReturnDateChange(e.target.value)}
-                  className="clean-date-input"
-                />
-              </div>
-            </div>
-
-            {/* Quick Duration Chips */}
-            <div className="quick-dur-row">
-              <span className="quick-dur-caption">Quick Set:</span>
-              {[3, 4, 5, 7, 10].map(days => (
-                <button
-                  key={days}
-                  className={`dur-pill-btn ${durationDays === days ? 'active' : ''}`}
-                  onClick={() => {
-                    const d1 = new Date(departureDate)
-                    const d2 = new Date(d1.getTime() + days * 86400000)
-                    onReturnDateChange(d2.toISOString().split('T')[0])
-                  }}
-                >
-                  {days} Days
-                </button>
-              ))}
-            </div>
           </div>
-        </div>
 
-        {/* RIGHT COLUMN: PARTY, VIBE & SQUAD */}
-        <div className="setup-clean-col">
+          {/* RIGHT COLUMN: TRAVEL PARTY */}
+          <div className="setup-clean-col">
           {/* CARD 3: TRAVEL PARTY */}
           <div className="clean-card">
             <div className="clean-card-header">
@@ -282,113 +233,164 @@ export default function StepSetupSync({
 
           {/* CARD 4: TRIP VIBE & PACE */}
           <div className="clean-card">
-            <div className="clean-card-header">
-              <div className="clean-card-title-wrap">
-                <Sparkles size={18} className="text-cyan" />
-                <h2>4. Trip Vibes & Pacing</h2>
-              </div>
-              <span className="clean-badge">{(groupPreferences.vibes || []).length} Selected</span>
+          <div className="clean-card-header">
+            <div className="clean-card-title-wrap">
+              <Sparkles size={18} className="text-cyan" />
+              <h2>4. Trip Vibes & Pacing</h2>
             </div>
+            <span className="clean-badge">{(groupPreferences.vibes || []).length} Selected</span>
+          </div>
 
-            {/* Vibe Chips */}
-            <div className="vibe-chips-wrap">
-              {vibeOptions.map(v => {
-                const isSelected = (groupPreferences.vibes || []).includes(v.id)
+          {/* Vibe Chips */}
+          <div className="vibe-chips-wrap">
+            {vibeOptions.map(v => {
+              const isSelected = (groupPreferences.vibes || []).includes(v.id)
+              return (
+                <button
+                  key={v.id}
+                  className={`vibe-chip-btn ${isSelected ? 'active' : ''}`}
+                  onClick={() => toggleVibe(v.id)}
+                >
+                  {isSelected ? '✓ ' : ''}{v.label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Pacing Buttons */}
+          <div className="pacing-row">
+            <span className="pacing-label">Daily Pace:</span>
+            <div className="pacing-buttons-group">
+              {[
+                { id: 'relaxed', label: '☕ Relaxed' },
+                { id: 'moderate', label: '⚖️ Balanced' },
+                { id: 'packed', label: '🚀 Action-Packed' }
+              ].map(p => (
+                <button
+                  key={p.id}
+                  className={`pacing-btn ${travelPace === p.id ? 'active' : ''}`}
+                  onClick={() => setTravelPace(p.id)}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dietary Chips */}
+          <div className="dietary-row">
+            <span className="pacing-label">Dietary:</span>
+            <div className="dietary-chips-group">
+              {dietaryOptions.map(diet => {
+                const isChecked = (groupPreferences.dietary || []).includes(diet)
                 return (
                   <button
-                    key={v.id}
-                    className={`vibe-chip-btn ${isSelected ? 'active' : ''}`}
-                    onClick={() => toggleVibe(v.id)}
+                    key={diet}
+                    className={`diet-chip-btn ${isChecked ? 'active' : ''}`}
+                    onClick={() => toggleDietary(diet)}
                   >
-                    {isSelected ? '✓ ' : ''}{v.label}
+                    {isChecked ? '✓ ' : '+ '}{diet}
                   </button>
                 )
               })}
             </div>
+          </div>
+        </div>
 
-            {/* Pacing Buttons */}
-            <div className="pacing-row">
-              <span className="pacing-label">Daily Pace:</span>
-              <div className="pacing-buttons-group">
-                {[
-                  { id: 'relaxed', label: '☕ Relaxed' },
-                  { id: 'moderate', label: '⚖️ Balanced' },
-                  { id: 'packed', label: '🚀 Action-Packed' }
-                ].map(p => (
-                  <button
-                    key={p.id}
-                    className={`pacing-btn ${travelPace === p.id ? 'active' : ''}`}
-                    onClick={() => setTravelPace(p.id)}
-                  >
-                    {p.label}
-                  </button>
-                ))}
+        {/* CARD 5: SQUAD COLLABORATION (IF GROUP, full width) */}
+        {travelParty !== 'solo' && (
+          <div className="clean-card">
+            <div className="clean-card-header">
+              <div className="clean-card-title-wrap">
+                <ShieldCheck size={18} className="text-emerald" />
+                <h2>5. Squad Members ({members.length})</h2>
               </div>
+              <span className="clean-badge success">Synced</span>
             </div>
 
-            {/* Dietary Chips */}
-            <div className="dietary-row">
-              <span className="pacing-label">Dietary:</span>
-              <div className="dietary-chips-group">
-                {dietaryOptions.map(diet => {
-                  const isChecked = (groupPreferences.dietary || []).includes(diet)
-                  return (
+            <div className="squad-members-row">
+              {members.map((m, idx) => (
+                <div key={m.id} className="squad-member-chip">
+                  <span className="member-avatar-emoji">{m.avatar}</span>
+                  <span className="member-name-text">{m.name}</span>
+                  {idx > 0 && (
                     <button
-                      key={diet}
-                      className={`diet-chip-btn ${isChecked ? 'active' : ''}`}
-                      onClick={() => toggleDietary(diet)}
+                      className="btn-member-remove"
+                      onClick={() => handleRemoveMember(m.id)}
+                      title="Remove member"
                     >
-                      {isChecked ? '✓ ' : '+ '}{diet}
+                      <Trash2 size={12} />
                     </button>
-                  )
-                })}
-              </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleAddMember} className="squad-add-form">
+              <input
+                type="text"
+                placeholder="Add friend's name..."
+                value={newMemberName}
+                onChange={e => setNewMemberName(e.target.value)}
+                className="squad-add-input"
+              />
+              <button type="submit" className="squad-add-btn">
+                <Plus size={15} /> Add
+              </button>
+            </form>
+          </div>
+        )}
+          </div>
+        </div>
+
+        {/* CARD 2: DATES & DURATION (full width) */}
+        <div className="clean-card">
+          <div className="clean-card-header">
+            <div className="clean-card-title-wrap">
+              <Calendar size={18} className="text-cyan" />
+              <h2>2. Travel Dates & Duration</h2>
+            </div>
+            <span className="clean-badge">{durationDays} Days / {Math.max(1, durationDays - 1)} Nights</span>
+          </div>
+
+          <div className="date-fields-grid">
+            <div className="date-field-box">
+              <label>Departure Date</label>
+              <input
+                type="date"
+                value={departureDate}
+                onChange={e => onDepartureDateChange(e.target.value)}
+                className="clean-date-input"
+              />
+            </div>
+            <div className="date-field-box">
+              <label>Return Date</label>
+              <input
+                type="date"
+                value={returnDate}
+                onChange={e => onReturnDateChange(e.target.value)}
+                className="clean-date-input"
+              />
             </div>
           </div>
 
-          {/* CARD 5: SQUAD COLLABORATION (IF GROUP) */}
-          {travelParty !== 'solo' && (
-            <div className="clean-card">
-              <div className="clean-card-header">
-                <div className="clean-card-title-wrap">
-                  <ShieldCheck size={18} className="text-emerald" />
-                  <h2>5. Squad Members ({members.length})</h2>
-                </div>
-                <span className="clean-badge success">Synced</span>
-              </div>
-
-              <div className="squad-members-row">
-                {members.map((m, idx) => (
-                  <div key={m.id} className="squad-member-chip">
-                    <span className="member-avatar-emoji">{m.avatar}</span>
-                    <span className="member-name-text">{m.name}</span>
-                    {idx > 0 && (
-                      <button
-                        className="btn-member-remove"
-                        onClick={() => handleRemoveMember(m.id)}
-                        title="Remove member"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <form onSubmit={handleAddMember} className="squad-add-form">
-                <input
-                  type="text"
-                  placeholder="Add friend's name..."
-                  value={newMemberName}
-                  onChange={e => setNewMemberName(e.target.value)}
-                  className="squad-add-input"
-                />
-                <button type="submit" className="squad-add-btn">
-                  <Plus size={15} /> Add
-                </button>
-              </form>
-            </div>
-          )}
+          {/* Quick Duration Chips */}
+          <div className="quick-dur-row">
+            <span className="quick-dur-caption">Quick Set:</span>
+            {[3, 4, 5, 7, 10].map(days => (
+              <button
+                key={days}
+                className={`dur-pill-btn ${durationDays === days ? 'active' : ''}`}
+                onClick={() => {
+                  const d1 = new Date(departureDate)
+                  const d2 = new Date(d1.getTime() + days * 86400000)
+                  onReturnDateChange(d2.toISOString().split('T')[0])
+                }}
+              >
+                {days} Days
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
