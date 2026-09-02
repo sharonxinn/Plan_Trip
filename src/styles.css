@@ -2649,16 +2649,18 @@ input, select, textarea {
 
 .page-title {
   font-family: var(--font-heading);
-  font-size: 2.3rem;
+  font-size: clamp(2.5rem, 4vw, 4.2rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
   margin-bottom: 8px;
 }
 
 .page-subtitle {
   color: var(--text-secondary);
   font-size: 1.05rem;
-  max-width: 800px;
+  max-width: 880px;
+  line-height: 1.5;
 }
 
 .route-summary-bar {
@@ -3102,15 +3104,15 @@ input, select, textarea {
 .ai-header {
   background: linear-gradient(180deg, #FFFFFF 0%, #FAF7F2 100%);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 30px 0 36px;
+  padding: 30px 0 24px;
 }
 
 .ai-title-row {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 18px;
   margin-top: 12px;
 }
 
@@ -3133,6 +3135,7 @@ input, select, textarea {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  margin-top: 4px;
 }
 
 .btn-download-doc {
@@ -3255,8 +3258,18 @@ input, select, textarea {
   margin-top: 36px;
 }
 
+.single-column-preview {
+  grid-template-columns: 1fr;
+}
+
+.full-width-preview {
+  width: 100%;
+}
+
 /* Document Sheet Preview */
 .document-sheet {
+  width: 100%;
+  max-width: 100%;
   background: #ffffff;
   color: #2C241E;
   border-radius: var(--radius-lg);
@@ -3280,10 +3293,10 @@ input, select, textarea {
 
 .doc-title {
   font-family: var(--font-heading);
-  font-size: 2.2rem;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
   font-weight: 800;
-  color: #F4EFE6;
-  line-height: 1.2;
+  color: #2C241E;
+  line-height: 0.96;
   margin-bottom: 10px;
 }
 
