@@ -365,6 +365,12 @@ input, select, textarea {
 }
 
 /* 2-COLUMN CLEAN SETUP GRID */
+.setup-clean-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .setup-clean-grid {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -381,6 +387,7 @@ input, select, textarea {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
 }
 
 .clean-card {
@@ -436,13 +443,10 @@ input, select, textarea {
 /* STEP 1: COUNTRY & CITY */
 .country-pills-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 10px;
   margin-bottom: 16px;
-  scrollbar-width: none;
 }
-.country-pills-row::-webkit-scrollbar { display: none; }
 
 .country-pill-btn {
   display: inline-flex;
