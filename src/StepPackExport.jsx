@@ -379,19 +379,6 @@ END:VCALENDAR`
             </button>
           </div>
 
-          {/* Card 3: Calendar Sync (.ics) */}
-          <div className="export-tile-card">
-            <div className="tile-icon-wrap emerald">
-              <Calendar size={28} />
-            </div>
-            <h3>Add to Calendar & Start Countdown</h3>
-            <p>Downloadable .ics calendar file to add trip dates & time alerts to your calendar and activate live dashboard countdown.</p>
-            <button className={`export-action-btn ${calendarSynced ? 'synced' : ''}`} onClick={handleExportICS}>
-              {calendarSynced ? <Check size={16} className="text-emerald" /> : <Calendar size={16} />}
-              <span>{calendarSynced ? 'Added to Calendar · Countdown Live!' : 'Add to Calendar (.ics)'}</span>
-            </button>
-          </div>
-
           {/* Card 4: WhatsApp Group Summary */}
           <div className="export-tile-card">
             <div className="tile-icon-wrap amber">
