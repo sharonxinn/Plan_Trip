@@ -3329,7 +3329,7 @@ input, select, textarea {
 }
 
 .doc-meta-item small { display: block; color: #4B5563; font-size: 0.7rem; font-weight: 700; }
-.doc-meta-item strong { color: #F4EFE6; font-size: 0.85rem; }
+.doc-meta-item strong { color: #2C241E; font-size: 0.85rem; }
 
 /* Day Blocks */
 .doc-days-list {
@@ -3387,7 +3387,7 @@ input, select, textarea {
 
 .slot-time { font-size: 0.75rem; color: #4B5563; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
 .slot-heading { display: flex; align-items: center; gap: 8px; font-size: 1.02rem; margin-bottom: 4px; }
-.slot-heading strong { color: #F4EFE6; }
+.slot-heading strong { color: #2C241E; }
 
 .rating-pill { background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
 .tier-pill { background: #dbeafe; color: #1e40af; font-size: 0.72rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
