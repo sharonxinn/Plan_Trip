@@ -4,7 +4,7 @@ import {
   Sparkles, ShieldCheck, ArrowLeft, Download, Plus,
   Trash2, Sun, CloudRain, CheckCircle2, Copy, Wind, Droplets
 } from 'lucide-react'
-import { addTripToGoogleCalendar } from './utils/googleCalendar'
+import { addTripToGoogleCalendar, addItineraryToGoogleCalendar } from './utils/googleCalendar'
 
 export default function StepPackExport({
   destination,
@@ -17,6 +17,7 @@ export default function StepPackExport({
   basket = [],
   selectedFlight,
   selectedHotel,
+  smartItinerary,
   onAddToCalendar,
   onPrevStep
 }) {
@@ -28,6 +29,9 @@ export default function StepPackExport({
   const [downloadingDoc, setDownloadingDoc] = useState(false)
   const [googleCalendarStatus, setGoogleCalendarStatus] = useState('idle') // 'idle' | 'connecting' | 'synced' | 'error'
   const [googleCalendarError, setGoogleCalendarError] = useState('')
+  const [itinerarySyncStatus, setItinerarySyncStatus] = useState('idle') // 'idle' | 'syncing' | 'done' | 'error'
+  const [itinerarySyncProgress, setItinerarySyncProgress] = useState({ done: 0, total: 0 })
+  const [itinerarySyncError, setItinerarySyncError] = useState('')
   const [newItemText, setNewItemText] = useState('')
 
   // Live real-time weather state
@@ -244,6 +248,22 @@ END:VCALENDAR`
     }
   }
 
+  // Sync every Run-Sheet activity as its own timed Google Calendar event
+  const handleSyncItinerary = async () => {
+    setItinerarySyncStatus('syncing')
+    setItinerarySyncError('')
+    setItinerarySyncProgress({ done: 0, total: 0 })
+    try {
+      await addItineraryToGoogleCalendar(smartItinerary, departureDate, (done, total) => {
+        setItinerarySyncProgress({ done, total })
+      })
+      setItinerarySyncStatus('done')
+    } catch (err) {
+      setItinerarySyncStatus('error')
+      setItinerarySyncError(err.message || 'Could not sync the itinerary to Google Calendar.')
+    }
+  }
+
   return (
     <div className="container step-pack-clean-container fade-in">
       {/* SECTION TITLE & CONTROLS */}
@@ -422,45 +442,48 @@ END:VCALENDAR`
             <span className="badge-highlight">{durationDays} Days Itinerary</span>
           </div>
 
-          <div className="runsheet-days-list">
-            {[1, 2, 3].slice(0, durationDays).map(dayNum => (
-              <div key={dayNum} className="runsheet-day-block">
-                <div className="day-title-badge">
-                  DAY {dayNum} · {dayNum === 1 ? 'Arrival & Landmark Exploration' : dayNum === 2 ? 'Culture, Heritage & Food Trail' : 'Hidden Gems & Sunset Chill'}
-                </div>
-                <div className="day-schedule-timeline">
-                  <div className="timeline-slot">
-                    <span className="slot-time">09:00 AM</span>
-                    <div className="slot-content">
-                      <strong>{dayNum === 1 ? 'Hotel Check-In & Refresh' : 'Iconic Landmark Tour'}</strong>
-                      <small>📍 City Center · Duration: 2.5 hrs</small>
-                    </div>
-                  </div>
-                  <div className="timeline-slot">
-                    <span className="slot-time">12:30 PM</span>
-                    <div className="slot-content">
-                      <strong>🍽️ Local Gastronomy & Hawker Lunch</strong>
-                      <small>📍 Famous Food Street · Budget: Balanced</small>
-                    </div>
-                  </div>
-                  <div className="timeline-slot">
-                    <span className="slot-time">03:30 PM</span>
-                    <div className="slot-content">
-                      <strong>🏛️ Cultural Heritage / Museum Exploration</strong>
-                      <small>📍 Air-conditioned / Scenic Walking Area</small>
-                    </div>
-                  </div>
-                  <div className="timeline-slot">
-                    <span className="slot-time">07:00 PM</span>
-                    <div className="slot-content">
-                      <strong>🍷 Sunset Rooftop & Group Dinner</strong>
-                      <small>📍 Panoramic Skyline View</small>
-                    </div>
-                  </div>
-                </div>
+          {!smartItinerary?.days?.length ? (
+            <p className="runsheet-empty-state">
+              Build your itinerary in the Discover Hub first — this run-sheet fills in once you've added activities to your route.
+            </p>
+          ) : (
+            <>
+              <div className="runsheet-sync-row">
+                <button
+                  className="export-action-btn"
+                  onClick={handleSyncItinerary}
+                  disabled={itinerarySyncStatus === 'syncing'}
+                >
+                  {itinerarySyncStatus === 'done' ? <Check size={16} /> : <Calendar size={16} />}
+                  {itinerarySyncStatus === 'syncing' && `Syncing ${itinerarySyncProgress.done} of ${itinerarySyncProgress.total}…`}
+                  {itinerarySyncStatus === 'done' && 'Itinerary Synced to Google Calendar'}
+                  {(itinerarySyncStatus === 'idle' || itinerarySyncStatus === 'error') && 'Sync Full Itinerary to Google Calendar'}
+                </button>
+                {itinerarySyncStatus === 'error' && (
+                  <span className="runsheet-sync-error">{itinerarySyncError}</span>
+                )}
               </div>
-            ))}
-          </div>
+
+              <div className="runsheet-days-list">
+                {smartItinerary.days.map(day => (
+                  <div key={day.dayNumber} className="runsheet-day-block">
+                    <div className="day-title-badge">{day.title}</div>
+                    <div className="day-schedule-timeline">
+                      {(day.spots || []).map(spot => (
+                        <div key={spot.id || spot.stepNumber} className="timeline-slot">
+                          <span className="slot-time">{spot.arriveTime || spot.timeSlot}</span>
+                          <div className="slot-content">
+                            <strong>{spot.name}</strong>
+                            <small>📍 {spot.category || 'Activity'} · Duration: {spot.stayDurationMins || spot.durationMins || 30} mins</small>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 
