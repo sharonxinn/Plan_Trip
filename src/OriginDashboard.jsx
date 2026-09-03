@@ -205,7 +205,7 @@ export default function OriginDashboard({
                 </span>
               )}
               <span className="trip-status-pill">
-                {selectedCity?.city || 'Trip'}, {selectedCountry?.name || 'Country'}
+                {selectedCity?.city || 'Trip'}, {selectedCountry?.country || selectedCity?.country || 'Malaysia'}
               </span>
             </div>
             <button className="btn-edit-dates-inline" onClick={onOpenDateEditor} title="Change Dates">
