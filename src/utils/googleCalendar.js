@@ -43,17 +43,26 @@ function requestGoogleAccessToken() {
   })
 }
 
+// Formats a Date using its local components (not toISOString, which converts
+// to UTC and shifts the date back a day in timezones ahead of UTC).
+function toLocalDateStr(d) {
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 // Google's all-day `end.date` is exclusive, so add one day past the return date.
 function nextDay(dateStr) {
   const d = new Date(`${dateStr}T00:00:00`)
   d.setDate(d.getDate() + 1)
-  return d.toISOString().slice(0, 10)
+  return toLocalDateStr(d)
 }
 
 function addDays(dateStr, amount) {
   const d = new Date(`${dateStr}T00:00:00`)
   d.setDate(d.getDate() + amount)
-  return d.toISOString().slice(0, 10)
+  return toLocalDateStr(d)
 }
 
 // Parses "9:15 AM" / "09:15 AM" into 24h { hours, minutes }.
