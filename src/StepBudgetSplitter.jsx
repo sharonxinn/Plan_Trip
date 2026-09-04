@@ -1395,11 +1395,10 @@ export default function StepBudgetSplitter({
       )}
 
       {/* ========================================================================= */}
-      {/* --- TRAVELLING MODE TAB 2: GROUP EXPENSE LEDGER (not shown in Planning) --- */}
+      {/* --- TRAVELLING MODE TAB 2: GROUP EXPENSE LEDGER (Single Full Width Column) --- */}
       {/* ========================================================================= */}
       {isTravellingMode && activeTab === 'ledger' && (
-        <div className="budget-splitter-grid fade-in">
-          {/* Left Column: Logged Expenses */}
+        <div className="budget-allocator-single fade-in">
           <div className="setup-card">
             <div className="card-header-row">
               <div className="card-icon-title">
@@ -1443,7 +1442,7 @@ export default function StepBudgetSplitter({
             </div>
 
             {/* Quick Manual Add Form */}
-            <form onSubmit={handleAddManualExpense} className="add-expense-box">
+            <form onSubmit={handleAddManualExpense} className="add-expense-box mt-4">
               <h4>+ Log Quick Expense (Cash / Transit / Entry)</h4>
               <div className="add-exp-row">
                 <input
@@ -1481,61 +1480,6 @@ export default function StepBudgetSplitter({
                 </button>
               </div>
             </form>
-          </div>
-
-          {/* Right Column: Debt Settlement Solver */}
-          <div className="setup-card">
-            <div className="card-header-row">
-              <div className="card-icon-title">
-                <Calculator className="text-cyan" size={20} />
-                <h3>1-Click Debt Settlement Solver</h3>
-              </div>
-              <button className="copy-settle-btn" onClick={handleCopySettlement}>
-                {copiedSettlement ? <Check size={14} /> : <Share2 size={14} />}
-                {copiedSettlement ? 'Copied to WhatsApp!' : 'Share Settlement'}
-              </button>
-            </div>
-
-            <p className="section-note">
-              Fair share is <strong>{curr.symbol} {Math.round(settlementData.fairSharePerPax * curr.rate).toLocaleString()}</strong> per person. Here is the mathematically minimal number of transfers to settle all accounts:
-            </p>
-
-            {/* Transfer Instructions */}
-            <div className="transfers-card-list">
-              {settlementData.transactions.length === 0 ? (
-                <div className="empty-settle-state">
-                  <Check size={28} className="text-emerald" />
-                  <p>All group expenses are completely balanced! No transfers needed.</p>
-                </div>
-              ) : (
-                settlementData.transactions.map((t, idx) => (
-                  <div key={idx} className="settle-transfer-tile">
-                    <div className="transfer-from-to">
-                      <span className="debtor-name">{t.from}</span>
-                      <span className="transfer-arrow">➔ pays ➔</span>
-                      <span className="creditor-name">{t.to}</span>
-                    </div>
-                    <div className="transfer-amount-badge">
-                      {curr.symbol} {Math.round(t.amount * curr.rate).toLocaleString()}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Individual Balances breakdown */}
-            <div className="individual-balances-table">
-              <h4>Individual Net Balances</h4>
-              {settlementData.balances.map((b, idx) => (
-                <div key={idx} className="balance-row">
-                  <span className="balance-name">{b.name}</span>
-                  <span className="balance-paid">Paid: {curr.symbol} {Math.round(b.paid * curr.rate).toLocaleString()}</span>
-                  <span className={`balance-net ${b.net >= 0 ? 'positive' : 'negative'}`}>
-                    {b.net >= 0 ? `+${curr.symbol} ${Math.round(b.net * curr.rate).toLocaleString()} (Refund)` : `-${curr.symbol} ${Math.round(Math.abs(b.net) * curr.rate).toLocaleString()} (Owes)`}
-                  </span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       )}
