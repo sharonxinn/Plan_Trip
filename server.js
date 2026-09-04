@@ -2433,6 +2433,243 @@ app.get('/api/transit/live-feed', async (req, res) => {
 
 
 
+// 15. Public Trips — open group trips that strangers can host & join.
+// In-memory only: no external API, no API key, no billing. Data resets when the server restarts.
+const publicTrips = new Map()
+
+const genId = (n = 12) => Math.random().toString(36).slice(2, 2 + n) + Date.now().toString(36).slice(-4)
+const genCode = () => {
+  let c = ''
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
+  for (let i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)]
+  return c
+}
+const JOIN_AVATARS = ['🧭', '🌊', '🏔️', '🎒', '🍜', '📸', '🛺', '🗺️', '🌅', '🎡', '🏝️', '⛺']
+
+const tripStatus = trip => {
+  if (trip.locked) return 'locked'
+  if (trip.members.length >= trip.maxPax) return 'full'
+  return 'open'
+}
+
+const publicView = trip => ({
+  ...trip,
+  status: tripStatus(trip),
+  spotsLeft: Math.max(0, trip.maxPax - trip.members.length),
+  canLock: trip.members.length >= trip.minPax
+})
+
+// List every joinable trip, newest first
+app.get('/api/public-trips', (_req, res) => {
+  const list = [...publicTrips.values()].sort((a, b) => b.createdAt - a.createdAt).map(publicView)
+  res.json({ data: list, total: list.length })
+})
+
+// Fetch one trip — the collaborative room polls this
+app.get('/api/public-trips/:id', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  res.json({ data: publicView(trip) })
+})
+
+// Host creates a new open trip
+app.post('/api/public-trips', (req, res) => {
+  const b = req.body || {}
+  const hostName = String(b.hostName || '').trim() || 'Anonymous Host'
+  const minPax = Math.max(2, Math.min(50, Math.round(Number(b.minPax) || 2)))
+  const maxPax = Math.max(minPax, Math.min(50, Math.round(Number(b.maxPax) || minPax + 3)))
+  const hostId = genId()
+  const now = Date.now()
+  const destinationCity = String(b.destinationCity || '').trim() || 'Kuala Lumpur'
+  const trip = {
+    id: genId(),
+    code: genCode(),
+    hostId,
+    hostName,
+    title: String(b.title || '').trim() || `${hostName}'s ${destinationCity} trip`,
+    destinationCity,
+    destinationCountry: String(b.destinationCountry || '').trim() || 'Malaysia',
+    departureDate: String(b.departureDate || '').trim(),
+    returnDate: String(b.returnDate || '').trim(),
+    minPax,
+    maxPax,
+    budgetTotal: Math.max(0, Math.round(Number(b.budgetTotal) || 0)),
+    currency: (String(b.currency || 'MYR').trim().toUpperCase().slice(0, 3)) || 'MYR',
+    vibe: String(b.vibe || '').trim(),
+    locked: false,
+    members: [{ id: hostId, name: hostName, avatar: String(b.hostAvatar || '🧭'), isHost: true, joinedAt: now }],
+    proposals: [],
+    expenses: [],
+    createdAt: now,
+    updatedAt: now
+  }
+  publicTrips.set(trip.id, trip)
+  res.json({ data: publicView(trip), youAre: { id: hostId, name: hostName, isHost: true } })
+})
+
+// A stranger joins an open trip
+app.post('/api/public-trips/:id/join', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  const b = req.body || {}
+  const already = trip.members.find(m => m.id === String(b.memberId || ''))
+  if (already) return res.json({ data: publicView(trip), youAre: { id: already.id, name: already.name, isHost: already.isHost } })
+  if (trip.locked) return res.status(409).json({ error: 'The host has already locked this trip' })
+  if (trip.members.length >= trip.maxPax) return res.status(409).json({ error: 'This trip is already full' })
+  const member = {
+    id: genId(),
+    name: String(b.name || '').trim() || `Traveller ${trip.members.length + 1}`,
+    avatar: String(b.avatar || JOIN_AVATARS[trip.members.length % JOIN_AVATARS.length]),
+    isHost: false,
+    joinedAt: Date.now()
+  }
+  trip.members.push(member)
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip), youAre: { id: member.id, name: member.name, isHost: false } })
+})
+
+// Leave a trip (host role is handed to the earliest remaining member; empty trips are deleted)
+app.post('/api/public-trips/:id/leave', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  const memberId = String(req.body?.memberId || '')
+  const leaving = trip.members.find(m => m.id === memberId)
+  if (!leaving) return res.json({ data: publicView(trip) })
+  trip.members = trip.members.filter(m => m.id !== memberId)
+  trip.proposals.forEach(p => { p.votes = p.votes.filter(v => v !== memberId) })
+  if (leaving.isHost) {
+    if (trip.members.length === 0) {
+      publicTrips.delete(trip.id)
+      return res.json({ data: null, deleted: true })
+    }
+    trip.members[0].isHost = true
+    trip.hostId = trip.members[0].id
+    trip.hostName = trip.members[0].name
+  }
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
+// Propose an attraction or restaurant to the shared plan
+app.post('/api/public-trips/:id/proposals', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  const b = req.body || {}
+  const member = trip.members.find(m => m.id === String(b.memberId || ''))
+  if (!member) return res.status(403).json({ error: 'Join the trip before proposing places' })
+  const name = String(b.name || '').trim()
+  if (!name) return res.status(400).json({ error: 'Place name is required' })
+  trip.proposals.push({
+    id: genId(),
+    type: b.type === 'restaurant' ? 'restaurant' : 'attraction',
+    name,
+    category: String(b.category || '').trim(),
+    image: String(b.image || '').trim(),
+    estCost: Math.max(0, Math.round(Number(b.estCost) || 0)),
+    note: String(b.note || '').trim(),
+    addedById: member.id,
+    addedByName: member.name,
+    votes: [member.id],
+    createdAt: Date.now()
+  })
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
+// Toggle your vote on a proposal
+app.post('/api/public-trips/:id/proposals/:pid/vote', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  const memberId = String(req.body?.memberId || '')
+  if (!trip.members.some(m => m.id === memberId)) return res.status(403).json({ error: 'Join the trip to vote' })
+  const proposal = trip.proposals.find(p => p.id === req.params.pid)
+  if (!proposal) return res.status(404).json({ error: 'Proposal not found' })
+  proposal.votes = proposal.votes.includes(memberId)
+    ? proposal.votes.filter(v => v !== memberId)
+    : [...proposal.votes, memberId]
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
+// Remove a proposal — proposer or host only
+app.delete('/api/public-trips/:id/proposals/:pid', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  const memberId = String(req.body?.memberId || '')
+  const proposal = trip.proposals.find(p => p.id === req.params.pid)
+  if (!proposal) return res.status(404).json({ error: 'Proposal not found' })
+  const isHost = trip.members.find(m => m.id === memberId)?.isHost
+  if (proposal.addedById !== memberId && !isHost) {
+    return res.status(403).json({ error: 'Only the person who added it (or the host) can remove it' })
+  }
+  trip.proposals = trip.proposals.filter(p => p.id !== proposal.id)
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
+// Host locks the plan once the minimum pax is met (pass reopen:true to unlock)
+app.post('/api/public-trips/:id/lock', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  const memberId = String(req.body?.memberId || '')
+  if (trip.hostId !== memberId) return res.status(403).json({ error: 'Only the host can lock the plan' })
+  if (req.body?.reopen) {
+    trip.locked = false
+  } else {
+    if (trip.members.length < trip.minPax) return res.status(409).json({ error: `Need at least ${trip.minPax} travellers before locking` })
+    trip.locked = true
+  }
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
+// Log a shared expense — who paid, and which members it is split among
+app.post('/api/public-trips/:id/expenses', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  if (!Array.isArray(trip.expenses)) trip.expenses = []
+  const b = req.body || {}
+  const member = trip.members.find(m => m.id === String(b.memberId || ''))
+  if (!member) return res.status(403).json({ error: 'Join the trip before adding expenses' })
+  const title = String(b.title || '').trim()
+  const amount = Math.round((Number(b.amount) || 0) * 100) / 100
+  if (!title) return res.status(400).json({ error: 'Expense title is required' })
+  if (amount <= 0) return res.status(400).json({ error: 'Amount must be greater than zero' })
+  const payer = trip.members.find(m => m.id === String(b.paidById || '')) || member
+  const memberIds = trip.members.map(m => m.id)
+  let splitAmong = Array.isArray(b.splitAmong) ? b.splitAmong.filter(x => memberIds.includes(x)) : []
+  if (splitAmong.length === 0) splitAmong = [...memberIds]
+  trip.expenses.push({
+    id: genId(),
+    title,
+    amount,
+    paidById: payer.id,
+    paidByName: payer.name,
+    splitAmong,
+    addedById: member.id,
+    createdAt: Date.now()
+  })
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
+// Remove a shared expense — the person who logged it, or the host
+app.delete('/api/public-trips/:id/expenses/:eid', (req, res) => {
+  const trip = publicTrips.get(req.params.id)
+  if (!trip) return res.status(404).json({ error: 'Trip not found' })
+  if (!Array.isArray(trip.expenses)) trip.expenses = []
+  const memberId = String(req.body?.memberId || '')
+  const expense = trip.expenses.find(e => e.id === req.params.eid)
+  if (!expense) return res.status(404).json({ error: 'Expense not found' })
+  const isHost = trip.members.find(m => m.id === memberId)?.isHost
+  if (expense.addedById !== memberId && !isHost) {
+    return res.status(403).json({ error: 'Only the person who logged it (or the host) can remove it' })
+  }
+  trip.expenses = trip.expenses.filter(e => e.id !== expense.id)
+  trip.updatedAt = Date.now()
+  res.json({ data: publicView(trip) })
+})
+
 // Production static serving vs Vite dev server
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(root, 'dist')))

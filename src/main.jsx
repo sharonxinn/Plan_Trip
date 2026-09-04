@@ -27,6 +27,7 @@ import OriginDashboard from './OriginDashboard'
 import StagePlanning from './StagePlanning'
 import StageTravelling from './StageTravelling'
 import StageMemory from './StageMemory'
+import PublicTripsPage from './PublicTripsPage'
 import { countriesData, popularDestinations } from './data/destinationsData'
 import { generateSmartItinerary } from './utils/routeOptimizer'
 import './styles.css'
@@ -485,6 +486,16 @@ function App() {
 
             {/* HEADER RIGHT ACTIONS */}
             <div className="header-actions">
+              {/* PUBLIC / OPEN TRIPS */}
+              <button
+                className="btn-smart-route-header"
+                onClick={() => { setCurrentPage('public'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                title="Open Trips — host or join a trip with other travellers"
+              >
+                <Users2 size={14} />
+                <span className="desktop-only">Open Trips</span>
+              </button>
+
               {/* CURRENT DESTINATION PILL */}
               <button
                 className="header-dest-pill"
@@ -649,6 +660,20 @@ function App() {
             basket={basket}
             smartItinerary={smartItinerary}
             onBackToDashboard={() => {
+              setCurrentPage('dashboard')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+          />
+        )}
+
+        {/* 5. 🚪 OPEN TRIPS (HOST / JOIN A PUBLIC GROUP TRIP & PLAN TOGETHER) */}
+        {currentPage === 'public' && (
+          <PublicTripsPage
+            defaultCity={selectedCity?.city}
+            defaultCountry={selectedCountry?.country}
+            defaultDeparture={departureDate}
+            defaultReturn={returnDate}
+            onBack={() => {
               setCurrentPage('dashboard')
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
