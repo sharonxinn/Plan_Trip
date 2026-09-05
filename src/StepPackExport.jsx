@@ -162,7 +162,7 @@ export default function StepPackExport({
         <ul>
           ${basket.map(b => `<li><strong>${b.title || b.name}</strong> (${b.category || b.tag || 'Sightseeing'}) - Verified Google Review spot</li>`).join('') || '<li>Batu Caves, Petronas Twin Towers, Jalan Alor Food Street</li>'}
         </ul>
-        <h2>Smart Packing Checklist</h2>
+        <h2>Your packing list</h2>
         <ul>
           ${packingCategories.flatMap(c => c.items).map(i => `<li>[${i.packed ? 'X' : ' '}] ${i.text}</li>`).join('')}
         </ul>
@@ -269,7 +269,7 @@ END:VCALENDAR`
       {/* SECTION TITLE & CONTROLS */}
       <div className="setup-clean-heading-row">
         <div>
-          <h1 className="step-clean-title">Packing Checklist & Export</h1>
+          <h1 className="step-clean-title">Ready to go.</h1>
           <p className="step-clean-subtitle">
             Prepare for takeoff with weather-aware packing, offline run-sheets, and 1-click itinerary export.
           </p>
@@ -309,7 +309,7 @@ END:VCALENDAR`
             <div className="card-header-row">
               <div className="card-icon-title">
                 <Luggage className="text-cyan" size={20} />
-                <h3>Smart Packing Checklist</h3>
+                <h3>Your packing list</h3>
               </div>
               <span className="badge-highlight">{packPercent}% Completed</span>
             </div>
@@ -421,7 +421,7 @@ END:VCALENDAR`
             <div className="tile-icon-wrap amber">
               <Share2 size={28} />
             </div>
-            <h3>WhatsApp Squad Summary</h3>
+            <h3>Share with your group</h3>
             <p>Formatted emoji-rich summary ready to paste into your friends or family WhatsApp chat.</p>
             <button className="export-action-btn" onClick={handleCopyWhatsApp}>
               {copiedWhatsApp ? <Check size={16} /> : <Copy size={16} />}
@@ -437,7 +437,7 @@ END:VCALENDAR`
           <div className="card-header-row">
             <div className="card-icon-title">
               <Calendar className="text-cyan" size={20} />
-              <h3>Turn-by-Turn Offline Day Run-Sheet</h3>
+              <h3>Your daily schedule</h3>
             </div>
             <span className="badge-highlight">{durationDays} Days Itinerary</span>
           </div>

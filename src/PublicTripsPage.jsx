@@ -421,8 +421,8 @@ function BoardView({ trips, loading, busy, memberships, identity, showCreate, se
       <div className="pt-hero">
         <div className="pt-hero-icon"><DoorOpen size={22} /></div>
         <div>
-          <h1>Open Trips & Travel with Strangers</h1>
-          <p>Host a public room with your destination cards, budget tiers, and vibe selectors. Let strangers join, vote on stops, and split shared expenses.</p>
+          <h1>Find your travel people.</h1>
+          <p>Join an open trip or start your own. Pick places together and keep shared costs in one place.</p>
         </div>
         <button className="pt-btn pt-btn-primary" disabled={busy} onClick={() => setShowCreate(v => !v)}>
           <Plus size={15} /> Host a trip
@@ -449,7 +449,7 @@ function BoardView({ trips, loading, busy, memberships, identity, showCreate, se
       ) : trips.length === 0 ? (
         <div className="pt-empty">
           <Sparkles size={20} />
-          <p>No open trips yet. Be the first host — pick your destination city, budget tier, and vibe!</p>
+          <p>No open trips yet. Host a trip to invite others along.</p>
         </div>
       ) : (
         <div className="pt-grid">

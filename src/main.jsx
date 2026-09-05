@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
+import { flushSync } from 'react-dom'
 import {
   Plane, Globe, Sparkles, ShoppingBag, ArrowRight, Search, MapPin,
   Compass, Utensils, BedDouble, Calendar, Users, ChevronRight, Menu, X, Check,
   Map, Layers, User, Heart, Users2, DollarSign, Zap, Coffee, SlidersHorizontal,
   Wand2, Edit3, Plus, Minus, MessageCircle, Share2, Scale, Bot, Camera,
-  ShieldCheck, AlertCircle, Luggage, Receipt, ArrowLeft, Link2, Navigation
+  ShieldCheck, AlertCircle, Luggage, Receipt, ArrowLeft, Link2, Navigation, Coins
 } from 'lucide-react'
 import RealMapView from './RealMapView'
 import AttractionsGrid from './AttractionsGrid'
@@ -18,7 +19,7 @@ import SmartRouteTimeline from './SmartRouteTimeline'
 import ComparePage from './ComparePage'
 import AIAgentPage from './AIAgentPage'
 import PostcardCheckinPage from './PostcardCheckinPage'
-import WebFooter from './WebFooter'
+
 import StepSetupSync from './StepSetupSync'
 import StepBudgetSplitter from './StepBudgetSplitter'
 import StepPlanBStudio from './StepPlanBStudio'
@@ -28,19 +29,46 @@ import StagePlanning from './StagePlanning'
 import StageTravelling from './StageTravelling'
 import StageMemory from './StageMemory'
 import PublicTripsPage from './PublicTripsPage'
+import GlobalAiAssistant from './GlobalAiAssistant'
+import MemoryWorld from './MemoryWorld'
 import { countriesData, popularDestinations } from './data/destinationsData'
 import { generateSmartItinerary } from './utils/routeOptimizer'
 import './styles.css'
+import './trip-home.css'
+import './workspace-design.css'
+import './memory-world.css'
+import './global-ai-assistant.css'
 
 function App() {
   // Navigation Flow: 'dashboard' (1st page) | 'planning' | 'travelling' | 'memory'
   // Deep-dive Views: 'compare' | 'ai' | 'postcard'
-  const [currentPage, setCurrentPage] = useState('dashboard')
+  const [currentPage, updateCurrentPage] = useState('dashboard')
+  const setCurrentPage = page => {
+    if (page === currentPage) return
+    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(max-width: 700px)').matches) {
+      updateCurrentPage(page)
+      return
+    }
+    document.startViewTransition(() => flushSync(() => updateCurrentPage(page)))
+  }
   const [planningStep, setPlanningStep] = useState('setup')
   const [planningDiscoverView, setPlanningDiscoverView] = useState('hub')
   const [isCalendarAdded, setIsCalendarAdded] = useState(false)
   const [postcardInitialSpot, setPostcardInitialSpot] = useState(null)
+  const [memoryInitialTab, setMemoryInitialTab] = useState('postcard')
   const [planBToast, setPlanBToast] = useState(null)
+  const [coinWalletOpen, setCoinWalletOpen] = useState(false)
+  const [tripCoins, setTripCoins] = useState(() => {
+    try { return Number(localStorage.getItem('plantrip-coin-balance-v1')) || 0 } catch { return 0 }
+  })
+
+  const earnTripCoins = amount => {
+    setTripCoins(current => {
+      const next = current + amount
+      try { localStorage.setItem('plantrip-coin-balance-v1', String(next)) } catch {}
+      return next
+    })
+  }
 
   // App View & Installation Mode
   const [installModalOpen, setInstallModalOpen] = useState(false)
@@ -469,7 +497,7 @@ function App() {
   }
 
   return (
-    <div className="app-root-wrapper">
+    <div className="app-root-wrapper" data-page={currentPage}>
       <div className="app-layout">
         {/* TOP HEADER & 3-STAGE NAVIGATION */}
         <header className="global-header app-native-header">
@@ -477,7 +505,7 @@ function App() {
             {/* BRAND */}
             <div className="brand-group" onClick={() => { setCurrentPage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
               <div className="brand-logo-icon">
-                <Map size={18} />
+                <Compass size={18} />
               </div>
               <div className="brand-text">
                 <span className="brand-name">PlanTrip</span>
@@ -486,11 +514,25 @@ function App() {
 
             {/* HEADER RIGHT ACTIONS */}
             <div className="header-actions">
+              <div className="coin-wallet-wrap">
+                <button className="coin-balance-pill" onClick={() => setCoinWalletOpen(open => !open)} aria-expanded={coinWalletOpen} aria-label={`${tripCoins} Trip Coins. Open coin wallet`}>
+                  <Coins size={15}/><span className="desktop-only">Trip Coins</span><strong>{tripCoins}</strong>
+                </button>
+                {coinWalletOpen && (
+                  <section className="coin-wallet-popover" aria-label="Trip Coin wallet">
+                    <header><div><span>Your wallet</span><strong>{tripCoins} Trip Coins</strong></div><button onClick={() => setCoinWalletOpen(false)} aria-label="Close coin wallet"><X size={15}/></button></header>
+                    <div className="coin-wallet-balance"><Coins size={25}/><span><small>Available balance</small><strong>{tripCoins}</strong></span></div>
+                    <div className="coin-earning-rule"><Sparkles size={15}/><span><strong>Publish a memory bundle</strong><small>Earn 5 coins each time you share your trip story.</small></span><b>+5</b></div>
+                    <div className="coin-progress"><span style={{width:`${Math.min(100, tripCoins / 25 * 100)}%`}}/></div>
+                    <small className="coin-progress-copy">{tripCoins >= 25 ? 'Explorer reward unlocked' : `${25 - tripCoins} coins until your next explorer reward`}</small>
+                  </section>
+                )}
+              </div>
               {/* PUBLIC / OPEN TRIPS */}
               <button
                 className="btn-smart-route-header"
                 onClick={() => { setCurrentPage('public'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                title="Open Trips — host or join a trip with other travellers"
+                title="Open Trips — explore journeys with other travellers"
               >
                 <Users2 size={14} />
                 <span className="desktop-only">Open Trips</span>
@@ -504,27 +546,21 @@ function App() {
               >
                 <MapPin size={13} className="text-cyan" />
                 <span className="pill-dest-city">{selectedCity.city}</span>
-                <span className="pill-dest-dur">{durationDays}D</span>
-              </button>
-
-              {/* 1-CLICK SMART ROUTE BUTTON */}
-              <button
-                className="btn-smart-route-header"
-                onClick={() => setSmartRouteWizardOpen(true)}
-                title="Generate Optimized Multi-Day Route"
-              >
-                <Zap size={14} />
-                <span className="desktop-only">Smart Route</span>
+                <span className="pill-dest-dur">{durationDays} days</span>
               </button>
 
               {/* BASKET DRAWER BUTTON */}
               <button
                 className="basket-btn-header"
+                aria-label="Saved places and stays"
+                aria-haspopup="dialog"
+                aria-expanded={basketDrawerOpen}
+                aria-controls="saved-items-dialog"
                 onClick={() => setBasketDrawerOpen(true)}
-                title="View Trip Basket"
+                title="View Saved Spots & Stays"
               >
                 <ShoppingBag size={14} />
-                <span className="desktop-only">Basket</span>
+                <span className="desktop-only">Saved</span>
                 {totalBasketCount > 0 && (
                   <span className="basket-counter-badge">{totalBasketCount}</span>
                 )}
@@ -532,6 +568,16 @@ function App() {
             </div>
           </div>
         </header>
+
+        {!['dashboard', 'globe'].includes(currentPage) && (
+          <nav className="workspace-navigation" aria-label="Main navigation">
+            <div className="workspace-navigation-inner">
+              {[['dashboard', 'Overview', Compass], ['planning', 'Plan', Calendar], ['travelling', 'On the trip', Navigation], ['memory', 'Memories', Camera], ['public', 'Open trips', Users2]].map(([page, label, Icon]) => (
+                <button key={page} aria-current={currentPage === page ? 'page' : undefined} onClick={() => setCurrentPage(page)}><Icon size={17}/><span>{label}</span></button>
+              ))}
+            </div>
+          </nav>
+        )}
 
         {/* TOAST FEEDBACK NOTIFICATION */}
         {planBToast && (
@@ -557,6 +603,7 @@ function App() {
             basket={basket}
             isCalendarAdded={isCalendarAdded}
             onNavigateStage={(st) => {
+              if (st === 'memory') setMemoryInitialTab('postcard')
               setCurrentPage(st)
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
@@ -564,7 +611,10 @@ function App() {
               setCurrentPage('planning')
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
-            onOpenSmartWizard={() => setSmartRouteWizardOpen(true)}
+            onOpenPublicGlobe={() => {
+              setCurrentPage('globe')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
           />
         )}
 
@@ -659,11 +709,38 @@ function App() {
             budgetTier={budgetTier}
             basket={basket}
             smartItinerary={smartItinerary}
+            initialTab={memoryInitialTab}
+            currentCoinBalance={tripCoins}
+            onEarnCoins={earnTripCoins}
+            onOpenDashboardGlobe={() => {
+              setCurrentPage('globe')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
             onBackToDashboard={() => {
               setCurrentPage('dashboard')
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
           />
+        )}
+
+        {currentPage === 'globe' && (
+          <main className="dashboard-public-globe-page fade-in">
+            <button className="btn-back-to-dashboard" onClick={() => { setCurrentPage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+              <ArrowLeft size={16}/><span>Back to Dashboard</span>
+            </button>
+            <MemoryWorld
+              mode="browse"
+              selectedCity={selectedCity}
+              selectedCountry={selectedCountry}
+              departureDate={departureDate}
+              returnDate={returnDate}
+              travellers={travellers}
+              initialBudget={budgetAmount}
+              totalActual={Math.round(budgetAmount * .91)}
+              varianceAmount={budgetAmount - Math.round(budgetAmount * .91)}
+              basket={basket}
+            />
+          </main>
         )}
 
         {/* 5. 🚪 OPEN TRIPS (HOST / JOIN A PUBLIC GROUP TRIP & PLAN TOGETHER) */}
@@ -759,6 +836,7 @@ function App() {
           onClearBasket={clearBasket}
           onNavigateToCompare={() => setCurrentPage('compare')}
           onNavigateToAI={() => setCurrentPage('ai')}
+          onBrowsePlaces={() => { setPlanningStep('discover'); setPlanningDiscoverView('places'); setCurrentPage('planning') }}
         />
 
         {/* GROUP CHAT & WHATSAPP DRAWER */}
@@ -809,29 +887,20 @@ function App() {
           }}
         />
 
-        {/* MODERN RESPONSIVE WEBSITE FOOTER */}
-        <WebFooter
-          onSelectPage={page => {
-            setCurrentPage(page)
-            setGroupChatOpen(false)
-            setBasketDrawerOpen(false)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }}
-          onSelectCity={cityName => {
-            const foundCountry = countriesData.find(c => c.places.some(p => p.city.toLowerCase().includes(cityName.toLowerCase())))
-            if (foundCountry) {
-              const foundPlace = foundCountry.places.find(p => p.city.toLowerCase().includes(cityName.toLowerCase()))
-              if (foundPlace) {
-                handleSelectCity(foundPlace, foundCountry)
-                setCurrentPage('planning')
-              }
-            }
-          }}
-          countriesData={countriesData}
+        <GlobalAiAssistant
+          destination={selectedCity}
+          country={selectedCountry}
+          travelParty={travelParty}
+          durationDays={durationDays}
+          budgetAmount={budgetAmount}
+          currentPlan={smartItinerary}
+          onPlanUpdate={setSmartItinerary}
         />
+
       </div>
     </div>
   )
 }
 
 createRoot(document.getElementById('root')).render(<App />)
+

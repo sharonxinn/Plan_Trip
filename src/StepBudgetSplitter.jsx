@@ -184,7 +184,6 @@ export default function StepBudgetSplitter({
   // ==========================================
   // --- AI RECEIPT SCANNER & ITEMIZER STATE ---
   // ==========================================
-  const [selectedReceiptPreset, setSelectedReceiptPreset] = useState('seafood')
   const [isScanning, setIsScanning] = useState(false)
   const [scanProgressText, setScanProgressText] = useState('')
   const [uploadedReceiptImage, setUploadedReceiptImage] = useState(null)
@@ -480,7 +479,7 @@ export default function StepBudgetSplitter({
   }
 
   // Trigger Scanning (Tesseract.js Client OCR + Gemini Multimodal Vision API + Fallback)
-  const handleScanReceipt = async (presetKey = selectedReceiptPreset, customText = '', imageFileOrData = null) => {
+  const handleScanReceipt = async (presetKey = 'custom', customText = '', imageFileOrData = null) => {
     setIsScanning(true)
     setScanProgressText('📷 Reading image & performing Optical Character Recognition (OCR)...')
 
@@ -928,18 +927,18 @@ export default function StepBudgetSplitter({
         <div>
           <div className="budget-hero-title-wrap">
             <h1 className="step-clean-title">
-              {isTravellingMode ? 'In-Trip Receipt Scanner & Expense Splitter' : 'Trip Budget'}
+              {isTravellingMode ? 'Split the bill.' : 'Your trip budget.'}
             </h1>
             {isTravellingMode && (
               <span className="live-camera-indicator">
-                <span className="pulse-dot"></span> Live In-Trip Companion
+                <span className="pulse-dot"></span> Group expenses
               </span>
             )}
           </div>
           <p className="step-clean-subtitle">
             {isTravellingMode
-              ? 'Scan restaurant & cafe bills, automatically separate food & drinks per member, and settle debts with 1-click.'
-              : 'Plan your total trip budget with healthy, automated category targets.'}
+              ? 'Add a receipt, choose who shared each item, and see who owes what.'
+              : 'Set a total and see how it breaks down across your trip.'}
           </p>
         </div>
 
@@ -997,48 +996,6 @@ export default function StepBudgetSplitter({
         <div className="receipt-scanner-workspace fade-in">
           {/* TOP RECEIPT PICKER & SCAN CONTROLS */}
           <div className="receipt-capture-top-bar">
-            <div className="preset-selector-group">
-              <span className="preset-label-tag">⚡ 1-Click Instant Receipt Demos:</span>
-              <div className="preset-pill-buttons">
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'seafood' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('seafood')
-                    handleScanReceipt('seafood')
-                  }}
-                >
-                  <span>🍤 Seafood Banquet Feast (RM 266.80)</span>
-                </button>
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'cafe' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('cafe')
-                    handleScanReceipt('cafe')
-                  }}
-                >
-                  <span>☕ Cafe Brunch & Artisan Drinks (RM 197.20)</span>
-                </button>
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'izakaya' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('izakaya')
-                    handleScanReceipt('izakaya')
-                  }}
-                >
-                  <span>🍣 Izakaya & Cocktails (RM 426.88)</span>
-                </button>
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'streetfood' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('streetfood')
-                    handleScanReceipt('streetfood')
-                  }}
-                >
-                  <span>🍜 Night Market Street Food (RM 111.00)</span>
-                </button>
-              </div>
-            </div>
-
             <div className="custom-upload-actions">
               <input
                 type="file"
@@ -1553,7 +1510,7 @@ export default function StepBudgetSplitter({
             <div className="card-header-row">
               <div className="card-icon-title">
                 <DollarSign className="text-cyan" size={20} />
-                <h3>Set Total Trip Target</h3>
+                <h3>How much would you like to spend?</h3>
               </div>
               <span className="badge-highlight">{travellers} Pax · {durationDays} Days</span>
             </div>
@@ -1606,9 +1563,9 @@ export default function StepBudgetSplitter({
             <div className="card-header-row">
               <div className="card-icon-title">
                 <PieChart className="text-cyan" size={20} />
-                <h3>Automated Healthy Category Split</h3>
+                <h3>Where your budget goes</h3>
               </div>
-              <span className="badge-highlight">Zero Stress Buffer Included</span>
+              <span className="badge-highlight">Includes a buffer</span>
             </div>
 
             <div className="category-bars-list">
@@ -1641,7 +1598,7 @@ export default function StepBudgetSplitter({
               <div className="health-header">
                 <ShieldCheck className="text-emerald" size={20} />
                 <div>
-                  <strong>Stress-Free Travel Financial Guard</strong>
+                  <strong>A little room for the unexpected</strong>
                   <p>
                     Your 5% contingency buffer ({curr.symbol} {Math.round(categoryAllocations.contingency.amount * curr.rate).toLocaleString()}) protects you against sudden taxi surges, umbrella purchases, or unplanned attraction tickets.
                   </p>

@@ -102,14 +102,14 @@ export default function StagePlanning({
             }}
           >
             <span className="step-num">3</span>
-            <span>Discover Hub</span>
+            <span>Stays & Spots</span>
           </button>
           <button
             className={`stage-step-pill ${currentStep === 'pack' ? 'active' : ''}`}
             onClick={() => setCurrentStep('pack')}
           >
             <span className="step-num">4</span>
-            <span>Pack & Export</span>
+            <span>Packlist</span>
           </button>
         </div>
       </div>
@@ -176,11 +176,11 @@ export default function StagePlanning({
             <div className="container discover-hub-dashboard fade-in">
               <div className="discover-hub-header">
                 <div className="hub-badge-row">
-                  <span className="hub-badge">Step 3 · Discover Hub</span>
+                  <span className="hub-badge">Step 3 · Stays & Spots</span>
                   <span className="hub-city-pill">📍 {selectedCity?.city || 'Destination'}</span>
                 </div>
-                <h2>Explore & Select Bookings</h2>
-                <p>Compare transportation, choose your stays, and discover top attractions and dining</p>
+                <h2>Find your kind of place.</h2>
+                <p>Compare quiet stays, scenic journeys, and neighborhood dining in {selectedCity?.city}</p>
               </div>
 
               <div className="discover-three-cards-grid">
