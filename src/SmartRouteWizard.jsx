@@ -17,7 +17,6 @@ export default function SmartRouteWizard({
   bucketList = [],
   onGeneratedRoute
 }) {
-  if (!isOpen) return null
 
   const cityName = destination?.city || 'Penang'
   const countryName = destination?.country || 'Malaysia'
@@ -121,6 +120,8 @@ export default function SmartRouteWizard({
     }, 700)
   }
 
+  if (!isOpen) return null
+
   return (
     <div className="smart-wizard-backdrop" onClick={onClose}>
       <div className="smart-wizard-modal" onClick={e => e.stopPropagation()}>
@@ -137,7 +138,7 @@ export default function SmartRouteWizard({
               </p>
             </div>
           </div>
-          <button className="wizard-close-btn" onClick={onClose}>
+          <button className="wizard-close-btn" onClick={onClose} aria-label="Close route builder">
             <X size={20} />
           </button>
         </div>
@@ -161,7 +162,7 @@ export default function SmartRouteWizard({
         </div>
 
         {/* STEP CONTENT BODY */}
-        <div className="wizard-body-content">
+        <div className="wizard-body-content" key={wizardStep}>
           {/* ================= STEP 1: DATES & DURATION ================= */}
           {wizardStep === 1 && (
             <div className="wizard-step-panel fade-in">

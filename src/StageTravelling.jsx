@@ -35,10 +35,10 @@ export default function StageTravelling({
             <span>Back to Dashboard</span>
           </button>
           <div className="stage-headline-group">
-            <span className="stage-phase-badge intrip">Stage 2 · Travelling Companion</span>
-            <h1 className="stage-headline-title">In-Trip Expenses, Transit Navigator & Plan B</h1>
+            <span className="stage-phase-badge intrip">On the trip</span>
+            <h1 className="stage-headline-title">Everything you need while you’re away.</h1>
             <p className="stage-headline-sub">
-              Scan restaurant receipts on the go, navigate Malaysia LRT/MRT and buses in real-time, settle debts with 1-click, and access zero-panic contingencies.
+              Split a bill, find your train, or make a backup plan.
             </p>
           </div>
         </div>
@@ -50,21 +50,21 @@ export default function StageTravelling({
             onClick={() => setActiveTab('splitter')}
           >
             <DollarSign size={16} />
-            <span>1. 🧾 Expense Splitter & Receipt Scanner</span>
+            <span>Split expenses</span>
           </button>
           <button
             className={`travelling-tab-btn ${activeTab === 'transit' ? 'active' : ''}`}
             onClick={() => setActiveTab('transit')}
           >
             <Train size={16} />
-            <span>2. 🚆 Malaysia Transit & Bus Live Navigator</span>
+            <span>Local transport</span>
           </button>
           <button
             className={`travelling-tab-btn ${activeTab === 'planb' ? 'active' : ''}`}
             onClick={() => setActiveTab('planb')}
           >
             <Zap size={16} />
-            <span>3. ⚡ Plan B Contingency</span>
+            <span>Backup plans</span>
           </button>
         </div>
       </div>

@@ -928,18 +928,18 @@ export default function StepBudgetSplitter({
         <div>
           <div className="budget-hero-title-wrap">
             <h1 className="step-clean-title">
-              {isTravellingMode ? 'In-Trip Receipt Scanner & Expense Splitter' : 'Trip Budget'}
+              {isTravellingMode ? 'Split the bill.' : 'Your trip budget.'}
             </h1>
             {isTravellingMode && (
               <span className="live-camera-indicator">
-                <span className="pulse-dot"></span> Live In-Trip Companion
+                <span className="pulse-dot"></span> Group expenses
               </span>
             )}
           </div>
           <p className="step-clean-subtitle">
             {isTravellingMode
-              ? 'Scan restaurant & cafe bills, automatically separate food & drinks per member, and settle debts with 1-click.'
-              : 'Plan your total trip budget with healthy, automated category targets.'}
+              ? 'Add a receipt, choose who shared each item, and see who owes what.'
+              : 'Set a total and see how it breaks down across your trip.'}
           </p>
         </div>
 
@@ -1553,7 +1553,7 @@ export default function StepBudgetSplitter({
             <div className="card-header-row">
               <div className="card-icon-title">
                 <DollarSign className="text-cyan" size={20} />
-                <h3>Set Total Trip Target</h3>
+                <h3>How much would you like to spend?</h3>
               </div>
               <span className="badge-highlight">{travellers} Pax · {durationDays} Days</span>
             </div>
@@ -1606,9 +1606,9 @@ export default function StepBudgetSplitter({
             <div className="card-header-row">
               <div className="card-icon-title">
                 <PieChart className="text-cyan" size={20} />
-                <h3>Automated Healthy Category Split</h3>
+                <h3>Where your budget goes</h3>
               </div>
-              <span className="badge-highlight">Zero Stress Buffer Included</span>
+              <span className="badge-highlight">Includes a buffer</span>
             </div>
 
             <div className="category-bars-list">
@@ -1641,7 +1641,7 @@ export default function StepBudgetSplitter({
               <div className="health-header">
                 <ShieldCheck className="text-emerald" size={20} />
                 <div>
-                  <strong>Stress-Free Travel Financial Guard</strong>
+                  <strong>A little room for the unexpected</strong>
                   <p>
                     Your 5% contingency buffer ({curr.symbol} {Math.round(categoryAllocations.contingency.amount * curr.rate).toLocaleString()}) protects you against sudden taxi surges, umbrella purchases, or unplanned attraction tickets.
                   </p>

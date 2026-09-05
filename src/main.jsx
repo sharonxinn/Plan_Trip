@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
+import { flushSync } from 'react-dom'
 import {
   Plane, Globe, Sparkles, ShoppingBag, ArrowRight, Search, MapPin,
   Compass, Utensils, BedDouble, Calendar, Users, ChevronRight, Menu, X, Check,
@@ -18,7 +19,7 @@ import SmartRouteTimeline from './SmartRouteTimeline'
 import ComparePage from './ComparePage'
 import AIAgentPage from './AIAgentPage'
 import PostcardCheckinPage from './PostcardCheckinPage'
-import WebFooter from './WebFooter'
+
 import StepSetupSync from './StepSetupSync'
 import StepBudgetSplitter from './StepBudgetSplitter'
 import StepPlanBStudio from './StepPlanBStudio'
@@ -31,11 +32,21 @@ import PublicTripsPage from './PublicTripsPage'
 import { countriesData, popularDestinations } from './data/destinationsData'
 import { generateSmartItinerary } from './utils/routeOptimizer'
 import './styles.css'
+import './trip-home.css'
+import './workspace-design.css'
 
 function App() {
   // Navigation Flow: 'dashboard' (1st page) | 'planning' | 'travelling' | 'memory'
   // Deep-dive Views: 'compare' | 'ai' | 'postcard'
-  const [currentPage, setCurrentPage] = useState('dashboard')
+  const [currentPage, updateCurrentPage] = useState('dashboard')
+  const setCurrentPage = page => {
+    if (page === currentPage) return
+    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.matchMedia('(max-width: 700px)').matches) {
+      updateCurrentPage(page)
+      return
+    }
+    document.startViewTransition(() => flushSync(() => updateCurrentPage(page)))
+  }
   const [planningStep, setPlanningStep] = useState('setup')
   const [planningDiscoverView, setPlanningDiscoverView] = useState('hub')
   const [isCalendarAdded, setIsCalendarAdded] = useState(false)
@@ -469,7 +480,7 @@ function App() {
   }
 
   return (
-    <div className="app-root-wrapper">
+    <div className="app-root-wrapper" data-page={currentPage}>
       <div className="app-layout">
         {/* TOP HEADER & 3-STAGE NAVIGATION */}
         <header className="global-header app-native-header">
@@ -477,7 +488,7 @@ function App() {
             {/* BRAND */}
             <div className="brand-group" onClick={() => { setCurrentPage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
               <div className="brand-logo-icon">
-                <Map size={18} />
+                <Compass size={18} />
               </div>
               <div className="brand-text">
                 <span className="brand-name">PlanTrip</span>
@@ -490,7 +501,7 @@ function App() {
               <button
                 className="btn-smart-route-header"
                 onClick={() => { setCurrentPage('public'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                title="Open Trips — host or join a trip with other travellers"
+                title="Open Trips — explore journeys with other travellers"
               >
                 <Users2 size={14} />
                 <span className="desktop-only">Open Trips</span>
@@ -504,27 +515,31 @@ function App() {
               >
                 <MapPin size={13} className="text-cyan" />
                 <span className="pill-dest-city">{selectedCity.city}</span>
-                <span className="pill-dest-dur">{durationDays}D</span>
+                <span className="pill-dest-dur">{durationDays} days</span>
               </button>
 
-              {/* 1-CLICK SMART ROUTE BUTTON */}
+              {/* CURATE ROUTE BUTTON */}
               <button
                 className="btn-smart-route-header"
                 onClick={() => setSmartRouteWizardOpen(true)}
-                title="Generate Optimized Multi-Day Route"
+                title="Curate a natural multi-day itinerary"
               >
-                <Zap size={14} />
-                <span className="desktop-only">Smart Route</span>
+                <Compass size={14} />
+                <span className="desktop-only">Curate Route</span>
               </button>
 
               {/* BASKET DRAWER BUTTON */}
               <button
                 className="basket-btn-header"
+                aria-label="Saved places and stays"
+                aria-haspopup="dialog"
+                aria-expanded={basketDrawerOpen}
+                aria-controls="saved-items-dialog"
                 onClick={() => setBasketDrawerOpen(true)}
-                title="View Trip Basket"
+                title="View Saved Spots & Stays"
               >
                 <ShoppingBag size={14} />
-                <span className="desktop-only">Basket</span>
+                <span className="desktop-only">Saved</span>
                 {totalBasketCount > 0 && (
                   <span className="basket-counter-badge">{totalBasketCount}</span>
                 )}
@@ -532,6 +547,16 @@ function App() {
             </div>
           </div>
         </header>
+
+        {currentPage !== 'dashboard' && (
+          <nav className="workspace-navigation" aria-label="Main navigation">
+            <div className="workspace-navigation-inner">
+              {[['dashboard', 'Overview', Compass], ['planning', 'Plan', Calendar], ['travelling', 'On the trip', Navigation], ['memory', 'Memories', Camera], ['public', 'Open trips', Users2]].map(([page, label, Icon]) => (
+                <button key={page} aria-current={currentPage === page ? 'page' : undefined} onClick={() => setCurrentPage(page)}><Icon size={17}/><span>{label}</span></button>
+              ))}
+            </div>
+          </nav>
+        )}
 
         {/* TOAST FEEDBACK NOTIFICATION */}
         {planBToast && (
@@ -759,6 +784,7 @@ function App() {
           onClearBasket={clearBasket}
           onNavigateToCompare={() => setCurrentPage('compare')}
           onNavigateToAI={() => setCurrentPage('ai')}
+          onBrowsePlaces={() => { setPlanningStep('discover'); setPlanningDiscoverView('places'); setCurrentPage('planning') }}
         />
 
         {/* GROUP CHAT & WHATSAPP DRAWER */}
@@ -809,29 +835,10 @@ function App() {
           }}
         />
 
-        {/* MODERN RESPONSIVE WEBSITE FOOTER */}
-        <WebFooter
-          onSelectPage={page => {
-            setCurrentPage(page)
-            setGroupChatOpen(false)
-            setBasketDrawerOpen(false)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }}
-          onSelectCity={cityName => {
-            const foundCountry = countriesData.find(c => c.places.some(p => p.city.toLowerCase().includes(cityName.toLowerCase())))
-            if (foundCountry) {
-              const foundPlace = foundCountry.places.find(p => p.city.toLowerCase().includes(cityName.toLowerCase()))
-              if (foundPlace) {
-                handleSelectCity(foundPlace, foundCountry)
-                setCurrentPage('planning')
-              }
-            }
-          }}
-          countriesData={countriesData}
-        />
       </div>
     </div>
   )
 }
 
 createRoot(document.getElementById('root')).render(<App />)
+

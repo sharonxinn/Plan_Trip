@@ -260,7 +260,7 @@ export default function StepPlanBStudio({
       {/* SECTION TITLE & SCENARIOS */}
       <div className="setup-clean-heading-row">
         <div>
-          <h1 className="step-clean-title">Plan B Contingency Studio</h1>
+          <h1 className="step-clean-title">A change of plans.</h1>
           <p className="step-clean-subtitle">
             Sudden rain, venue closure, or fatigue? 1-click swap your affected spots with zero stress.
           </p>
@@ -295,7 +295,7 @@ export default function StepPlanBStudio({
           <div className="card-header-row">
             <div className="card-icon-title">
               <RefreshCw className="text-cyan" size={20} />
-              <h3>Real-Time Schedule Comparison</h3>
+              <h3>Your plan, before and after</h3>
             </div>
             <span className="badge-highlight">{currentDiff.originalDay}</span>
           </div>
@@ -395,7 +395,7 @@ export default function StepPlanBStudio({
             <div className="card-header-row">
               <div className="card-icon-title">
                 <Sparkles className="text-cyan" size={20} />
-                <h3>Custom Hiccup Solver</h3>
+                <h3>Tell us what changed</h3>
               </div>
               <span className="badge-highlight">AI Emergency Assistant</span>
             </div>
@@ -504,7 +504,7 @@ export default function StepPlanBStudio({
             <div className="card-header-row">
               <div className="card-icon-title">
                 <PhoneCall className="text-cyan" size={20} />
-                <h3>Local Emergency Safety Card</h3>
+                <h3>Useful local contacts</h3>
               </div>
               <span className="badge-highlight">{cityName}, {countryName}</span>
             </div>

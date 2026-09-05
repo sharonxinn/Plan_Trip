@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   ShoppingBag, X, Trash2, ArrowRight, Compass, Utensils,
   Plane, BedDouble, Star, DollarSign, Sparkles, CheckCircle2, Users, Edit3
@@ -17,8 +17,26 @@ export default function TripBasketDrawer({
   onRemoveItem,
   onClearBasket,
   onNavigateToCompare,
-  onNavigateToAI
+  onNavigateToAI,
+  onBrowsePlaces
 }) {
+  const dialogRef = useRef(null)
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return
+    const dialog = dialogRef.current
+    const previousFocus = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    const previousRootOverflow = document.documentElement.style.overflow
+    dialog.showModal()
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      dialog.close()
+      document.body.style.overflow = previousOverflow
+      document.documentElement.style.overflow = previousRootOverflow
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true })
+    }
+  }, [isOpen])
   const attractions = basket.filter(item => item.type === 'attraction' || item.category)
   const restaurants = basket.filter(item => item.type === 'restaurant' || item.cuisine)
 
@@ -29,19 +47,21 @@ export default function TripBasketDrawer({
   if (!isOpen) return null
 
   return (
-    <>
-      {/* Backdrop */}
-      <div className="drawer-backdrop" onClick={onClose} />
-
-      {/* Drawer */}
-      <aside className={`basket-drawer ${isOpen ? 'open' : ''}`}>
+    <dialog id="saved-items-dialog" ref={dialogRef} className="saved-items-dialog" aria-labelledby="saved-items-title"
+      onCancel={event => { event.preventDefault(); onClose() }}
+      onClick={event => {
+        if (event.target !== event.currentTarget) return
+        const rect = event.currentTarget.getBoundingClientRect()
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose()
+      }}>
+      <aside className="basket-drawer open">
         <div className="drawer-header">
           <div className="drawer-title-group">
             <div className="drawer-badge">
               <ShoppingBag size={16} />
-              <span>Trip Basket</span>
+              <span>Saved</span>
             </div>
-            <h2>Selected for Your Trip ({totalItems})</h2>
+            <h2 id="saved-items-title">Saved places & stays ({totalItems})</h2>
           </div>
           <button className="drawer-close-btn" onClick={onClose} aria-label="Close basket">
             <X size={20} />
@@ -53,7 +73,7 @@ export default function TripBasketDrawer({
           <div className="budget-banner-header">
             <div>
               <span className="budget-title">Est. Current Total ({travellers} Pax)</span>
-              <h3>RM {estimatedTotalCost.toLocaleString()}</h3>
+              <h3>RM {(totalItems ? estimatedTotalCost : 0).toLocaleString()}</h3>
             </div>
             <div className="budget-target-pill">
               <div className="target-input-row">
@@ -73,7 +93,7 @@ export default function TripBasketDrawer({
           <div className="budget-progress-track">
             <div
               className={`budget-progress-bar ${budgetPercentage > 95 ? 'warning' : ''}`}
-              style={{ width: `${budgetPercentage}%` }}
+              style={{ width: `${totalItems ? budgetPercentage : 0}%` }}
             />
           </div>
         </div>
@@ -84,10 +104,11 @@ export default function TripBasketDrawer({
               <div className="empty-icon-circle">
                 <ShoppingBag size={36} />
               </div>
-              <h3>Your basket is empty</h3>
+              <h3>No saved places yet</h3>
               <p>
-                Browse through attractions and nearby restaurants on the map to add them to your trip plan, or use the <strong>"✨ Auto-Pick Best Spots"</strong> button.
+                Save places, restaurants, flights, and stays as you explore. You’ll find them here.
               </p>
+              <button className="btn-primary-drawer" onClick={() => { onClose(); onBrowsePlaces() }}><Compass size={17}/> Browse places</button>
             </div>
           ) : (
             <div className="basket-items-list">
@@ -226,6 +247,6 @@ export default function TripBasketDrawer({
           </div>
         )}
       </aside>
-    </>
+    </dialog>
   )
 }

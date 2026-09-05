@@ -27,7 +27,6 @@ function Instagram({ size = 18, className = '' }) {
     </svg>
   )
 }
-
 // Preset Slogan Categories
 const SLOGAN_PRESETS = {
   vibes: [
@@ -180,11 +179,11 @@ export default function PostcardCheckinPage({
   const [uploadedImage, setUploadedImage] = useState(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [exportSuccessMsg, setExportSuccessMsg] = useState('')
-  const [postcardModalOpen, setPostcardModalOpen] = useState(false)
   const [generatedDataUrl, setGeneratedDataUrl] = useState(null)
 
   const canvasRef = useRef(null)
   const fileInputRef = useRef(null)
+  const previewRef = useRef(null)
 
   // Sync selectedSpot changes
   useEffect(() => {
@@ -197,6 +196,18 @@ export default function PostcardCheckinPage({
 
   // Active Photo URL
   const activePhotoUrl = uploadedImage || selectedSpot?.image || selectedCity?.heroImage || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=1000&q=80'
+
+  // Editing returns the phone to its live preview until the next generation.
+  useEffect(() => {
+    setGeneratedDataUrl(null)
+    setExportSuccessMsg('')
+  }, [activePhotoUrl, customLocationName, customAddress, selectedTheme, sloganText, authorTag, travelDate, temperature, selectedFilter, selectedStamp])
+
+  useEffect(() => {
+    if (!generatedDataUrl) return
+    previewRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
+    previewRef.current?.focus({ preventScroll: true })
+  }, [generatedDataUrl])
 
   // Handle Photo Upload
   const handlePhotoUpload = (e) => {
@@ -569,16 +580,18 @@ export default function PostcardCheckinPage({
     })
   }
 
-  // 0. Primary Action: Generate Postcard & Open Modal Showcase
+  // Render the actual export inside the phone preview.
   const handleGeneratePostcard = async () => {
     setIsGenerating(true)
-    const canvas = await renderCanvasPostcard()
-    const dataUrl = canvas.toDataURL('image/png', 1.0)
-    setGeneratedDataUrl(dataUrl)
-    setIsGenerating(false)
-    setPostcardModalOpen(true)
-    setExportSuccessMsg('✨ E-Postcard Generated Successfully!')
-    setTimeout(() => setExportSuccessMsg(''), 4000)
+    try {
+      const canvas = await renderCanvasPostcard()
+      setGeneratedDataUrl(canvas.toDataURL('image/png', 1.0))
+      setExportSuccessMsg('Your postcard is ready in the phone preview.')
+    } catch {
+      setExportSuccessMsg('The postcard could not be generated. Try another photo and generate again.')
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   // 1. Download HD Postcard
@@ -663,7 +676,7 @@ export default function PostcardCheckinPage({
     <div className="postcard-page-container">
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-      <div className="container postcard-layout-grid">
+      <div className={`container postcard-layout-grid ${generatedDataUrl ? 'has-generated-postcard' : ''}`}>
         {/* =========================================================================
             LEFT COLUMN: INTERACTIVE POSTCARD CONTROLS & CHECK-IN CUSTOMIZER
             ========================================================================= */}
@@ -680,8 +693,8 @@ export default function PostcardCheckinPage({
                 </button>
               )}
             </div>
-            <h2>E-Postcard Studio</h2>
-            <p>Check-in at verified spots, customize travel slogans, and export high-res 9:16 Instagram Stories!</p>
+            <h2>Make a postcard</h2>
+            <p>Choose a place, add your photo and a few words, then save or share.</p>
           </div>
 
           {exportSuccessMsg && (
@@ -964,7 +977,7 @@ export default function PostcardCheckinPage({
         {/* =========================================================================
             RIGHT COLUMN: REAL-TIME 9:16 INSTAGRAM STORY LIVE PREVIEW & EXPORT
             ========================================================================= */}
-        <div className="postcard-preview-panel">
+        <div className="postcard-preview-panel" ref={previewRef} tabIndex={-1} aria-label="Instagram Story postcard preview">
           <div className="preview-sticky-wrap">
             <div className="preview-header-bar">
               <div className="preview-title">
@@ -976,6 +989,9 @@ export default function PostcardCheckinPage({
 
             {/* 9:16 INSTAGRAM STORY CANVAS FRAME */}
             <div className={`ig-story-frame theme-${selectedTheme}`}>
+              {generatedDataUrl ? (
+                <img className="story-generated-image" src={generatedDataUrl} alt={`Generated postcard for ${customLocationName}`} />
+              ) : (
               <div className="story-content-wrapper">
                 {/* Background Layer */}
                 <div
@@ -1069,28 +1085,31 @@ export default function PostcardCheckinPage({
                   </div>
                 )}
               </div>
+              )}
             </div>
+
+            {generatedDataUrl && <div className="story-ready-message" role="status"><CheckCircle2 size={18}/><div><h3>Your E-Postcard is ready!</h3><p>Your 1080 × 1920 postcard for {customLocationName} is ready to share.</p></div></div>}
 
             {/* ACTION EXPORT BUTTONS */}
             <div className="postcard-export-actions">
               <button
                 className="btn-share-instagram-primary"
-                onClick={handleGeneratePostcard}
+                onClick={generatedDataUrl ? handleShareInstagramStory : handleGeneratePostcard}
                 disabled={isGenerating}
               >
-                <Sparkles size={18} />
-                <span>{isGenerating ? 'Rendering Story...' : '✨ Generate & Preview Postcard'}</span>
+                {generatedDataUrl ? <Instagram size={18}/> : <Sparkles size={18} />}
+                <span>{isGenerating ? 'Preparing postcard...' : generatedDataUrl ? 'Share to Instagram Story' : 'Generate & Preview Postcard'}</span>
               </button>
 
               <div className="export-secondary-row">
-                <button
+                {!generatedDataUrl && <button
                   className="btn-action-secondary"
                   onClick={handleShareInstagramStory}
                   disabled={isGenerating}
                 >
                   <Instagram size={15} />
                   <span>Share to Story</span>
-                </button>
+                </button>}
 
                 <button
                   className="btn-action-secondary"
@@ -1098,7 +1117,7 @@ export default function PostcardCheckinPage({
                   disabled={isGenerating}
                 >
                   <Download size={15} />
-                  <span>Download HD</span>
+                  <span>Download 1080×1920 HD</span>
                 </button>
 
                 <button
@@ -1109,84 +1128,17 @@ export default function PostcardCheckinPage({
                   <Copy size={15} />
                   <span>Copy Image</span>
                 </button>
+                {generatedDataUrl && <button className="btn-action-secondary" onClick={() => {
+                  const text = `Check out my travel postcard at ${customLocationName}! ${sloganText}`
+                  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer')
+                }} disabled={isGenerating}><MessageCircle size={15}/><span>Share to WhatsApp</span></button>}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* =========================================================================
-          FULLSCREEN POSTCARD SHOWCASE MODAL
-          ========================================================================= */}
-      {postcardModalOpen && (
-        <div className="modal-backdrop-blur" onClick={() => setPostcardModalOpen(false)}>
-          <div className="postcard-showcase-modal" onClick={e => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setPostcardModalOpen(false)}>
-              <X size={18} />
-            </button>
-
-            <div className="modal-header-tag">
-              <Sparkles size={18} className="text-cyan" />
-              <h3>Your E-Postcard is Ready!</h3>
-            </div>
-
-            <p className="modal-sub-desc">
-              Your 1080 × 1920 Instagram Story digital postcard for <strong>{customLocationName}</strong> is generated and ready to share!
-            </p>
-
-            {/* Rendered Preview Image */}
-            <div className="modal-postcard-preview">
-              {generatedDataUrl && (
-                <img
-                  src={generatedDataUrl}
-                  alt="Generated Postcard"
-                  className="modal-rendered-img"
-                />
-              )}
-            </div>
-
-            {/* Modal Actions */}
-            <div className="modal-postcard-actions">
-              <button
-                className="btn-modal-instagram-share"
-                onClick={handleShareInstagramStory}
-              >
-                <Instagram size={18} />
-                <span>📲 Share to Instagram Story</span>
-              </button>
-
-              <div className="modal-sub-actions-row">
-                <button
-                  className="btn-modal-action"
-                  onClick={handleDownloadHD}
-                >
-                  <Download size={16} />
-                  <span>Download 1080x1920 HD</span>
-                </button>
-
-                <button
-                  className="btn-modal-action"
-                  onClick={handleCopyClipboard}
-                >
-                  <Copy size={16} />
-                  <span>Copy Image</span>
-                </button>
-
-                <button
-                  className="btn-modal-action"
-                  onClick={() => {
-                    const text = `Check out my travel postcard at ${customLocationName}! ${sloganText}`
-                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank')
-                  }}
-                >
-                  <MessageCircle size={16} />
-                  <span>Share to WhatsApp</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
+

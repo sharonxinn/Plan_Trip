@@ -111,9 +111,9 @@ export default function StepSetupSync({
       {/* SECTION TITLE */}
       <div className="setup-clean-heading-row">
         <div>
-          <h1 className="step-clean-title">Where & How are you travelling?</h1>
+          <h1 className="step-clean-title">Make it your trip.</h1>
           <p className="step-clean-subtitle">
-            Configure your destination, dates, party type, and style for a seamless trip.
+            Choose a place, set your dates, and tell us who’s coming.
           </p>
         </div>
         <div className="setup-quick-summary-pill">
@@ -136,7 +136,7 @@ export default function StepSetupSync({
             <div className="clean-card-header">
               <div className="clean-card-title-wrap">
                 <MapPin size={18} className="text-cyan" />
-                <h2>1. Choose Destination</h2>
+                <h2>Choose a destination</h2>
               </div>
               <span className="clean-badge">{selectedCountry.flag} {selectedCountry.country}</span>
             </div>
@@ -160,13 +160,14 @@ export default function StepSetupSync({
               {filteredPlaces.map(place => {
                 const isSelected = selectedCity.city === place.city
                 return (
-                  <div
+                  <button
                     key={place.id || place.city}
                     className={`city-card-item ${isSelected ? 'selected' : ''}`}
+                    aria-pressed={isSelected}
                     onClick={() => onSelectCity(place, selectedCountry)}
                   >
                     <div className="city-card-img-wrap">
-                      <img src={place.image} alt={place.city} className="city-card-img" />
+                      <img src={place.heroImage || place.image} alt="" className="city-card-img" loading="lazy" onError={event => { event.currentTarget.style.visibility = 'hidden' }} />
                       <div className="city-card-tag">{place.tag}</div>
                       {isSelected && (
                         <div className="city-selected-indicator">
@@ -178,7 +179,7 @@ export default function StepSetupSync({
                       <div className="city-name">{place.city}</div>
                       <div className="city-sub">{place.state || selectedCountry.country}</div>
                     </div>
-                  </div>
+                  </button>
                 )
               })}
             </div>
@@ -192,7 +193,7 @@ export default function StepSetupSync({
             <div className="clean-card-header">
               <div className="clean-card-title-wrap">
                 <Users size={18} className="text-cyan" />
-                <h2>3. Travel Party & Travellers</h2>
+                <h2>Who’s coming</h2>
               </div>
               <div className="pax-stepper">
                 <button
@@ -236,7 +237,7 @@ export default function StepSetupSync({
           <div className="clean-card-header">
             <div className="clean-card-title-wrap">
               <Sparkles size={18} className="text-cyan" />
-              <h2>4. Trip Vibes & Pacing</h2>
+              <h2>Your travel style</h2>
             </div>
             <span className="clean-badge">{(groupPreferences.vibes || []).length} Selected</span>
           </div>
@@ -303,7 +304,7 @@ export default function StepSetupSync({
             <div className="clean-card-header">
               <div className="clean-card-title-wrap">
                 <ShieldCheck size={18} className="text-emerald" />
-                <h2>5. Squad Members ({members.length})</h2>
+                <h2>Travel group ({members.length})</h2>
               </div>
               <span className="clean-badge success">Synced</span>
             </div>
@@ -348,7 +349,7 @@ export default function StepSetupSync({
           <div className="clean-card-header">
             <div className="clean-card-title-wrap">
               <Calendar size={18} className="text-cyan" />
-              <h2>2. Travel Dates & Duration</h2>
+              <h2>Dates & duration</h2>
             </div>
             <span className="clean-badge">{durationDays} Days / {Math.max(1, durationDays - 1)} Nights</span>
           </div>

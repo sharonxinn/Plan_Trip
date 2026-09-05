@@ -126,10 +126,10 @@ export default function StageMemory({
             <span>Back to Dashboard</span>
           </button>
           <div className="stage-headline-group">
-            <span className="stage-phase-badge memory">Stage 3 · Memory Hub</span>
-            <h1 className="stage-headline-title">Travel Memories, Budget Summary & History</h1>
+            <span className="stage-phase-badge memory">Your travel journal</span>
+            <h1 className="stage-headline-title">Bring a little of the trip home.</h1>
             <p className="stage-headline-sub">
-              Craft digital souvenir E-Postcards, review your budget vs actual final expenses, and view your travel history.
+              Make a postcard, review your spending, and revisit your journeys.
             </p>
           </div>
         </div>
@@ -141,28 +141,28 @@ export default function StageMemory({
             onClick={() => setActiveTab('postcard')}
           >
             <Camera size={16} />
-            <span>1. AI Digital Postcard</span>
+            <span>Postcards</span>
           </button>
           <button
             className={`memory-tab-btn ${activeTab === 'budget-summary' ? 'active' : ''}`}
             onClick={() => setActiveTab('budget-summary')}
           >
             <DollarSign size={16} />
-            <span>2. Budget Summary (Initial vs Final)</span>
+            <span>Spending recap</span>
           </button>
           <button
             className={`memory-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
             onClick={() => setActiveTab('history')}
           >
             <History size={16} />
-            <span>3. 📜 Travel History</span>
+            <span>Past trips</span>
           </button>
           <button
             className={`memory-tab-btn ${activeTab === 'doc' ? 'active' : ''}`}
             onClick={() => setActiveTab('doc')}
           >
             <FileText size={16} />
-            <span>4. Word Trip Recap</span>
+            <span>Trip journal</span>
           </button>
         </div>
       </div>
