@@ -216,18 +216,6 @@ export default function AIAgentPage({
       {/* Page Header */}
       <div className="ai-header">
         <div className="container">
-          <div className="breadcrumbs">
-            <button onClick={onNavigateToExplore} className="crumb-btn">
-              1. 🗺️ Places & Map
-            </button>
-            <span className="crumb-divider">/</span>
-            <button onClick={onNavigateToCompare} className="crumb-btn">
-              2. ✈️ Compare Stays & Flights
-            </button>
-            <span className="crumb-divider">/</span>
-            <span className="crumb-active">3. Itinerary Document</span>
-          </div>
-
           <div className="ai-title-row">
             <div>
               <h1 className="page-title">

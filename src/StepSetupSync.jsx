@@ -128,6 +128,55 @@ export default function StepSetupSync({
 
       {/* MAIN SETUP LAYOUT */}
       <div className="setup-clean-stack">
+        {/* DATES & DURATION */}
+        <div className="clean-card">
+          <div className="clean-card-header">
+            <div className="clean-card-title-wrap">
+              <Calendar size={18} className="text-cyan" />
+              <h2>Dates & duration</h2>
+            </div>
+            <span className="clean-badge">{durationDays} Days / {Math.max(1, durationDays - 1)} Nights</span>
+          </div>
+
+          <div className="date-fields-grid">
+            <div className="date-field-box">
+              <label>Departure Date</label>
+              <input
+                type="date"
+                value={departureDate}
+                onChange={e => onDepartureDateChange(e.target.value)}
+                className="clean-date-input"
+              />
+            </div>
+            <div className="date-field-box">
+              <label>Return Date</label>
+              <input
+                type="date"
+                value={returnDate}
+                onChange={e => onReturnDateChange(e.target.value)}
+                className="clean-date-input"
+              />
+            </div>
+          </div>
+
+          <div className="quick-dur-row">
+            <span className="quick-dur-caption">Quick Set:</span>
+            {[3, 4, 5, 7, 10].map(days => (
+              <button
+                key={days}
+                className={`dur-pill-btn ${durationDays === days ? 'active' : ''}`}
+                onClick={() => {
+                  const d1 = new Date(departureDate)
+                  const d2 = new Date(d1.getTime() + days * 86400000)
+                  onReturnDateChange(d2.toISOString().split('T')[0])
+                }}
+              >
+                {days} Days
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="setup-clean-grid">
           {/* LEFT COLUMN: DESTINATION */}
           <div className="setup-clean-col">
@@ -344,55 +393,6 @@ export default function StepSetupSync({
           </div>
         </div>
 
-        {/* CARD 2: DATES & DURATION (full width) */}
-        <div className="clean-card">
-          <div className="clean-card-header">
-            <div className="clean-card-title-wrap">
-              <Calendar size={18} className="text-cyan" />
-              <h2>Dates & duration</h2>
-            </div>
-            <span className="clean-badge">{durationDays} Days / {Math.max(1, durationDays - 1)} Nights</span>
-          </div>
-
-          <div className="date-fields-grid">
-            <div className="date-field-box">
-              <label>Departure Date</label>
-              <input
-                type="date"
-                value={departureDate}
-                onChange={e => onDepartureDateChange(e.target.value)}
-                className="clean-date-input"
-              />
-            </div>
-            <div className="date-field-box">
-              <label>Return Date</label>
-              <input
-                type="date"
-                value={returnDate}
-                onChange={e => onReturnDateChange(e.target.value)}
-                className="clean-date-input"
-              />
-            </div>
-          </div>
-
-          {/* Quick Duration Chips */}
-          <div className="quick-dur-row">
-            <span className="quick-dur-caption">Quick Set:</span>
-            {[3, 4, 5, 7, 10].map(days => (
-              <button
-                key={days}
-                className={`dur-pill-btn ${durationDays === days ? 'active' : ''}`}
-                onClick={() => {
-                  const d1 = new Date(departureDate)
-                  const d2 = new Date(d1.getTime() + days * 86400000)
-                  onReturnDateChange(d2.toISOString().split('T')[0])
-                }}
-              >
-                {days} Days
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* BOTTOM STEP PROCEED BAR */}

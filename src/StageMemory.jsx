@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Camera, DollarSign, ArrowLeft, Download, Share2, Sparkles,
   TrendingDown, TrendingUp, CheckCircle2, FileText, PieChart, Users,
   Receipt, ArrowUpRight, ArrowDownRight, Printer, AlertCircle, Heart,
-  History, Calendar, MapPin, Award, Plane, Compass
+  History, Calendar, MapPin, Award, Plane, Compass, Globe2
 } from 'lucide-react'
 import PostcardCheckinPage from './PostcardCheckinPage'
 import AIAgentPage from './AIAgentPage'
+import MemoryWorld from './MemoryWorld'
 
 export default function StageMemory({
   selectedCity,
@@ -20,9 +21,14 @@ export default function StageMemory({
   budgetTier = 'balanced',
   basket = [],
   smartItinerary,
+  initialTab = 'postcard',
+  currentCoinBalance = 0,
+  onEarnCoins,
+  onOpenDashboardGlobe,
   onBackToDashboard
 }) {
-  const [activeTab, setActiveTab] = useState('postcard') // 'postcard' | 'budget-summary' | 'history' | 'doc'
+  const [activeTab, setActiveTab] = useState(initialTab) // 'postcard' | 'budget-summary' | 'doc' | 'world'
+  useEffect(() => setActiveTab(initialTab), [initialTab])
 
   // Realistic Expense Variance Calculations (Initial Budget vs Final Actual)
   const initialBudget = budgetAmount || 3800
@@ -151,24 +157,43 @@ export default function StageMemory({
             <span>Spending recap</span>
           </button>
           <button
-            className={`memory-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
-            onClick={() => setActiveTab('history')}
-          >
-            <History size={16} />
-            <span>Past trips</span>
-          </button>
-          <button
             className={`memory-tab-btn ${activeTab === 'doc' ? 'active' : ''}`}
             onClick={() => setActiveTab('doc')}
           >
             <FileText size={16} />
             <span>Trip journal</span>
           </button>
+          <button
+            className={`memory-tab-btn memory-world-tab ${activeTab === 'world' ? 'active' : ''}`}
+            onClick={() => setActiveTab('world')}
+          >
+            <Globe2 size={16} />
+            <span>Public globe</span>
+          </button>
         </div>
       </div>
 
       {/* 2. TAB CONTENT */}
       <div className="memory-tab-content">
+        {activeTab === 'world' && (
+          <div className="memory-tab-pane fade-in">
+            <MemoryWorld
+              mode="publish"
+              selectedCity={selectedCity}
+              selectedCountry={selectedCountry}
+              departureDate={departureDate}
+              returnDate={returnDate}
+              travellers={travellers}
+              initialBudget={initialBudget}
+              totalActual={totalActual}
+              varianceAmount={varianceAmount}
+              basket={basket}
+              currentCoinBalance={currentCoinBalance}
+              onEarnCoins={onEarnCoins}
+              onOpenDashboardGlobe={onOpenDashboardGlobe}
+            />
+          </div>
+        )}
         {/* TAB 1: AI DIGITAL POSTCARD STUDIO */}
         {activeTab === 'postcard' && (
           <div className="memory-tab-pane fade-in">
@@ -290,9 +315,9 @@ export default function StageMemory({
                   <Share2 size={15} />
                   <span>Broadcast on WhatsApp</span>
                 </button>
-                <button className="btn-clean-primary" onClick={() => setActiveTab('history')}>
-                  <History size={15} />
-                  <span>View Travel History Log</span>
+                <button className="btn-clean-primary" onClick={() => setActiveTab('world')}>
+                  <Globe2 size={15} />
+                  <span>Publish to Public Globe</span>
                 </button>
               </div>
             </div>

@@ -63,6 +63,13 @@
 .trip-route-note p { font-size:13px; color:#536274; line-height:1.7; }
 .trip-home .trip-route-button { display:flex; align-items:center; gap:8px; padding:11px 15px; border-radius:8px; background:white; border:1px solid #cedbf0; margin-top:19px; font-size:14px; color:#245bc4; font-weight:600; }
 .trip-saved-note { display:block; font-size:11px; color:#637185; margin-top:12px; }
+.trip-public-globe-note{position:relative;min-height:390px;overflow:hidden;padding:25px;border-radius:16px;background:radial-gradient(circle at 72% 19%,#214c75 0,#0b2139 35%,#06121f 72%);color:#fff;align-self:start;box-shadow:0 16px 36px #172e481b}
+.trip-mini-globe{position:relative;width:210px;height:210px;margin:-64px -55px 12px auto;border-radius:50%;background-image:url('/textures/earth-atmos-2048.jpg');background-size:420px 210px;background-position:42% center;box-shadow:inset -25px -15px 38px #020b16b8,inset 12px 7px 18px #c6e7ff26,0 0 0 5px #58b6f31a,0 0 40px #57aeef38;animation:trip-globe-turn 24s linear infinite}
+.trip-mini-globe:after{content:'';position:absolute;inset:-50px;background-image:radial-gradient(#fff 1px,transparent 1.2px);background-size:27px 25px;opacity:.28;z-index:-1}
+.trip-mini-globe>span{position:absolute;inset:-7px;border:1px solid #80ccff57;border-radius:50%}
+.globe-pin{position:absolute;width:8px;height:8px;border-radius:50%;background:#f4c95d;box-shadow:0 0 0 5px #f4c95d24,0 0 14px #f4c95d}.globe-pin.one{left:62px;top:55px}.globe-pin.two{right:45px;top:87px}.globe-pin.three{left:95px;bottom:33px}
+.trip-globe-label{display:flex;align-items:center;gap:7px;font-size:11px;color:#9bc8e8}.trip-public-globe-note h2{font-size:25px;line-height:1.18;letter-spacing:-.7px;margin:10px 0 9px;font-weight:650}.trip-public-globe-note p{font-size:13px;color:#c2d2df;line-height:1.65}.trip-public-globe-note .trip-route-button{background:#fff;border-color:#fff;color:#174f9c}.trip-public-globe-note .trip-route-button:is(:hover,:focus-visible){background:#e9f1ff}.trip-public-globe-note .trip-saved-note{color:#91a8ba}
+@keyframes trip-globe-turn{to{background-position:-378px center}}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:3px solid #3975df; outline-offset:4px; }
 .trip-home button:active { transform:translateY(1px); }
 @keyframes trip-photo-arrive { from { opacity:.4; transform:scale(1.035); } to { opacity:1; transform:scale(1); } }

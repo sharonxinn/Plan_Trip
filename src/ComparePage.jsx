@@ -84,12 +84,6 @@ export default function ComparePage({
   const tripHotelLink = `https://www.trip.com/hotels/list?city=${encodeURIComponent(cityName)}&checkIn=${departureDate}&checkOut=${returnDate}&adult=${travellers}&curr=MYR`
 
   // Mode-aware copy so Transportation and Accommodation never bleed into each other
-  const breadcrumbLabel = mode === 'flights'
-    ? '2. ✈️ Compare Tickets'
-    : mode === 'hotels'
-      ? '2. 🏨 Compare Stays'
-      : '2. ✈️ Compare Tickets & Stays'
-
   const pageTitle = mode === 'flights'
     ? 'Compare Real Fares across Top Providers'
     : mode === 'hotels'
@@ -107,18 +101,6 @@ export default function ComparePage({
       {/* Header Banner */}
       <div className="compare-header">
         <div className="container">
-          <div className="breadcrumbs">
-            <button onClick={onNavigateToExplore} className="crumb-btn">
-              1. 🌍 Explore {cityName}
-            </button>
-            <span className="crumb-divider">/</span>
-            <span className="crumb-active">{breadcrumbLabel}</span>
-            <span className="crumb-divider">/</span>
-            <button onClick={onNavigateToAI} className="crumb-btn">
-              3. 🤖 AI Itinerary
-            </button>
-          </div>
-
           <h1 className="page-title">
             {pageTitle}
           </h1>

@@ -184,7 +184,6 @@ export default function StepBudgetSplitter({
   // ==========================================
   // --- AI RECEIPT SCANNER & ITEMIZER STATE ---
   // ==========================================
-  const [selectedReceiptPreset, setSelectedReceiptPreset] = useState('seafood')
   const [isScanning, setIsScanning] = useState(false)
   const [scanProgressText, setScanProgressText] = useState('')
   const [uploadedReceiptImage, setUploadedReceiptImage] = useState(null)
@@ -480,7 +479,7 @@ export default function StepBudgetSplitter({
   }
 
   // Trigger Scanning (Tesseract.js Client OCR + Gemini Multimodal Vision API + Fallback)
-  const handleScanReceipt = async (presetKey = selectedReceiptPreset, customText = '', imageFileOrData = null) => {
+  const handleScanReceipt = async (presetKey = 'custom', customText = '', imageFileOrData = null) => {
     setIsScanning(true)
     setScanProgressText('📷 Reading image & performing Optical Character Recognition (OCR)...')
 
@@ -997,48 +996,6 @@ export default function StepBudgetSplitter({
         <div className="receipt-scanner-workspace fade-in">
           {/* TOP RECEIPT PICKER & SCAN CONTROLS */}
           <div className="receipt-capture-top-bar">
-            <div className="preset-selector-group">
-              <span className="preset-label-tag">⚡ 1-Click Instant Receipt Demos:</span>
-              <div className="preset-pill-buttons">
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'seafood' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('seafood')
-                    handleScanReceipt('seafood')
-                  }}
-                >
-                  <span>🍤 Seafood Banquet Feast (RM 266.80)</span>
-                </button>
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'cafe' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('cafe')
-                    handleScanReceipt('cafe')
-                  }}
-                >
-                  <span>☕ Cafe Brunch & Artisan Drinks (RM 197.20)</span>
-                </button>
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'izakaya' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('izakaya')
-                    handleScanReceipt('izakaya')
-                  }}
-                >
-                  <span>🍣 Izakaya & Cocktails (RM 426.88)</span>
-                </button>
-                <button
-                  className={`preset-pill ${selectedReceiptPreset === 'streetfood' ? 'active' : ''}`}
-                  onClick={() => {
-                    setSelectedReceiptPreset('streetfood')
-                    handleScanReceipt('streetfood')
-                  }}
-                >
-                  <span>🍜 Night Market Street Food (RM 111.00)</span>
-                </button>
-              </div>
-            </div>
-
             <div className="custom-upload-actions">
               <input
                 type="file"

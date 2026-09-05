@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   Zap, CloudRain, AlertTriangle, Clock, BatteryCharging,
   DollarSign, ShieldCheck, ArrowRight, ArrowLeft, RefreshCw,
-  Check, Sparkles, MapPin, Coffee, Compass, PhoneCall, Share2
+  Check, PhoneCall, Share2
 } from 'lucide-react'
 
 export default function StepPlanBStudio({
@@ -25,78 +25,7 @@ export default function StepPlanBStudio({
   const [selectedScenario, setSelectedScenario] = useState('rain')
   const [isApplying, setIsApplying] = useState(false)
   const [appliedSuccess, setAppliedSuccess] = useState(false)
-  const [customDisruption, setCustomDisruption] = useState('')
   const [copiedEmergencyMsg, setCopiedEmergencyMsg] = useState(false)
-  const [customSolution, setCustomSolution] = useState(null)
-  const [isSolvingCustom, setIsSolvingCustom] = useState(false)
-  const [copiedCustomMsg, setCopiedCustomMsg] = useState(false)
-  const [customAppliedToast, setCustomAppliedToast] = useState(false)
-
-  // Handle Custom AI Contingency Generation
-  const handleGenerateCustomEmergencyFix = async () => {
-    if (!customDisruption.trim()) return
-    setIsSolvingCustom(true)
-    try {
-      const res = await fetch('/api/ai/emergency-solve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          situation: customDisruption.trim(),
-          city: cityName,
-          country: countryName,
-          party: travelParty,
-          durationDays,
-          budgetAmount
-        })
-      })
-      if (res.ok) {
-        const data = await res.json()
-        if (data.solution) {
-          setCustomSolution(data.solution)
-        }
-      }
-    } catch (_err) {
-      // Offline fallback NLP resolver
-      const s = customDisruption.toLowerCase()
-      setCustomSolution({
-        title: `Custom Contingency: ${customDisruption.slice(0, 35)} in ${cityName}`,
-        urgency: s.includes('passport') || s.includes('medical') ? 'High' : 'Moderate',
-        summary: `Tailored real-time contingency plan for ${cityName}, ${countryName}.`,
-        immediateActions: [
-          `Head to nearest air-conditioned lounge or concierge in ${cityName}.`,
-          `Address immediate mitigation for "${customDisruption}".`,
-          `Notify squad members of temporary 45-min schedule adjustment.`,
-          `Resume with low-stress dining near your hotel.`
-        ],
-        itineraryReroute: `Auto-pause current day schedule by 45 mins. Soften walking pace in ${cityName}.`,
-        localSafetyResource: `${cityName} Tourist Information Center`,
-        hotline: '📞 999 / 112 (Emergency Assistance)',
-        whatsappBroadcastTemplate: `💡 [Squad Contingency Update]\nHandling "${customDisruption}" in ${cityName}. Schedule shifted by 45 mins, all good!`
-      })
-    } finally {
-      setIsSolvingCustom(false)
-    }
-  }
-
-  // Copy Custom Solution to WhatsApp
-  const handleCopyCustomBroadcast = () => {
-    if (!customSolution) return
-    navigator.clipboard.writeText(customSolution.whatsappBroadcastTemplate)
-    setCopiedCustomMsg(true)
-    setTimeout(() => setCopiedCustomMsg(false), 2500)
-  }
-
-  // Apply Custom Solution to Itinerary
-  const handleApplyCustomSolution = () => {
-    if (onApplyPlanB) {
-      onApplyPlanB({
-        title: customSolution.title,
-        desc: customSolution.summary
-      })
-    }
-    setCustomAppliedToast(true)
-    setTimeout(() => setCustomAppliedToast(false), 3000)
-  }
 
   // Scenario presets definition
   const scenarios = [
@@ -390,115 +319,6 @@ export default function StepPlanBStudio({
 
         {/* Right Column: Custom Disruption Helper & Local Safety Hotlines */}
         <div className="setup-card-stack">
-          {/* Custom Disruption AI Assistant */}
-          <div className="setup-card">
-            <div className="card-header-row">
-              <div className="card-icon-title">
-                <Sparkles className="text-cyan" size={20} />
-                <h3>Tell us what changed</h3>
-              </div>
-              <span className="badge-highlight">AI Emergency Assistant</span>
-            </div>
-
-            <p className="section-note">
-              Faced with something else? Type your situation below for an instant custom contingency solution:
-            </p>
-
-            <div className="custom-input-box">
-              <textarea
-                placeholder="e.g. Lost passport, kids crying for food at 3 PM, sudden sprained ankle in city center, phone battery dead..."
-                value={customDisruption}
-                onChange={e => setCustomDisruption(e.target.value)}
-                className="custom-disruption-textarea"
-                rows={3}
-              />
-              <button
-                className="solve-custom-btn"
-                disabled={!customDisruption.trim() || isSolvingCustom}
-                onClick={handleGenerateCustomEmergencyFix}
-              >
-                {isSolvingCustom ? (
-                  <>
-                    <RefreshCw size={16} className="spin" /> Generating Tailored Contingency Plan...
-                  </>
-                ) : (
-                  <>
-                    <Zap size={16} /> Generate Custom Emergency Fix
-                  </>
-                )}
-              </button>
-            </div>
-
-            {/* Generated Custom AI Emergency Solution Card */}
-            {customSolution && (
-              <div className="custom-solution-result-card fade-in">
-                <div className="solution-card-header">
-                  <div className="solution-title-row">
-                    <h4>{customSolution.title}</h4>
-                    <span className={`urgency-badge ${customSolution.urgency?.toLowerCase()}`}>
-                      🚨 {customSolution.urgency} Urgency
-                    </span>
-                  </div>
-                  <p className="solution-summary-text">{customSolution.summary}</p>
-                </div>
-
-                {/* Immediate Sequential Action Checklist */}
-                <div className="solution-steps-section">
-                  <h5>⚡ Immediate Action Steps (First 15-30 Mins):</h5>
-                  <div className="solution-checklist">
-                    {customSolution.immediateActions?.map((step, idx) => (
-                      <div key={idx} className="solution-checklist-item">
-                        <span className="step-num-badge">{idx + 1}</span>
-                        <span className="step-text">{step}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Itinerary Reroute Adjustment */}
-                {customSolution.itineraryReroute && (
-                  <div className="solution-reroute-box">
-                    <div className="reroute-title-line">
-                      <Compass size={15} className="text-cyan" />
-                      <strong>Itinerary Adjustment:</strong>
-                    </div>
-                    <p>{customSolution.itineraryReroute}</p>
-                  </div>
-                )}
-
-                {/* Emergency Contact Hub */}
-                <div className="solution-contact-bar">
-                  <div className="contact-resource-name">
-                    <MapPin size={14} className="text-cyan" />
-                    <span>{customSolution.localSafetyResource}</span>
-                  </div>
-                  <div className="contact-hotline-tag">{customSolution.hotline}</div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="solution-actions-row">
-                  <button
-                    type="button"
-                    className="btn-apply-custom-fix"
-                    onClick={handleApplyCustomSolution}
-                  >
-                    <Zap size={15} />
-                    {customAppliedToast ? '✅ Applied to Day Itinerary!' : 'Apply Contingency to Itinerary'}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn-copy-custom-wa"
-                    onClick={handleCopyCustomBroadcast}
-                  >
-                    {copiedCustomMsg ? <Check size={15} /> : <Share2 size={15} />}
-                    {copiedCustomMsg ? 'Copied WhatsApp Text!' : 'Copy WhatsApp Broadcast'}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Local Emergency Hotlines & Peace of Mind */}
           <div className="setup-card">
             <div className="card-header-row">

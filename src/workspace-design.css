@@ -20,6 +20,7 @@
 .workspace-navigation svg { transition:transform 250ms; }
 .workspace-navigation button:is(:hover,:focus-visible) svg { transform:translateY(-3px); }
 .app-root-wrapper :is(.container,.header-container) { max-width:1160px; }
+.coin-wallet-wrap{position:relative}.coin-balance-pill{display:flex;align-items:center;gap:6px;height:34px;padding:0 11px;border:1px solid #ead69d;border-radius:999px;background:#fff9e8;color:#7c5a0b;font-size:11px;font-weight:650}.coin-balance-pill svg{color:#d49316}.coin-balance-pill strong{display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:999px;background:#f2c452;color:#493500;font-size:10px}.coin-balance-pill:hover{background:#fff3c9;border-color:#dcb959}.coin-wallet-popover{position:absolute;z-index:90;right:0;top:43px;width:300px;padding:15px;background:#fff;border:1px solid #dce4ec;border-radius:15px;box-shadow:0 18px 48px rgba(28,47,69,.18);animation:workspace-content-in .22s ease-out both}.coin-wallet-popover:before{content:"";position:absolute;right:28px;top:-6px;width:11px;height:11px;transform:rotate(45deg);background:#fff;border-left:1px solid #dce4ec;border-top:1px solid #dce4ec}.coin-wallet-popover header{display:flex;align-items:flex-start;justify-content:space-between}.coin-wallet-popover header span{display:block;color:#7b8998;font-size:9px;text-transform:uppercase;letter-spacing:.08em}.coin-wallet-popover header strong{display:block;font-size:16px;margin-top:3px}.coin-wallet-popover header button{display:grid;place-items:center;width:27px;height:27px;border-radius:50%;background:#f2f5f8;color:#617286}.coin-wallet-balance{display:flex;align-items:center;gap:10px;margin:14px 0;padding:13px;border-radius:11px;background:linear-gradient(135deg,#fff5ce,#fffaf0);color:#91650a}.coin-wallet-balance>svg{padding:7px;width:38px;height:38px;border-radius:50%;background:#f1c44e;color:#574000}.coin-wallet-balance span small,.coin-wallet-balance span strong{display:block}.coin-wallet-balance small{font-size:9px;color:#8b7a52}.coin-wallet-balance strong{font-size:22px;line-height:1.05}.coin-earning-rule{display:grid;grid-template-columns:25px minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;border:1px solid #e6ebf0;border-radius:10px}.coin-earning-rule>svg{color:#245bc4}.coin-earning-rule span strong,.coin-earning-rule span small{display:block}.coin-earning-rule strong{font-size:10px}.coin-earning-rule small{color:#7a8998;font-size:9px;line-height:1.4;margin-top:2px}.coin-earning-rule>b{color:#9a6b09;font-size:12px}.coin-progress{height:6px;margin-top:14px;overflow:hidden;border-radius:999px;background:#e8edf2}.coin-progress span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#e1ad25,#f2ca5b);transition:width .45s ease}.coin-progress-copy{display:block;margin-top:6px;color:#82909e;font-size:9px;text-align:right}
 .app-root-wrapper :is(.stage-travelling-container,.stage-memory-container) { max-width:1160px; padding:30px 24px 60px; gap:24px; }
 .app-root-wrapper :is(.stage-planning-container,.compare-page,.ai-agent-page,.postcard-page-container) { width:100%; background:transparent; }
 .app-root-wrapper :is(.stage-view-top-header,.compare-header,.ai-header,.setup-clean-heading-row,.discover-hub-header,.postcard-panel-header,.transit-simple-header) { background:transparent; border:0; box-shadow:none; border-radius:0; }
@@ -54,8 +55,8 @@
 .app-root-wrapper .city-card-tag { text-transform:none; letter-spacing:0; font-size:10px; }
 .app-root-wrapper :is(.clean-date-input,.squad-add-input,.add-exp-input,.add-exp-num,.collector-input,.collector-select,.collector-textarea,.pt-input,.raw-ocr-textarea,.transit-clean-input,.slogan-custom-textarea,.custom-disruption-textarea) { background:#fff; color:#233449; border:1px solid #cdd8e6; border-radius:8px; box-shadow:none; }
 .app-root-wrapper :is(input,select,textarea) { accent-color:#245bc4; }
-.app-root-wrapper :is(.step-next-primary-btn,.btn-clean-primary,.btn-next-step,.btn-find-transit-route,.btn-main-generate-postcard,.btn-primary-generate,.btn-collector-submit,.btn-trigger-smart-route,.btn-save-to-group-ledger,.add-exp-submit-btn,.squad-add-btn,.solve-custom-btn,.btn-apply-custom-fix,.btn-primary-drawer,.pt-btn-primary,.btn-download-doc,.btn-generate-route) { background:#245bc4; color:#fff; border:1px solid #245bc4; border-radius:9px; box-shadow:none; font-weight:600; }
-.app-root-wrapper :is(.step-next-primary-btn,.btn-clean-primary,.btn-find-transit-route,.btn-main-generate-postcard,.btn-primary-generate,.pt-btn-primary):hover { background:#194aa7; box-shadow:0 3px 9px #245bc424; transform:none; }
+.app-root-wrapper :is(.step-next-primary-btn,.btn-clean-primary,.btn-next-step,.btn-find-transit-route,.btn-primary-generate,.btn-collector-submit,.btn-trigger-smart-route,.btn-save-to-group-ledger,.add-exp-submit-btn,.squad-add-btn,.solve-custom-btn,.btn-apply-custom-fix,.btn-primary-drawer,.pt-btn-primary,.btn-download-doc,.btn-generate-route) { background:#245bc4; color:#fff; border:1px solid #245bc4; border-radius:9px; box-shadow:none; font-weight:600; }
+.app-root-wrapper :is(.step-next-primary-btn,.btn-clean-primary,.btn-find-transit-route,.btn-primary-generate,.pt-btn-primary):hover { background:#194aa7; box-shadow:0 3px 9px #245bc424; transform:none; }
 .app-root-wrapper :is(.step-bottom-bar,.collector-footer-row,.modal-footer-actions,.drawer-footer) { background:#fff; border:1px solid #dfe6ee; border-radius:12px; box-shadow:none; padding:16px 20px; }
 /* Planning: a destination picker, a readable ledger, and a checklist. */
 .app-root-wrapper .budget-input-hero-box { padding:24px; }
@@ -95,7 +96,6 @@
 .app-root-wrapper .postcard-layout-grid { padding:0; grid-template-columns:minmax(0,1fr) minmax(280px,360px); gap:30px; }
 .app-root-wrapper .postcard-panel-header { padding:0 0 6px; }
 .app-root-wrapper .postcard-panel-header h2 { font-size:23px; font-weight:650; color:#233449; }
-.app-root-wrapper .studio-generate-action-box { background:#eaf1ff; border:1px solid #d9e4f5; border-radius:14px; box-shadow:none; }
 .app-root-wrapper .preview-sticky-wrap { top:90px; padding:18px; background:#e8edf4; border-radius:16px; border:1px solid #dbe3ee; }
 .app-root-wrapper .theme-card-btn.active .theme-color-dot { animation:workspace-check 320ms ease-out; }
 .app-root-wrapper :is(.budget-category-variance-card,.travel-history-card,.export-tile-card) { overflow:hidden; }
@@ -125,7 +125,7 @@
 .app-root-wrapper :is(.collector-tab-switch,.chat-tab-navigation,.slogan-cat-tabs,.clean-tab-switch,.travelling-tab-switcher,.memory-tab-switcher) button:is(:hover,:focus-visible) svg { transform:rotate(-10deg) scale(1.1); }
 .app-root-wrapper button:not(:disabled) { touch-action:manipulation; }
 .app-root-wrapper button:disabled { cursor:not-allowed; }
-.app-root-wrapper :is(.step-next-primary-btn,.btn-main-generate-postcard,.btn-find-transit-route,.pt-btn,.export-action-btn,.btn-open-tile):active { transform:scale(.97); }
+.app-root-wrapper :is(.step-next-primary-btn,.btn-find-transit-route,.pt-btn,.export-action-btn,.btn-open-tile):active { transform:scale(.97); }
 @keyframes workspace-content-in { from { opacity:.3; transform:translateX(12px); } to { opacity:1; transform:translateX(0); } }
 @keyframes workspace-check { 0% { transform:scale(.5); } 65% { transform:scale(1.18); } 100% { transform:scale(1); } }
 @keyframes workspace-station { from { opacity:.3; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
@@ -286,39 +286,6 @@
 .app-root-wrapper .postcard-export-actions .export-secondary-row { display:grid; grid-template-columns:1fr; gap:8px; }
 .app-root-wrapper .postcard-export-actions .btn-action-secondary { justify-content:center; background:#fff; color:#34485f; border:1px solid #cdd8e6; border-radius:8px; padding:11px; }
 .app-root-wrapper .postcard-export-actions .btn-share-instagram-primary { background:#245bc4; color:#fff; border-radius:9px; box-shadow:none; }
-
-/* Generated postcard mode becomes a centered presentation instead of hugging the edge. */
-.app-root-wrapper .postcard-layout-grid.has-generated-postcard {
-  grid-template-columns:minmax(0,760px);
-  justify-content:center;
-  align-items:start;
-}
-.app-root-wrapper .has-generated-postcard .postcard-preview-panel {
-  grid-row:1;
-  width:100%;
-  max-width:440px;
-  margin-inline:auto;
-}
-.app-root-wrapper .has-generated-postcard .preview-sticky-wrap {
-  position:static;
-  width:100%;
-  margin-inline:auto;
-}
-.app-root-wrapper .has-generated-postcard .postcard-controls-panel {
-  grid-row:2;
-  width:100%;
-  max-width:760px;
-  margin-inline:auto;
-}
-.app-root-wrapper .has-generated-postcard .preview-header-bar,
-.app-root-wrapper .has-generated-postcard .story-ready-message,
-.app-root-wrapper .has-generated-postcard .postcard-export-actions {
-  width:min(100%,360px);
-  margin-inline:auto;
-}
-.app-root-wrapper .has-generated-postcard .ig-story-frame {
-  margin-inline:auto;
-}
 
 /* Keep every primary page on the same optical center and prevent accidental spill. */
 .app-layout > :is(main,.stage-planning-container,.stage-travelling-container,.stage-memory-container,.compare-page,.ai-agent-page,.pubtrip-wrap) {

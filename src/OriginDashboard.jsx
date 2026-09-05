@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Calendar, MapPin, Users, ArrowUpRight, ChevronRight, Compass, Navigation, Camera, Check, Plus, Luggage, RotateCcw } from 'lucide-react'
+import { Calendar, MapPin, Users, ArrowUpRight, ChevronRight, Compass, Navigation, Camera, Check, Globe2, Sparkles, RotateCcw } from 'lucide-react'
 
 
-export default function OriginDashboard({ selectedCity, selectedCountry, departureDate, returnDate, travellers, budgetAmount, basket = [], isCalendarAdded, onNavigateStage, onOpenDateEditor, onOpenSmartWizard }) {
+export default function OriginDashboard({ selectedCity, selectedCountry, departureDate, returnDate, travellers, budgetAmount, basket = [], isCalendarAdded, onNavigateStage, onOpenDateEditor, onOpenPublicGlobe }) {
   const [now, setNow] = useState(Date.now())
   const [imageFailed, setImageFailed] = useState(false)
   const [postcardFlipped, setPostcardFlipped] = useState(false)
@@ -58,7 +58,14 @@ export default function OriginDashboard({ selectedCity, selectedCountry, departu
         <section className="trip-places"><div className="trip-section-heading"><div><h2>Get to know {selectedCity?.city || 'your destination'}</h2><p>A few places to start exploring.</p></div><button className="trip-text-button" onClick={() => onNavigateStage('planning')}>Explore <ArrowUpRight size={16}/></button></div>
           <div className="trip-place-list">{spots.map(spot => <button key={spot.id} className="trip-place" onClick={() => onNavigateStage('planning')}><div className="trip-place-image"><img src={spot.image} alt="" loading="lazy" onError={event => { event.currentTarget.style.visibility = 'hidden' }}/></div><span><strong>{spot.name}</strong><small>{spot.category}</small></span><ArrowUpRight size={18}/></button>)}{!spots.length && <p>Choose a destination in your plan to discover places nearby.</p>}</div>
         </section>
-        <aside className="trip-route-note"><span className="trip-note-icon"><Luggage size={23}/></span><svg className="trip-route-sketch" viewBox="0 0 230 65" aria-hidden="true"><path className="trip-route-track" d="M12 48 C45 48 35 12 76 16 S120 65 158 38 S187 10 218 15"/><path className="trip-route-ink" pathLength="1" d="M12 48 C45 48 35 12 76 16 S120 65 158 38 S187 10 218 15"/><circle cx="12" cy="48" r="5"/><circle cx="115" cy="40" r="5"/><circle cx="218" cy="15" r="5"/></svg><h2>Less zigzag.<br/>More exploring.</h2><p>Turn your saved places into a day-by-day route, with time to get between stops.</p><button className="trip-route-button" onClick={onOpenSmartWizard}><Plus size={17}/> Build my route</button><span className="trip-saved-note">{basket.length ? `${basket.length} items in your trip basket` : 'Start with the places you want to see'}</span></aside>
+        <aside className="trip-public-globe-note">
+          <div className="trip-mini-globe" aria-hidden="true"><span/><i className="globe-pin one"/><i className="globe-pin two"/><i className="globe-pin three"/></div>
+          <span className="trip-globe-label"><Sparkles size={14}/> Shared by travellers</span>
+          <h2>See how others travelled.</h2>
+          <p>Explore postcards, budgets, and trip journals pinned around the world before making your own plan.</p>
+          <button className="trip-route-button" onClick={onOpenPublicGlobe}><Globe2 size={17}/> Explore public globe</button>
+          <span className="trip-saved-note">Find ideas from real shared trips</span>
+        </aside>
       </div>
     </main>
   )

@@ -183,7 +183,6 @@ export default function PostcardCheckinPage({
 
   const canvasRef = useRef(null)
   const fileInputRef = useRef(null)
-  const previewRef = useRef(null)
 
   // Sync selectedSpot changes
   useEffect(() => {
@@ -203,12 +202,6 @@ export default function PostcardCheckinPage({
     setExportSuccessMsg('')
   }, [activePhotoUrl, customLocationName, customAddress, selectedTheme, sloganText, authorTag, travelDate, temperature, selectedFilter, selectedStamp])
 
-  useEffect(() => {
-    if (!generatedDataUrl) return
-    previewRef.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
-    previewRef.current?.focus({ preventScroll: true })
-  }, [generatedDataUrl])
-
   // Handle Photo Upload
   const handlePhotoUpload = (e) => {
     const file = e.target.files?.[0]
@@ -226,28 +219,6 @@ export default function PostcardCheckinPage({
     const list = SLOGAN_PRESETS[sloganCategory] || SLOGAN_PRESETS.vibes
     const random = list[Math.floor(Math.random() * list.length)]
     setSloganText(random)
-  }
-
-  // 1-Click AI Randomize All (Spot, Slogan, Theme, Stamp)
-  const handleRandomizeAll = () => {
-    if (availableSpots.length > 0) {
-      const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)]
-      setSelectedSpot(randomSpot)
-    }
-    const cats = Object.keys(SLOGAN_PRESETS)
-    const randomCat = cats[Math.floor(Math.random() * cats.length)]
-    setSloganCategory(randomCat)
-    const slogans = SLOGAN_PRESETS[randomCat]
-    setSloganText(slogans[Math.floor(Math.random() * slogans.length)])
-
-    const randomTheme = THEMES[Math.floor(Math.random() * THEMES.length)].id
-    setSelectedTheme(randomTheme)
-
-    const randomStamp = STAMPS[Math.floor(Math.random() * STAMPS.length)].id
-    setSelectedStamp(randomStamp)
-
-    setExportSuccessMsg('🎲 AI Random Postcard created! Check the preview.')
-    setTimeout(() => setExportSuccessMsg(''), 3000)
   }
 
   // Helper: Draw Aspect Cover on Canvas
@@ -586,7 +557,7 @@ export default function PostcardCheckinPage({
     try {
       const canvas = await renderCanvasPostcard()
       setGeneratedDataUrl(canvas.toDataURL('image/png', 1.0))
-      setExportSuccessMsg('Your postcard is ready in the phone preview.')
+      setExportSuccessMsg('')
     } catch {
       setExportSuccessMsg('The postcard could not be generated. Try another photo and generate again.')
     } finally {
@@ -676,7 +647,7 @@ export default function PostcardCheckinPage({
     <div className="postcard-page-container">
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-      <div className={`container postcard-layout-grid ${generatedDataUrl ? 'has-generated-postcard' : ''}`}>
+      <div className="container postcard-layout-grid">
         {/* =========================================================================
             LEFT COLUMN: INTERACTIVE POSTCARD CONTROLS & CHECK-IN CUSTOMIZER
             ========================================================================= */}
@@ -932,52 +903,12 @@ export default function PostcardCheckinPage({
             </div>
           </div>
 
-          {/* PROMINENT PRIMARY GENERATE POSTCARD BUTTON BOX */}
-          <div className="studio-generate-action-box">
-            <button
-              className="btn-main-generate-postcard"
-              onClick={handleGeneratePostcard}
-              disabled={isGenerating}
-            >
-              <Sparkles size={22} className="sparkle-spin" />
-              <span>{isGenerating ? 'Rendering HD Postcard...' : '✨ Generate Postcard'}</span>
-            </button>
-
-            <div className="generate-quick-row">
-              <button
-                className="btn-generate-sub"
-                onClick={handleShareInstagramStory}
-                disabled={isGenerating}
-              >
-                <Instagram size={16} />
-                <span>Share to IG Story</span>
-              </button>
-
-              <button
-                className="btn-generate-sub"
-                onClick={handleDownloadHD}
-                disabled={isGenerating}
-              >
-                <Download size={16} />
-                <span>Download HD</span>
-              </button>
-
-              <button
-                className="btn-generate-sub-random"
-                onClick={handleRandomizeAll}
-                title="AI Randomize Spot, Slogan & Theme"
-              >
-                <Wand2 size={15} />
-                <span>AI Randomize</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* =========================================================================
             RIGHT COLUMN: REAL-TIME 9:16 INSTAGRAM STORY LIVE PREVIEW & EXPORT
             ========================================================================= */}
-        <div className="postcard-preview-panel" ref={previewRef} tabIndex={-1} aria-label="Instagram Story postcard preview">
+        <div className="postcard-preview-panel" aria-label="Instagram Story postcard preview">
           <div className="preview-sticky-wrap">
             <div className="preview-header-bar">
               <div className="preview-title">
