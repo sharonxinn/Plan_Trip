@@ -27,9 +27,9 @@ export default function GroupChatDrawer({
 
   // Real Group Members Management (Fully dynamic)
   const [members, setMembers] = useState([
-    { id: 'm1', name: 'You (Organizer)', avatar: '🌟', isOrganizer: true },
-    { id: 'm2', name: 'Pei Shan', avatar: '👩', isOrganizer: false },
-    { id: 'm3', name: 'Vicky', avatar: '🧑', isOrganizer: false }
+    { id: 'm1', name: 'You (Organizer)', avatar: 'YO', isOrganizer: true },
+    { id: 'm2', name: 'Pei Shan', avatar: 'PS', isOrganizer: false },
+    { id: 'm3', name: 'Vicky', avatar: 'VK', isOrganizer: false }
   ])
   const [newMemberName, setNewMemberName] = useState('')
   const [newMemberAvatar, setNewMemberAvatar] = useState('🧑')
@@ -66,7 +66,7 @@ export default function GroupChatDrawer({
               if (newItems.length > 0) {
                 newItems.forEach(item => {
                   if (item.sender && !members.some(m => m.name.toLowerCase() === item.sender.toLowerCase())) {
-                    setMembers(mPrev => [...mPrev, { id: `mem-${Date.now()}`, name: item.sender, avatar: '🧑' }])
+                    setMembers(mPrev => [...mPrev, { id: `mem-${Date.now()}`, name: item.sender, avatar: 'VK' }])
                   }
                   if (autoApply && item.suggestedItem && onAddToBasket) {
                     onAddToBasket(item.suggestedItem)
@@ -94,7 +94,7 @@ export default function GroupChatDrawer({
       const newM = {
         id: `mem-${Date.now()}`,
         name: nameClean,
-        avatar: newMemberAvatar || '🧑',
+        avatar: newMemberAvatar || 'YO',
         isOrganizer: false
       }
       setMembers(prev => [...prev, newM])
@@ -110,26 +110,26 @@ export default function GroupChatDrawer({
 
   // Generate WhatsApp Share Message with Real Destination Data
   const generateWhatsAppMessage = () => {
-    const attractionsList = basket.filter(b => b.type === 'attraction' || b.category).map(a => `• 🏛️ ${a.name} (${typeof a.rating === 'number' ? a.rating.toFixed(1) : String(a.rating || '4.8').replace('★', '').trim()}★)`).join('\n') || `• 🏛️ Top-rated Google review sights in ${cityName}`
-    const diningList = basket.filter(b => b.type === 'restaurant' || b.cuisine).map(r => `• 🍽️ ${r.name} (${r.priceTier || '$$'} · ${r.cuisine || 'Local'})`).join('\n') || `• 🍽️ Google 4.8★+ verified food spots in ${cityName}`
+    const attractionsList = basket.filter(b => b.type === 'attraction' || b.category).map(a => `• ${a.name} (${typeof a.rating === 'number' ? a.rating.toFixed(1) : String(a.rating || '4.8').replace('★', '').trim()}★)`).join('\n') || `• Top-rated Google review sights in ${cityName}`
+    const diningList = basket.filter(b => b.type === 'restaurant' || b.cuisine).map(r => `• ${r.name} (${r.priceTier || '$$'} · ${r.cuisine || 'Local'})`).join('\n') || `• Google 4.8★+ verified food spots in ${cityName}`
 
     const membersListStr = members.map(m => m.name).join(', ')
 
-    return `🌴 *Our ${cityName}, ${countryName} Trip Plan!* ✈️
-📅 *Dates:* ${departureDate} ➔ ${returnDate} (${durationDays} Days)
+    return `*Our ${cityName}, ${countryName} Trip Plan!*
+Dates: ${departureDate} ➔ ${returnDate} (${durationDays} Days)
 👥 *Group:* ${members.length} Travelers (${membersListStr})
-💰 *Target Budget:* RM ${budgetAmount.toLocaleString()} (RM ${Math.round(budgetAmount / Math.max(1, members.length)).toLocaleString()}/pax)
+Target Budget: RM ${budgetAmount.toLocaleString()} (RM ${Math.round(budgetAmount / Math.max(1, members.length)).toLocaleString()}/pax)
 
-📍 *Selected Attractions & Sights:*
+*Selected Attractions & Sights:*
 ${attractionsList}
 
-🍲 *Selected Dining & Food Spots:*
+*Selected Dining & Food Spots:*
 ${diningList}
 
-🗺️ *Live Google Maps & Interactive Plan:*
+*Live Google Maps & Interactive Plan:*
 👉 http://127.0.0.1:5173
 
-_💬 Reply in this WhatsApp group with any place suggestions, food wishes, or budget preferences — our AI Trip Planner will automatically capture your real feedback and update our itinerary!_`
+_Reply in this WhatsApp group with any place suggestions, food wishes, or budget preferences — our AI Trip Planner will automatically capture your real feedback and update our itinerary!_`
   }
 
   const whatsAppShareUrl = `https://wa.me/?text=${encodeURIComponent(generateWhatsAppMessage())}`
@@ -153,7 +153,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
 
     // Auto-register member
     if (!members.some(m => m.name.toLowerCase() === actualSender.toLowerCase())) {
-      setMembers(prev => [...prev, { id: `mem-${Date.now()}`, name: actualSender, avatar: '🧑' }])
+      setMembers(prev => [...prev, { id: `mem-${Date.now()}`, name: actualSender, avatar: 'VK' }])
     }
 
     setIsCapturing(true)
@@ -210,7 +210,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
     e.preventDefault()
     if (!inputMsg.trim()) return
 
-    const senderObj = members.find(m => m.name === activeChatSender) || { name: activeChatSender, avatar: '🧑' }
+    const senderObj = members.find(m => m.name === activeChatSender) || { name: activeChatSender, avatar: 'VK' }
     const currentMsgText = inputMsg.trim()
 
     const newMsg = {
@@ -280,7 +280,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
       }
 
       if (sender && !members.some(m => m.name.toLowerCase() === sender.toLowerCase())) {
-        setMembers(prev => [...prev, { id: `mem-${Date.now()}-${i}`, name: sender, avatar: '🧑' }])
+        setMembers(prev => [...prev, { id: `mem-${Date.now()}-${i}`, name: sender, avatar: 'VK' }])
       }
 
       try {
@@ -431,35 +431,35 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
 
               {/* Quick 1-Click Suggestion Triggers for Pei Shan, Vicky, etc. */}
               <div className="quick-suggestions-block">
-                <span className="quick-block-label">⚡ 1-Click Test Member WhatsApp Replies:</span>
+                <span className="quick-block-label">1-Click Test Member WhatsApp Replies:</span>
                 <div className="quick-chips-grid">
                   <button
                     type="button"
                     className="quick-sug-chip highlight"
                     onClick={() => triggerCapture('Pei Shan', 'i want to visit trx')}
                   >
-                    <span>👩 Pei Shan:</span> "I want to visit TRX"
+                    <span>Pei Shan:</span> "I want to visit TRX"
                   </button>
                   <button
                     type="button"
                     className="quick-sug-chip"
                     onClick={() => triggerCapture('Pei Shan', 'Can we eat at Village Park Nasi Lemak?')}
                   >
-                    <span>👩 Pei Shan:</span> "Village Park Nasi Lemak"
+                    <span>Pei Shan:</span> "Village Park Nasi Lemak"
                   </button>
                   <button
                     type="button"
                     className="quick-sug-chip"
                     onClick={() => triggerCapture('Vicky', 'Please include Batu Caves on Day 2 morning')}
                   >
-                    <span>🧑 Vicky:</span> "Batu Caves rainbow steps"
+                    <span>Vicky:</span> "Batu Caves rainbow steps"
                   </button>
                   <button
                     type="button"
                     className="quick-sug-chip"
                     onClick={() => triggerCapture('Vicky', 'Aquaria KLCC for family sightseeing')}
                   >
-                    <span>🧑 Vicky:</span> "Aquaria KLCC"
+                    <span>Vicky:</span> "Aquaria KLCC"
                   </button>
                 </div>
               </div>
@@ -599,7 +599,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
               </h4>
               <form onSubmit={handleAddMember} className="add-member-form">
                 <div className="avatar-pick-row">
-                  {['🧑', '👩', '👦', '👧', '🧔', '👵', '👴', '🌟'].map(av => (
+                  {['YO', 'PS', 'MC', 'VK', 'AL', 'JN', 'CL', 'SK'].map(av => (
                     <button
                       key={av}
                       type="button"
@@ -754,7 +754,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
               disabled={parserLoading || !pastedChat.trim()}
             >
               <Sparkles size={16} />
-              <span>{parserLoading ? 'Extracting & Querying Real Google Places...' : '🪄 Auto-Extract Wishes with Real Places'}</span>
+              <span>{parserLoading ? 'Extracting & Querying Real Google Places...' : 'Auto-Extract Wishes with Real Places'}</span>
             </button>
 
             {/* EXTRACTED WISHES RESULTS */}
@@ -767,7 +767,7 @@ _💬 Reply in this WhatsApp group with any place suggestions, food wishes, or b
                   <div key={wish.id} className="extracted-wish-card">
                     <div className="wish-card-top">
                       <strong>{wish.member}'s Suggestion:</strong>
-                      <span className="wish-type-badge">{wish.type === 'attraction' ? '🏛️ Sight' : '🍽️ Dining'}</span>
+                      <span className="wish-type-badge">{wish.type === 'attraction' ? 'Sight' : 'Dining'}</span>
                     </div>
                     <h5>{wish.wishName}</h5>
                     <p className="orig-quote">"{wish.extractedText}"</p>

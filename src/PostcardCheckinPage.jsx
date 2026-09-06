@@ -30,31 +30,31 @@ function Instagram({ size = 18, className = '' }) {
 // Preset Slogan Categories
 const SLOGAN_PRESETS = {
   vibes: [
-    'Living my best life in paradise! ✨🌴',
-    'Collecting moments, not things. 📸✈️',
-    'Escape the ordinary, discover the extraordinary. 🗺️',
-    'Chasing sunsets and unforgettable memories. 🌅💫',
-    'Found my new favorite corner of the world. 🌍💖'
+    'Living my best life in paradise.',
+    'Collecting moments, not things.',
+    'Escape the ordinary, discover the extraordinary.',
+    'Chasing sunsets and unforgettable memories.',
+    'Found my new favorite corner of the world.'
   ],
   food: [
-    '99% Local Food, 1% Human. 🍜🔥',
-    'Diet starts tomorrow, food trip starts NOW! 😋🥢',
-    'Aromatic White Coffee in my veins. ☕✨',
-    'Happiness is a warm plate of local cuisine. 🦐🍲',
-    'Eating my way through every street market! 🥟🍢'
+    '99% Local Food, 1% Human.',
+    'Diet starts tomorrow, food trip starts now.',
+    'Aromatic White Coffee in my veins.',
+    'Happiness is a warm plate of local cuisine.',
+    'Eating my way through every street market.'
   ],
   culture: [
-    'Lost in the limestone caves and heritage alleys. 🏛️🌿',
-    'History whispered in every cobblestone street. 🏮✨',
-    'In awe of the ancient rainforests & majestic sights. 🦧🌳',
-    'Where tradition meets modern wonder. 🕌💫',
-    'Treasured heritage and timeless stories. 📜✨'
+    'Lost in the limestone caves and heritage alleys.',
+    'History whispered in every cobblestone street.',
+    'In awe of the ancient rainforests and majestic sights.',
+    'Where tradition meets modern wonder.',
+    'Treasured heritage and timeless stories.'
   ],
   squad: [
-    'Good vibes and unforgettable squad adventures! 👯‍♂️🎉',
-    'Friends who travel together, stay together! 🚗💨',
-    'Making memories we will talk about for decades. 🥂✨',
-    'Best travel crew in the world! 🌟🙌'
+    'Good vibes and unforgettable squad adventures.',
+    'Friends who travel together, stay together.',
+    'Making memories we will talk about for decades.',
+    'Best travel crew in the world.'
   ]
 }
 
@@ -62,67 +62,67 @@ const SLOGAN_PRESETS = {
 const THEMES = [
   {
     id: 'cream-terracotta',
-    name: 'Warm Linen',
-    tag: 'Modern Cream',
-    accent: '#E06D53',
-    bgGradient: 'linear-gradient(135deg, #FAF7F2 0%, #F5ECE0 50%, #EFE5D5 100%)',
-    textColor: '#2C241E',
-    subColor: '#6E6156'
+    name: 'Sky & White',
+    tag: 'Modern Light Blue',
+    accent: '#38bdf8',
+    bgGradient: 'linear-gradient(135deg, #FFFFFF 0%, #F0F9FF 50%, #E0F2FE 100%)',
+    textColor: '#000000',
+    subColor: '#475569'
   },
   {
     id: 'vintage-airmail',
-    name: 'Vintage Airmail',
-    tag: 'Classic Postcard',
-    accent: '#D96B43',
-    bgGradient: 'linear-gradient(135deg, #FEF7EE 0%, #FDEED8 100%)',
-    textColor: '#2C241E',
-    subColor: '#786A5E'
+    name: 'Modern Airmail',
+    tag: 'Black & Sky Stripes',
+    accent: '#38bdf8',
+    bgGradient: 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)',
+    textColor: '#000000',
+    subColor: '#334155'
   },
   {
     id: 'polaroid',
     name: 'Polaroid Instant',
-    tag: 'Retro Film',
-    accent: '#D9822B',
+    tag: 'Crisp White Minimal',
+    accent: '#38bdf8',
     bgGradient: '#FFFFFF',
-    textColor: '#2C241E',
-    subColor: '#6E6156'
+    textColor: '#000000',
+    subColor: '#475569'
   },
   {
     id: 'soft-sage',
-    name: 'Botanical Sage',
-    tag: 'Nature Aesthetic',
-    accent: '#477A5E',
-    bgGradient: 'linear-gradient(135deg, #FAF8F5 0%, #EBF4EE 50%, #E1EFE7 100%)',
-    textColor: '#2C241E',
-    subColor: '#527863'
+    name: 'Azure Breeze',
+    tag: 'Soft Light Blue',
+    accent: '#0284c7',
+    bgGradient: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #BAE6FD 100%)',
+    textColor: '#000000',
+    subColor: '#0369a1'
   },
   {
     id: 'cute-pastel',
-    name: 'Sweet Pastel',
-    tag: 'Soft Dream',
-    accent: '#D97398',
-    bgGradient: 'linear-gradient(135deg, #FDF0F5 0%, #F5EEFD 50%, #E8F4FD 100%)',
-    textColor: '#2C241E',
-    subColor: '#6E5D78'
+    name: 'Midnight Contrast',
+    tag: 'Deep Slate & Sky',
+    accent: '#38bdf8',
+    bgGradient: 'linear-gradient(135deg, #0F172A 0%, #020617 100%)',
+    textColor: '#FFFFFF',
+    subColor: '#94A3B8'
   }
 ]
 
 // Photo Filters
 const PHOTO_FILTERS = [
   { id: 'none', label: 'Original', css: 'none' },
-  { id: 'warm', label: 'Warm Sun 🌅', css: 'sepia(0.2) saturate(1.3) brightness(1.05)' },
-  { id: 'vintage', label: 'Vintage 🎞️', css: 'sepia(0.4) contrast(1.1) brightness(0.95)' },
-  { id: 'cinematic', label: 'Teal & Orange 🎨', css: 'contrast(1.2) saturate(1.25) hue-rotate(-10deg)' },
-  { id: 'vivid', label: 'Vivid Glow ✨', css: 'saturate(1.45) contrast(1.1) brightness(1.05)' }
+  { id: 'warm', label: 'Warm Sun', css: 'sepia(0.2) saturate(1.3) brightness(1.05)' },
+  { id: 'vintage', label: 'Vintage', css: 'sepia(0.4) contrast(1.1) brightness(0.95)' },
+  { id: 'cinematic', label: 'Azure Tint', css: 'contrast(1.2) saturate(1.25) hue-rotate(-10deg)' },
+  { id: 'vivid', label: 'Vivid Glow', css: 'saturate(1.45) contrast(1.1) brightness(1.05)' }
 ]
 
 // Stamp Badges
 const STAMPS = [
-  { id: 'passport', label: '🛂 PASSPORT CONTROL - ENTRY PERMIT' },
-  { id: 'google', label: '⭐ 4.9 GOOGLE REVIEW VERIFIED' },
-  { id: 'explorer', label: '🧭 VERIFIED EXPLORER CHECK-IN' },
-  { id: 'foodie', label: '🔥 TOP FOODIE MUST-EAT SPOT' },
-  { id: 'memory', label: '💖 FOREVER TRAVEL MEMORY' }
+  { id: 'passport', label: 'PASSPORT CONTROL - ENTRY PERMIT' },
+  { id: 'google', label: 'GOOGLE REVIEW VERIFIED' },
+  { id: 'explorer', label: 'VERIFIED EXPLORER CHECK-IN' },
+  { id: 'foodie', label: 'TOP GASTRONOMY MUST-EAT SPOT' },
+  { id: 'memory', label: 'FOREVER TRAVEL MEMORY' }
 ]
 
 export default function PostcardCheckinPage({
@@ -170,7 +170,7 @@ export default function PostcardCheckinPage({
   const [customAddress, setCustomAddress] = useState(selectedSpot?.address || `${selectedCity?.city || 'Kuala Lumpur'}`)
   const [selectedTheme, setSelectedTheme] = useState('glass-dark')
   const [sloganCategory, setSloganCategory] = useState('vibes')
-  const [sloganText, setSloganText] = useState('Living my best life in paradise! ✨🌴')
+  const [sloganText, setSloganText] = useState('Living my best life in paradise.')
   const [authorTag, setAuthorTag] = useState('@travel_explorer')
   const [travelDate, setTravelDate] = useState(new Date().toISOString().split('T')[0])
   const [temperature, setTemperature] = useState('29°C')
@@ -295,19 +295,19 @@ export default function PostcardCheckinPage({
       // 1. Background
       if (theme.id === 'cream-terracotta') {
         const grad = ctx.createLinearGradient(0, 0, width, height)
-        grad.addColorStop(0, '#FAF7F2')
-        grad.addColorStop(0.5, '#F5ECE0')
-        grad.addColorStop(1, '#EFE5D5')
+        grad.addColorStop(0, '#FFFFFF')
+        grad.addColorStop(0.5, '#F0F9FF')
+        grad.addColorStop(1, '#E0F2FE')
         ctx.fillStyle = grad
         ctx.fillRect(0, 0, width, height)
       } else if (theme.id === 'vintage-airmail') {
-        ctx.fillStyle = '#FEF7EE'
+        ctx.fillStyle = '#FFFFFF'
         ctx.fillRect(0, 0, width, height)
 
         const stripeSize = 40
         ctx.save()
         for (let i = 0; i < width + height; i += stripeSize * 2) {
-          ctx.fillStyle = '#E06D53'
+          ctx.fillStyle = '#38bdf8'
           ctx.beginPath()
           ctx.moveTo(i, 0)
           ctx.lineTo(i + stripeSize, 0)
@@ -315,7 +315,7 @@ export default function PostcardCheckinPage({
           ctx.lineTo(0, i)
           ctx.fill()
 
-          ctx.fillStyle = '#477A5E'
+          ctx.fillStyle = '#000000'
           ctx.beginPath()
           ctx.moveTo(i + stripeSize, 0)
           ctx.lineTo(i + stripeSize * 2, 0)
@@ -324,23 +324,23 @@ export default function PostcardCheckinPage({
           ctx.fill()
         }
         ctx.restore()
-        ctx.fillStyle = '#FEF7EE'
+        ctx.fillStyle = '#FFFFFF'
         ctx.fillRect(24, 24, width - 48, height - 48)
       } else if (theme.id === 'polaroid') {
-        ctx.fillStyle = '#F3EFE6'
+        ctx.fillStyle = '#FFFFFF'
         ctx.fillRect(0, 0, width, height)
       } else if (theme.id === 'soft-sage') {
         const grad = ctx.createLinearGradient(0, 0, width, height)
-        grad.addColorStop(0, '#FAF8F5')
-        grad.addColorStop(0.5, '#EBF4EE')
-        grad.addColorStop(1, '#E1EFE7')
+        grad.addColorStop(0, '#F0F9FF')
+        grad.addColorStop(0.5, '#E0F2FE')
+        grad.addColorStop(1, '#BAE6FD')
         ctx.fillStyle = grad
         ctx.fillRect(0, 0, width, height)
       } else if (theme.id === 'cute-pastel') {
         const grad = ctx.createLinearGradient(0, 0, width, height)
-        grad.addColorStop(0, '#FDF0F5')
-        grad.addColorStop(0.5, '#F5EEFD')
-        grad.addColorStop(1, '#E8F4FD')
+        grad.addColorStop(0, '#0F172A')
+        grad.addColorStop(0.5, '#1E293B')
+        grad.addColorStop(1, '#020617')
         ctx.fillStyle = grad
         ctx.fillRect(0, 0, width, height)
       }
@@ -503,7 +503,7 @@ export default function PostcardCheckinPage({
           ctx.font = 'bold 50px "Comic Sans MS", "Outfit", cursive, sans-serif'
           wrapText(ctx, sloganText, 140, 1370, 800, 64)
 
-          ctx.fillStyle = '#f59e0b'
+          ctx.fillStyle = '#38bdf8'
           ctx.font = 'bold 44px Outfit, sans-serif'
           ctx.fillText(`📍 ${customLocationName}`, 140, 1560)
 

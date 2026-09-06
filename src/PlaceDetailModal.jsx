@@ -56,7 +56,7 @@ export default function PlaceDetailModal({
 
             <div className="modal-rating-row">
               <div className="google-stars-pill">
-                <Star size={16} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
+                <Star size={16} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
                 <span className="rating-score">{typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('★', '').trim()}</span>
                 <span className="reviews-count">
                   ({(item.reviewsCount || 15000).toLocaleString()} verified Google Reviews)
@@ -84,13 +84,13 @@ export default function PlaceDetailModal({
                   <span key={i} className="personalized-chip dietary">{b}</span>
                 ))}
                 {item.isPlayground && (
-                  <span className="personalized-chip playground">🎠 Playground & Water Play</span>
+                  <span className="personalized-chip playground">Playground & Water Play</span>
                 )}
                 {item.isRomantic && (
-                  <span className="personalized-chip romantic">💖 Sunset & Romantic View</span>
+                  <span className="personalized-chip romantic">Sunset & Romantic View</span>
                 )}
                 {item.hasHighchairs && (
-                  <span className="personalized-chip family">👶 Highchairs & Family Seating</span>
+                  <span className="personalized-chip family">Highchairs & Family Seating</span>
                 )}
               </div>
             </div>
@@ -183,15 +183,15 @@ export default function PlaceDetailModal({
             <ul className="tips-list">
               {isAttraction ? (
                 <>
-                  <li>📸 <strong>Best Photo Spot:</strong> Arrive early in the morning or near golden hour for the best natural lighting and fewer crowds.</li>
-                  <li>🎫 <strong>Ticketing:</strong> {item.priceEstimate?.includes('Free') ? 'Free admission — walk-in at your convenience.' : 'Advance online booking recommended on weekends.'}</li>
-                  <li>👟 <strong>Comfort:</strong> Wear comfortable walking shoes to fully explore the grounds and viewpoints.</li>
+                  <li><strong>Best Photo Spot:</strong> Arrive early in the morning or near golden hour for the best natural lighting and fewer crowds.</li>
+                  <li><strong>Ticketing:</strong> {item.priceEstimate?.includes('Free') ? 'Free admission — walk-in at your convenience.' : 'Advance online booking recommended on weekends.'}</li>
+                  <li><strong>Comfort:</strong> Wear comfortable walking shoes to fully explore the grounds and viewpoints.</li>
                 </>
               ) : (
                 <>
-                  <li>🔥 <strong>Signature Dish:</strong> Try their house-specialty {item.cuisine} dishes and chef recommendations.</li>
+                  <li><strong>Signature Dish:</strong> Try their house-specialty {item.cuisine} dishes and chef recommendations.</li>
                   <li>⏰ <strong>Peak Hours:</strong> Peak dinner times are 7:00 PM – 8:30 PM. Arrive slightly earlier for shorter queues.</li>
-                  <li>💳 <strong>Payment:</strong> Accepts major credit cards, QR payments, and cash.</li>
+                  <li><strong>Payment:</strong> Accepts major credit cards, QR payments, and cash.</li>
                 </>
               )}
             </ul>

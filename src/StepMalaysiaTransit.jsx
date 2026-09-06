@@ -30,7 +30,7 @@ export default function StepMalaysiaTransit({
     {
       id: 'r1',
       title: 'KL Sentral ➔ KLCC Twin Towers',
-      icon: '🗼',
+      icon: '',
       origin: 'KL Sentral (Transit Hub)',
       dest: 'KLCC (Petronas Twin Towers)',
       tag: 'LRT 5 · 12 mins'
@@ -38,7 +38,7 @@ export default function StepMalaysiaTransit({
     {
       id: 'r2',
       title: 'Bukit Bintang ➔ TRX Mall',
-      icon: '🛍️',
+      icon: '',
       origin: 'Bukit Bintang (Pavilion / Lot 10)',
       dest: 'Tun Razak Exchange (TRX Shopping Gallery)',
       tag: 'MRT 9 · 4 mins'
@@ -46,7 +46,7 @@ export default function StepMalaysiaTransit({
     {
       id: 'r3',
       title: 'Pasar Seni ➔ Batu Caves',
-      icon: '🛕',
+      icon: '',
       origin: 'Pasar Seni (Chinatown / Central Market)',
       dest: 'Batu Caves (Rainbow Stairs & Temple)',
       tag: 'KTM Komuter · 28 mins'
@@ -54,7 +54,7 @@ export default function StepMalaysiaTransit({
     {
       id: 'r4',
       title: 'KLCC ➔ Pavilion Bukit Bintang',
-      icon: '🚌',
+      icon: '',
       origin: 'KLCC (Suria Mall Gate)',
       dest: 'Pavilion Bukit Bintang (Main Entrance)',
       tag: 'Free GoKL Bus · 8 mins'
@@ -62,7 +62,7 @@ export default function StepMalaysiaTransit({
     {
       id: 'r5',
       title: 'Komtar ➔ Batu Ferringhi Beach',
-      icon: '🏖️',
+      icon: '',
       origin: 'Komtar Bus Terminal (Central Georgetown Hub)',
       dest: 'Batu Ferringhi Beachfront (Night Market / Resorts)',
       tag: 'Rapid 101 · 35 mins'
@@ -88,7 +88,7 @@ export default function StepMalaysiaTransit({
       const key = k.toLowerCase()
       if (!seen.has(key)) {
         seen.add(key)
-        list.push({ name: k, subtitle: 'Popular Landmark', color: '#F97316' })
+        list.push({ name: k, subtitle: 'Popular Landmark', color: '#38bdf8' })
       }
     })
 
@@ -129,15 +129,15 @@ export default function StepMalaysiaTransit({
   const handleCopyTransitGuide = () => {
     if (!activeRouteResult) return
     const text = [
-      `🚆 *Transit Route: ${activeRouteResult.originName} ➔ ${activeRouteResult.destName}*`,
+      `Transit Route: ${activeRouteResult.originName} ➔ ${activeRouteResult.destName}*`,
       `🚇 Line: ${activeRouteResult.line}`,
       `⏱️ Travel Time: ${activeRouteResult.durationMins} mins (${activeRouteResult.stopsCount} stops)`,
-      `💳 Fare: ${activeRouteResult.tngFare} (Free with MyCity Pass)`,
+      `Fare: ${activeRouteResult.tngFare} (Free with MyCity Pass)`,
       '',
-      `🧭 *Directions:*`,
+      `Directions:`,
       ...activeRouteResult.steps.map((s, i) => `${i + 1}. ${s}`),
       '',
-      `💡 Next train arrives every 3-5 mins.`
+      `Next train arrives every 3-5 mins.`
     ].join('\n')
 
     navigator.clipboard?.writeText(text)
@@ -173,7 +173,7 @@ export default function StepMalaysiaTransit({
                 className={`shortcut-chip ${isSelected ? 'active' : ''}`}
                 onClick={() => handleSelectQuickRoute(r)}
               >
-                <span className="chip-emoji">{r.icon}</span>
+                
                 <span className="chip-title">{r.title}</span>
                 <span className="chip-tag">{r.tag}</span>
               </button>
@@ -240,7 +240,7 @@ export default function StepMalaysiaTransit({
           {/* Destination Input */}
           <div className="transit-input-container">
             <label className="input-field-label">
-              <Compass size={13} className="text-orange" />
+              <Compass size={13} className="text-sky" />
               <span>Where do you want to go?</span>
             </label>
             <div className="transit-field-wrapper">
@@ -269,7 +269,7 @@ export default function StepMalaysiaTransit({
                       handlePlanRoute(searchOrigin, s.name)
                     }}
                   >
-                    <Compass size={13} className="text-orange" />
+                    <Compass size={13} className="text-sky" />
                     <div className="suggestion-text">
                       <strong>{s.name}</strong>
                       <span>{s.subtitle}</span>
@@ -325,7 +325,7 @@ export default function StepMalaysiaTransit({
           <div className="result-metrics-grid">
             <div className="metric-box">
               <span className="m-label">Travel Time</span>
-              <strong className="m-val text-orange">~{activeRouteResult.durationMins} mins</strong>
+              <strong className="m-val text-sky">~{activeRouteResult.durationMins} mins</strong>
             </div>
             <div className="metric-box">
               <span className="m-label">Stops</span>
@@ -345,7 +345,7 @@ export default function StepMalaysiaTransit({
           {activeRouteResult.intermediateStations && activeRouteResult.intermediateStations.length > 0 && (
             <div className="stations-path-container">
               <span className="path-title">
-                <Milestone size={13} className="text-orange" />
+                <Milestone size={13} className="text-sky" />
                 <span>Station Flow ({activeRouteResult.intermediateStations.length} stops)</span>
               </span>
               <div className="stations-path-scroll">
@@ -369,7 +369,7 @@ export default function StepMalaysiaTransit({
           {/* Step-by-Step Directions */}
           <div className="route-steps-box">
             <span className="steps-title">
-              <Navigation size={14} className="text-orange" />
+              <Navigation size={14} className="text-sky" />
               <span>Step-by-Step Instructions</span>
             </span>
             <div className="steps-ordered-list">

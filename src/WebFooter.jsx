@@ -48,7 +48,7 @@ export default function WebFooter({ onSelectPage, onSelectCity, countriesData = 
           <div className="footer-links-col">
             <h4>Trip Stages</h4>
             <ul>
-              <li><button onClick={() => onSelectPage('dashboard')}>🏠 Origin Dashboard</button></li>
+              <li><button onClick={() => onSelectPage('dashboard')}>Origin Dashboard</button></li>
               <li><button onClick={() => onSelectPage('planning')}>1. Planning (Setup, Budget, Discover, Pack)</button></li>
               <li><button onClick={() => onSelectPage('travelling')}>2. Travelling (Expense Splitter, Plan B)</button></li>
               <li><button onClick={() => onSelectPage('memory')}>3. Memory (AI Postcard, Budget Summary)</button></li>
@@ -77,7 +77,7 @@ export default function WebFooter({ onSelectPage, onSelectCity, countriesData = 
             <h4>Smart Tools</h4>
             <ul>
               <li><button onClick={() => onSelectPage('planning')}>Smart Route & Discover Hub</button></li>
-              <li><button onClick={() => onSelectPage('travelling')}>⚡ Plan B Contingency Studio</button></li>
+              <li><button onClick={() => onSelectPage('travelling')}>Plan B Contingency Studio</button></li>
               <li><button onClick={() => onSelectPage('memory')}>E-Postcard Check-in Studio</button></li>
               <li><button onClick={() => onSelectPage('memory')}>Budget vs Actual Variance</button></li>
             </ul>

@@ -193,10 +193,10 @@ function App() {
   })
 
   const [members, setMembers] = useState([
-    { id: 'm1', name: 'You (Organizer)', avatar: '🌟', isOrganizer: true },
-    { id: 'm2', name: 'Pei Shan', avatar: '👩', isOrganizer: false },
-    { id: 'm3', name: 'Marcus', avatar: '👱‍♂️', isOrganizer: false },
-    { id: 'm4', name: 'Vicky', avatar: '🧑', isOrganizer: false }
+    { id: 'm1', name: 'You (Organizer)', avatar: 'YO', isOrganizer: true },
+    { id: 'm2', name: 'Pei Shan', avatar: 'PS', isOrganizer: false },
+    { id: 'm3', name: 'Marcus', avatar: 'MC', isOrganizer: false },
+    { id: 'm4', name: 'Vicky', avatar: 'VK', isOrganizer: false }
   ])
 
   // Search & Filtering
@@ -295,10 +295,10 @@ function App() {
         setMembers([members[0]])
       } else if (members.length < found.defaultCount) {
         setMembers([
-          { id: 'm1', name: 'You (Organizer)', avatar: '🌟', isOrganizer: true },
-          { id: 'm2', name: 'Pei Shan', avatar: '👩', isOrganizer: false },
-          { id: 'm3', name: 'Marcus', avatar: '👱‍♂️', isOrganizer: false },
-          { id: 'm4', name: 'Vicky', avatar: '🧑', isOrganizer: false }
+          { id: 'm1', name: 'You (Organizer)', avatar: 'YO', isOrganizer: true },
+          { id: 'm2', name: 'Pei Shan', avatar: 'PS', isOrganizer: false },
+          { id: 'm3', name: 'Marcus', avatar: 'MC', isOrganizer: false },
+          { id: 'm4', name: 'Vicky', avatar: 'VK', isOrganizer: false }
         ].slice(0, found.defaultCount))
       }
     }
@@ -442,7 +442,7 @@ function App() {
       name: s.title,
       type: s.type.includes('Dining') ? 'restaurant' : 'attraction',
       category: s.type,
-      rating: '4.8 ★',
+      rating: '4.8',
       priceTier: '$$',
       isPlanB: true
     }))
@@ -662,7 +662,7 @@ function App() {
             onOpenSmartWizard={() => setSmartRouteWizardOpen(true)}
             onAddToCalendar={() => {
               setIsCalendarAdded(true)
-              setPlanBToast('📅 Added to Calendar! Countdown is live on your Dashboard.')
+              setPlanBToast('Added to Calendar! Countdown is live on your Dashboard.')
               setTimeout(() => setPlanBToast(null), 5000)
             }}
             onBackToDashboard={() => {
@@ -881,7 +881,7 @@ function App() {
             setPlanningStep('discover')
             setPlanningDiscoverView('timeline')
             setCurrentPage('planning')
-            setPlanBToast(`⚡ Generated ${newItinerary.totalDays}-Day optimized route with ${newItinerary.totalSpotsScheduled} stops (Total ${newItinerary.totalEstimatedKm} km, 0 backtracking)!`)
+            setPlanBToast(`Generated ${newItinerary.totalDays}-Day optimized route with ${newItinerary.totalSpotsScheduled} stops (Total ${newItinerary.totalEstimatedKm} km, 0 backtracking)!`)
             setTimeout(() => setPlanBToast(null), 5000)
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }}

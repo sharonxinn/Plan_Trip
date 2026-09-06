@@ -5,7 +5,7 @@ import {
   Share2, Sparkles, DoorOpen, Receipt
 } from 'lucide-react'
 
-const AVATAR_CHOICES = ['🧭', '🌊', '🏔️', '🎒', '🍜', '📸', '🛺', '🗺️', '🌅', '🎡', '🏝️', '⛺']
+const AVATAR_CHOICES = ['TR', 'OC', 'MT', 'BP', 'FD', 'PH', 'CT', 'MP', 'SS', 'PR', 'IS', 'CP']
 const CURRENCIES = ['MYR', 'SGD', 'USD', 'EUR', 'THB', 'JPY']
 const IDENTITY_KEY = 'plantrip_traveller'
 const MEMBERSHIP_KEY = 'plantrip_memberships'
@@ -733,12 +733,12 @@ function RoomView({ room, myMemberId, busy, onPropose, onVote, onRemoveProposal,
   const copySettlement = () => {
     const c = room.currency
     const lines = [
-      `💰 ${room.title} — bill split`,
+      `${room.title} — bill split`,
       `Total spent: ${c} ${settlement.totalSpent.toLocaleString()}`,
       '',
       '--- Who pays whom ---',
       ...(settlement.transactions.length
-        ? settlement.transactions.map(t => `👉 ${t.from} pays ${t.to}: ${c} ${t.amount.toLocaleString()}`)
+        ? settlement.transactions.map(t => `${t.from} pays ${t.to}: ${c} ${t.amount.toLocaleString()}`)
         : ['All settled up — nobody owes anything.'])
     ]
     try {
@@ -1135,7 +1135,7 @@ function PubTripStyles() {
         border-radius: var(--radius-full); padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--text-secondary); cursor: pointer; font-family: var(--font-body); }
       .pt-back:hover { border-color: var(--border-highlight); }
 
-      .pt-error { display: flex; align-items: center; gap: 8px; background: #FDECEA; color: #B0332C; border: 1px solid #F3C6C1;
+      .pt-error { display: flex; align-items: center; gap: 8px; background: #f0f9ff; color: #000000; border: 1px solid #38bdf8;
         padding: 10px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 16px; }
 
       .pt-hero { display: flex; align-items: center; gap: 16px; background: var(--gradient-card); border: 1px solid var(--border-subtle);
@@ -1153,7 +1153,7 @@ function PubTripStyles() {
       .pt-card-top { display: flex; align-items: center; justify-content: space-between; }
       .pt-card h3 { font-family: var(--font-heading); font-size: 15px; font-weight: 700; color: var(--text-primary); }
       .pt-meta { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-muted); }
-      .pt-vibe { font-size: 12px; color: var(--accent-blue); background: rgba(62,123,108,0.08); padding: 5px 9px; border-radius: 8px; margin-top: 2px; }
+      .pt-vibe { font-size: 12px; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; padding: 5px 9px; border-radius: 8px; margin-top: 2px; }
       .pt-code { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--text-muted); font-family: var(--font-heading); }
       .pt-status { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: var(--radius-full); }
       .pt-status-open { background: rgba(71,122,94,0.14); color: #35674E; }
@@ -1207,7 +1207,7 @@ function PubTripStyles() {
       .pt-city-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 6px; }
       .pt-city-card { border: 1px solid var(--border-subtle); background: var(--bg-primary); border-radius: 10px; padding: 10px; text-align: left; cursor: pointer; font-family: var(--font-body); transition: all 0.15s ease; }
       .pt-city-card:hover { border-color: var(--border-highlight); }
-      .pt-city-card.is-active { border-color: var(--accent-cyan); background: rgba(45,160,140,0.06); box-shadow: 0 0 0 1px var(--accent-cyan); }
+      .pt-city-card.is-active { border-color: var(--accent-cyan); background: #f0f9ff; box-shadow: 0 0 0 1px var(--accent-cyan); }
       .pt-city-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .pt-city-name { font-size: 13px; font-weight: 800; color: var(--text-primary); }
       .pt-city-state { font-size: 11px; color: var(--text-muted); }
@@ -1215,14 +1215,14 @@ function PubTripStyles() {
       /* Budget Tiers Grid */
       .pt-budget-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 6px; }
       .pt-budget-card { border: 1px solid var(--border-subtle); background: var(--bg-primary); border-radius: 10px; padding: 11px; text-align: left; cursor: pointer; font-family: var(--font-body); }
-      .pt-budget-card.is-active { border-color: var(--accent-cyan); background: rgba(45,160,140,0.06); box-shadow: 0 0 0 1px var(--accent-cyan); }
+      .pt-budget-card.is-active { border-color: var(--accent-cyan); background: #f0f9ff; box-shadow: 0 0 0 1px var(--accent-cyan); }
       .pt-b-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
       .pt-b-desc { font-size: 10.5px; color: var(--text-muted); line-height: 1.35; }
 
       /* Vibe Chips */
       .pt-vibe-chips { display: flex; flex-wrap: wrap; gap: 6px; }
       .pt-vibe-chip { border: 1px solid var(--border-subtle); background: var(--bg-primary); border-radius: var(--radius-full); padding: 5px 11px; font-size: 11.5px; font-weight: 600; cursor: pointer; font-family: var(--font-body); color: var(--text-secondary); }
-      .pt-vibe-chip.is-active { border-color: var(--accent-cyan); color: var(--accent-cyan); background: rgba(45,160,140,0.08); }
+      .pt-vibe-chip.is-active { border-color: var(--accent-cyan); color: var(--accent-cyan); background: #f0f9ff; }
 
       .pt-room-header { display: flex; justify-content: space-between; gap: 16px; background: var(--gradient-card); border: 1px solid var(--border-subtle);
         border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); margin-bottom: 16px; flex-wrap: wrap; }

@@ -9,10 +9,10 @@ import TravelStorySpotlightModal from './TravelStorySpotlightModal'
 const STORAGE_KEY = 'plantrip-public-memory-posts-v1'
 
 const TYPE_META = {
-  postcard: { label: 'Postcard', icon: Camera, color: '#ff8f70' },
-  spending: { label: 'Spending recap', icon: DollarSign, color: '#5fd5b3' },
-  trip: { label: 'Past trip', icon: History, color: '#f6c563' },
-  journal: { label: 'Trip journal', icon: FileText, color: '#86b7ff' }
+  postcard: { label: 'Postcard', icon: Camera, color: '#38bdf8' },
+  spending: { label: 'Spending recap', icon: DollarSign, color: '#38bdf8' },
+  trip: { label: 'Past trip', icon: History, color: '#38bdf8' },
+  journal: { label: 'Trip journal', icon: FileText, color: '#38bdf8' }
 }
 
 const PUBLIC_LOCATION_STORIES = [
@@ -206,19 +206,19 @@ function makeGoldStarMarker(post, count) {
     else ctx.lineTo(x, y)
   }
   ctx.closePath()
-  ctx.shadowColor = '#f4cf69'
+  ctx.shadowColor = '#38bdf8'
   ctx.shadowBlur = 28
-  const gold = ctx.createLinearGradient(-40, -60, 45, 65)
-  gold.addColorStop(0, '#fff1a6')
-  gold.addColorStop(.45, '#e5bb52')
-  gold.addColorStop(1, '#9c6a14')
-  ctx.fillStyle = gold
+  const blueGrad = ctx.createLinearGradient(-40, -60, 45, 65)
+  blueGrad.addColorStop(0, '#f0f9ff')
+  blueGrad.addColorStop(.45, '#38bdf8')
+  blueGrad.addColorStop(1, '#0284c7')
+  ctx.fillStyle = blueGrad
   ctx.fill()
   ctx.shadowBlur = 0
-  ctx.strokeStyle = '#ffe9a0'
+  ctx.strokeStyle = '#ffffff'
   ctx.lineWidth = 5
   ctx.stroke()
-  ctx.fillStyle = '#181307'
+  ctx.fillStyle = '#000000'
   ctx.font = '800 42px sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
@@ -306,7 +306,7 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
       return groups
     }, {}))
     locationGroups.forEach(({ post, posts: locationPosts }, index) => {
-      const markerColor = '#e7bd58'
+      const markerColor = '#38bdf8'
       const color = new THREE.Color(markerColor)
       const surface = latLngToVector3(post.lat + (index % 3) * .32, post.lng + (index % 4) * .32, 2.01)
       const pos = surface.clone().normalize().multiplyScalar(2.22)

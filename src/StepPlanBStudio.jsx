@@ -99,26 +99,26 @@ export default function StepPlanBStudio({
       rain: {
         originalDay: `Day 2 · ${cityName} Outdoor Exploration`,
         planA: [
-          { time: '09:30 AM', title: outdoorSpot.name || `${cityName} Outdoor Heritage Walk`, type: outdoorSpot.category || 'Outdoor Landmark', tag: 'Rain Risk ⚠️' },
-          { time: '01:00 PM', title: 'Open-Air Food Street Stalls', type: 'Outdoor Dining', tag: 'Exposed Seating ⚠️' },
-          { time: '03:30 PM', title: cityAttractions[3]?.name || `${cityName} Scenic Park & Garden`, type: 'Outdoor Park', tag: 'Rain Risk ⚠️' }
+          { time: '09:30 AM', title: outdoorSpot.name || `${cityName} Outdoor Heritage Walk`, type: outdoorSpot.category || 'Outdoor Landmark', tag: 'Rain Risk' },
+          { time: '01:00 PM', title: 'Open-Air Food Street Stalls', type: 'Outdoor Dining', tag: 'Exposed Seating' },
+          { time: '03:30 PM', title: cityAttractions[3]?.name || `${cityName} Scenic Park & Garden`, type: 'Outdoor Park', tag: 'Rain Risk' }
         ],
         planB: [
-          { time: '09:30 AM', title: indoorSpot.name || `${cityName} Arts Museum & Heritage Gallery`, type: 'Indoor Cultural', tag: '✅ 100% Covered & Dry', isSwap: true },
-          { time: '01:00 PM', title: casualRest.name || `${cityName} Covered Food Arcade`, type: 'Covered Dining', tag: '✅ Air-Conditioned', isSwap: true },
-          { time: '03:30 PM', title: backupIndoor2.name || `${cityName} Science & Aquarium Center`, type: 'Indoor Attraction', tag: '✅ Underground Link', isSwap: true }
+          { time: '09:30 AM', title: indoorSpot.name || `${cityName} Arts Museum & Heritage Gallery`, type: 'Indoor Cultural', tag: '100% Covered & Dry', isSwap: true },
+          { time: '01:00 PM', title: casualRest.name || `${cityName} Covered Food Arcade`, type: 'Covered Dining', tag: 'Air-Conditioned', isSwap: true },
+          { time: '03:30 PM', title: backupIndoor2.name || `${cityName} Science & Aquarium Center`, type: 'Indoor Attraction', tag: 'Underground Link', isSwap: true }
         ],
         benefit: `Zero wet clothes, seamless indoor transit in ${cityName}, 0 minutes lost to rain.`
       },
       closed: {
         originalDay: `Day 1 · ${cityName} Hallmark Highlights`,
         planA: [
-          { time: '10:00 AM', title: `${outdoorSpot.name} (Overbooked / Closed)`, type: 'Observation & Sight', tag: '❌ Sold Out Today' },
+          { time: '10:00 AM', title: `${outdoorSpot.name} (Overbooked / Closed)`, type: 'Observation & Sight', tag: 'Sold Out Today' },
           { time: '02:00 PM', title: `${indoorSpot.name}`, type: 'Sightseeing', tag: 'Regular' }
         ],
         planB: [
-          { time: '10:00 AM', title: backupIndoor2.name || `${cityName} Sky View Panorama Deck`, type: 'Observation Deck', tag: '✅ Instant Mobile QR Entry', isSwap: true },
-          { time: '02:00 PM', title: indoorSpot.name || `${cityName} Cultural Square`, type: 'Sightseeing', tag: '✅ Confirmed & Open' }
+          { time: '10:00 AM', title: backupIndoor2.name || `${cityName} Sky View Panorama Deck`, type: 'Observation Deck', tag: 'Instant Mobile QR Entry', isSwap: true },
+          { time: '02:00 PM', title: indoorSpot.name || `${cityName} Cultural Square`, type: 'Sightseeing', tag: 'Confirmed & Open' }
         ],
         benefit: `Instant alternative booked nearby in ${cityName} with zero wait time.`
       },
@@ -126,13 +126,13 @@ export default function StepPlanBStudio({
         originalDay: `Day 1 · Arrival & Check-In`,
         planA: [
           { time: '02:00 PM', title: 'Check into Hotel', type: 'Hotel', tag: 'Delayed' },
-          { time: '03:30 PM', title: outdoorSpot.name, type: 'Activity', tag: '❌ Missed Opening Slot' },
+          { time: '03:30 PM', title: outdoorSpot.name, type: 'Activity', tag: 'Missed Opening Slot' },
           { time: '06:00 PM', title: 'Rushed Dinner', type: 'Dining', tag: 'Stressful' }
         ],
         planB: [
-          { time: '04:30 PM', title: 'Express Hotel Check-In & Refresh', type: 'Hotel', tag: '✅ Rescheduled', isSwap: true },
-          { time: '06:00 PM', title: dinnerRest.name || `${cityName} Sunset Dining Lounge`, type: 'Dining & Sunset View', tag: '✅ Merged & Relaxed', isSwap: true },
-          { time: '08:30 PM', title: `${cityName} Night Market Promenade & Live Music`, type: 'Evening', tag: '✅ Extended Evening', isSwap: true }
+          { time: '04:30 PM', title: 'Express Hotel Check-In & Refresh', type: 'Hotel', tag: 'Rescheduled', isSwap: true },
+          { time: '06:00 PM', title: dinnerRest.name || `${cityName} Sunset Dining Lounge`, type: 'Dining & Sunset View', tag: 'Merged & Relaxed', isSwap: true },
+          { time: '08:30 PM', title: `${cityName} Night Market Promenade & Live Music`, type: 'Evening', tag: 'Extended Evening', isSwap: true }
         ],
         benefit: `Eliminates arrival rush, turns transit delay into a relaxed evening in ${cityName}.`
       },
@@ -143,8 +143,8 @@ export default function StepPlanBStudio({
           { time: '02:00 PM', title: 'Multi-Site Hiking & Viewpoint Climb', type: 'Physical Activity', tag: 'High Fatigue' }
         ],
         planB: [
-          { time: '10:30 AM', title: `${cityName} Scenic Tram Ride & Heritage Cafe`, type: 'Scenic & Low Effort', tag: '✅ 0 Steps Strenuous', isSwap: true },
-          { time: '02:30 PM', title: `Traditional Wellness Spa & Reflexology Lounge`, type: 'Wellness Recovery', tag: '✅ Full Recharge', isSwap: true }
+          { time: '10:30 AM', title: `${cityName} Scenic Tram Ride & Heritage Cafe`, type: 'Scenic & Low Effort', tag: '0 Steps Strenuous', isSwap: true },
+          { time: '02:30 PM', title: `Traditional Wellness Spa & Reflexology Lounge`, type: 'Wellness Recovery', tag: 'Full Recharge', isSwap: true }
         ],
         benefit: 'Prevents travel burnout, restores energy for the evening.'
       },
@@ -155,8 +155,8 @@ export default function StepPlanBStudio({
           { time: '07:30 PM', title: `Fine Dining Gourmet Experience`, type: 'Fine Dining', tag: 'RM 320 / pax' }
         ],
         planB: [
-          { time: '01:00 PM', title: `Michelin Guide Bib Gourmand: ${casualRest.name}`, type: 'Authentic Local', tag: '✅ RM 20 / pax (Saved 88%)', isSwap: true },
-          { time: '07:30 PM', title: `${cityName} Legendary Street Food & Satay Night Bazaar`, type: 'Food Trail', tag: '✅ RM 35 / pax (Top Rated 4.8★)', isSwap: true }
+          { time: '01:00 PM', title: `Michelin Guide Bib Gourmand: ${casualRest.name}`, type: 'Authentic Local', tag: 'RM 20 / pax (Saved 88%)', isSwap: true },
+          { time: '07:30 PM', title: `${cityName} Legendary Street Food & Satay Night Bazaar`, type: 'Food Trail', tag: 'RM 35 / pax (Top Rated 4.8)', isSwap: true }
         ],
         benefit: `Saves over 80% on meals while tasting ${cityName}'s most authentic world-famous gastronomy.`
       }
@@ -178,7 +178,7 @@ export default function StepPlanBStudio({
 
   // Copy Emergency Squad Broadcast
   const handleCopyBroadcast = () => {
-    const text = `🚨 PlanTrip Smart Update (${cityName})\nScenario: ${scenarios.find(s => s.id === selectedScenario)?.title}\nWe just updated our itinerary with Plan B! New schedule:\n${currentDiff.planB.map(p => `• ${p.time}: ${p.title} (${p.tag})`).join('\n')}\nRelax, everything is sorted with zero stress! 😎`
+    const text = `PlanTrip Smart Update (${cityName})\nScenario: ${scenarios.find(s => s.id === selectedScenario)?.title}\nWe just updated our itinerary with Plan B! New schedule:\n${currentDiff.planB.map(p => `• ${p.time}: ${p.title} (${p.tag})`).join('\n')}\nRelax, everything is sorted with zero stress!`
     navigator.clipboard.writeText(text)
     setCopiedEmergencyMsg(true)
     setTimeout(() => setCopiedEmergencyMsg(false), 2500)
@@ -332,15 +332,15 @@ export default function StepPlanBStudio({
             <div className="emergency-hotlines-list">
               <div className="hotline-item">
                 <div className="hotline-name">Police & Tourist Assistance</div>
-                <div className="hotline-number">📞 999 / 112 (Toll Free)</div>
+                <div className="hotline-number">999 / 112 (Toll Free)</div>
               </div>
               <div className="hotline-item">
                 <div className="hotline-name">Medical & Ambulance Emergency</div>
-                <div className="hotline-number">📞 999 (National Dispatch)</div>
+                <div className="hotline-number">999 (National Dispatch)</div>
               </div>
               <div className="hotline-item">
                 <div className="hotline-name">Grab / Taxi 24/7 Support</div>
-                <div className="hotline-number">🚗 In-App Emergency Button</div>
+                <div className="hotline-number">In-App Emergency Button</div>
               </div>
             </div>
           </div>
