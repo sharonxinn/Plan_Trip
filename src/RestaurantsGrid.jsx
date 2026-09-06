@@ -59,10 +59,10 @@ export default function RestaurantsGrid({
 
         if (isHalal) {
           score += 65
-          dietaryBadges.push('🟢 100% Halal Verified')
+          dietaryBadges.push('100% Halal Verified')
         } else if (nameAndDesc.includes('pork') || nameAndDesc.includes('non-halal') || nameAndDesc.includes('bacon')) {
           score -= 45
-          dietaryWarnings.push('⚠️ Non-Halal / Pork Served')
+          dietaryWarnings.push('Non-Halal / Pork Served')
         }
       }
 
@@ -73,7 +73,7 @@ export default function RestaurantsGrid({
 
         if (isVeg) {
           score += 70
-          dietaryBadges.push('🌱 Vegetarian Friendly')
+          dietaryBadges.push('Vegetarian Friendly')
         }
       }
 
@@ -109,10 +109,10 @@ export default function RestaurantsGrid({
 
         if (isPorkFree && !hasPork) {
           score += 45
-          dietaryBadges.push('🚫 100% Pork-Free')
+          dietaryBadges.push('100% Pork-Free')
         } else if (hasPork) {
           score -= 45
-          dietaryWarnings.push('⚠️ Contains Pork')
+          dietaryWarnings.push('Contains Pork')
         }
       }
 
@@ -122,7 +122,7 @@ export default function RestaurantsGrid({
 
         if (isGlutenFree) {
           score += 30
-          dietaryBadges.push('🌾 Gluten-Free Friendly')
+          dietaryBadges.push('Gluten-Free Friendly')
         }
       }
 
@@ -136,12 +136,12 @@ export default function RestaurantsGrid({
         if (isRomantic) {
           score += 55
           partyMatchReason = '💑 Romantic Couple Top Pick: Sunset Ambiance & Intimate Dining'
-          partyBadge = '💖 Romantic Date Night'
+          partyBadge = 'Romantic Date Night'
           isPartyHighlight = true
         } else if (item.priceTier === '$$$' || item.priceTier === '$$$$') {
           score += 25
           partyMatchReason = '💑 Chic Atmosphere for Two'
-          partyBadge = '✨ Couple Dining'
+          partyBadge = 'Couple Dining'
           isPartyHighlight = true
         }
       } else if (travelParty === 'family') {
@@ -167,7 +167,7 @@ export default function RestaurantsGrid({
 
         if (isFriendsDining) {
           score += 50
-          partyMatchReason = '👯 Friends Squad Top Pick: Big Communal Tables & Late Night Feasts'
+          partyMatchReason = 'Friends Squad Top Pick: Big Communal Tables & Late Night Feasts'
           partyBadge = '🍲 Group Sharing Feast'
           isPartyHighlight = true
         } else {
@@ -180,7 +180,7 @@ export default function RestaurantsGrid({
 
         if (isSoloDining) {
           score += 45
-          partyMatchReason = '👤 Solo Explorer Pick: Cozy Counter Seating & Easy Single Servings'
+          partyMatchReason = 'Solo Explorer Pick: Cozy Counter Seating & Easy Single Servings'
           partyBadge = '☕ Solo Friendly Counter'
           isPartyHighlight = true
         } else {
@@ -214,7 +214,7 @@ export default function RestaurantsGrid({
         tailorScore: score,
         matchPercent,
         partyMatchReason: partyMatchReason || `⭐ Top Google Rated Dining in ${city?.city || 'the Area'}`,
-        partyBadge: partyBadge || (travelParty === 'couple' ? '💖 Couple Friendly' : travelParty === 'family' ? '👶 Family Friendly' : '🍴 Highly Rated'),
+        partyBadge: partyBadge || (travelParty === 'couple' ? 'Couple Friendly' : travelParty === 'family' ? '👶 Family Friendly' : '🍴 Highly Rated'),
         dietaryBadges,
         dietaryWarnings,
         isPartyHighlight
@@ -305,7 +305,7 @@ export default function RestaurantsGrid({
               onChange={e => setSortBy(e.target.value)}
               className="sort-dropdown"
             >
-              <option value="tailored">✨ Best Match for Trip & Dietary</option>
+              <option value="tailored">Best Match for Trip & Dietary</option>
               <option value="rating">⭐ Google Rating (Highest first)</option>
               <option value="priceAsc">💲 Price ($ to $$$$)</option>
               <option value="priceDesc">💎 Price ($$$$ to $)</option>
@@ -332,7 +332,7 @@ export default function RestaurantsGrid({
             className={`cat-pill halal-pill-btn ${activeDietaryQuickFilter === 'halal' ? 'active' : ''}`}
             onClick={() => setActiveDietaryQuickFilter(activeDietaryQuickFilter === 'halal' ? 'All' : 'halal')}
           >
-            🟢 Halal Verified Only
+            Halal Verified Only
           </button>
         )}
 
@@ -341,7 +341,7 @@ export default function RestaurantsGrid({
             className={`cat-pill veg-pill-btn ${activeDietaryQuickFilter === 'vegetarian' ? 'active' : ''}`}
             onClick={() => setActiveDietaryQuickFilter(activeDietaryQuickFilter === 'vegetarian' ? 'All' : 'vegetarian')}
           >
-            🌱 Vegetarian / Vegan Only
+            Vegetarian / Vegan Only
           </button>
         )}
 
@@ -359,7 +359,7 @@ export default function RestaurantsGrid({
             className={`cat-pill party-pill-highlight ${activeDietaryQuickFilter === 'romantic' ? 'active' : ''}`}
             onClick={() => setActiveDietaryQuickFilter(activeDietaryQuickFilter === 'romantic' ? 'All' : 'romantic')}
           >
-            💖 Romantic Date Spots Only
+            Romantic Date Spots Only
           </button>
         )}
 
@@ -408,7 +408,7 @@ export default function RestaurantsGrid({
                 </div>
 
                 <div className="google-review-badge">
-                  <Star size={13} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
+                  <Star size={13} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
                   <strong>{typeof restaurant.rating === 'number' ? restaurant.rating.toFixed(1) : String(restaurant.rating || '4.8').replace('★', '').trim()}</strong>
                 </div>
               </div>

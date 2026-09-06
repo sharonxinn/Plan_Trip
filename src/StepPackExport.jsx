@@ -39,7 +39,7 @@ export default function StepPackExport({
     temp: 31,
     feelsLike: 34,
     description: 'Partly Sunny & Warm',
-    icon: '🌤️',
+    icon: '',
     rainChance: 25,
     humidity: 75,
     windSpeed: 10,
@@ -68,7 +68,7 @@ export default function StepPackExport({
   // Smart Weather-aware Packing Checklist
   const [packingCategories, setPackingCategories] = useState([
     {
-      category: '📄 Travel Documents & Essentials',
+      category: 'Travel Documents & Essentials',
       items: [
         { id: 'p-1', text: 'Passport / National ID (Valid > 6 months)', packed: true },
         { id: 'p-2', text: 'Flight & Hotel Booking Confirmations (Digital & PDF)', packed: true },
@@ -77,7 +77,7 @@ export default function StepPackExport({
       ]
     },
     {
-      category: '⚡ Tech & Electronics',
+      category: 'Tech & Electronics',
       items: [
         { id: 'p-5', text: 'Universal travel power adapter (UK / US / EU plug)', packed: false },
         { id: 'p-6', text: '10,000mAh+ Power bank for full-day photo shooting', packed: true },
@@ -85,7 +85,7 @@ export default function StepPackExport({
       ]
     },
     {
-      category: `☀️ ${cityName} Weather & Clothing (${destination?.weather || 'Tropical 28-32°C'})`,
+      category: `${cityName} Weather & Clothing (${destination?.weather || 'Tropical 28-32°C'})`,
       items: [
         { id: 'p-8', text: 'Breathable lightweight cotton / linen outfits', packed: true },
         { id: 'p-9', text: 'Compact travel umbrella / rain poncho', packed: false },
@@ -95,7 +95,7 @@ export default function StepPackExport({
       ]
     },
     {
-      category: '💊 Health, First-Aid & Toiletries',
+      category: 'Health, First-Aid & Toiletries',
       items: [
         { id: 'p-13', text: 'Personal medications, Panadol & motion sickness pills', packed: true },
         { id: 'p-14', text: 'Hydration electrolyte packs & insect repellent', packed: false },
@@ -184,16 +184,16 @@ export default function StepPackExport({
 
   // 1-Click Copy WhatsApp Summary
   const handleCopyWhatsApp = () => {
-    const summary = `✈️ *PlanTrip: ${cityName}, ${countryName} Trip Plan*
-📅 *Dates:* ${departureDate} → ${returnDate} (${durationDays} Days)
-👥 *Squad:* ${travellers} Pax (${travelParty})
-💰 *Budget:* RM ${budgetAmount.toLocaleString()}
+    const summary = `*PlanTrip: ${cityName}, ${countryName} Trip Plan*
+*Dates:* ${departureDate} → ${returnDate} (${durationDays} Days)
+Squad: ${travellers} Pax (${travelParty})
+*Budget:* RM ${budgetAmount.toLocaleString()}
 
-📍 *Key Highlights & Sights:*
+Key Highlights & Sights:*
 ${basket.slice(0, 4).map(b => `• ${b.title || b.name}`).join('\n') || '• Iconic Twin Towers\n• Batu Caves & Cultural Walk\n• World-famous Night Food Street'}
 
-🧳 *Packing Checklist:* ${packedItems}/${totalItems} items ready (${packPercent}%)
-📱 *Live Plan & Plan B Contingency:* Loaded in PlanTrip App!
+Packing Checklist: ${packedItems}/${totalItems} items ready (${packPercent}%)
+*Live Plan & Plan B Contingency:* Loaded in PlanTrip App!
 
 _Generated with PlanTrip AI - Zero Stress Group Travel!_`
 
@@ -474,7 +474,7 @@ END:VCALENDAR`
                           <span className="slot-time">{spot.arriveTime || spot.timeSlot}</span>
                           <div className="slot-content">
                             <strong>{spot.name}</strong>
-                            <small>📍 {spot.category || 'Activity'} · Duration: {spot.stayDurationMins || spot.durationMins || 30} mins</small>
+                            <small>{spot.category || 'Activity'} · Duration: {spot.stayDurationMins || spot.durationMins || 30} mins</small>
                           </div>
                         </div>
                       ))}

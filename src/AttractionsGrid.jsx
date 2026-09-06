@@ -84,12 +84,12 @@ export default function AttractionsGrid({
         if (isCoupleSpot) {
           score += 50
           partyMatchReason = '💑 Romantic Couple Top Pick: Scenic Sunset Panoramas & Intimate Vibe'
-          partyBadge = '💖 Romantic Sunset Spot'
+          partyBadge = 'Romantic Sunset Spot'
           isPartyHighlight = true
         } else if (nameAndDesc.includes('garden') || nameAndDesc.includes('temple') || nameAndDesc.includes('beach') || nameAndDesc.includes('heritage')) {
           score += 25
           partyMatchReason = '💑 Scenic & Atmospheric Date Walk'
-          partyBadge = '✨ Couple Friendly'
+          partyBadge = 'Couple Friendly'
           isPartyHighlight = true
         }
       } else if (travelParty === 'friends') {
@@ -100,7 +100,7 @@ export default function AttractionsGrid({
 
         if (isFriendsSpot) {
           score += 50
-          partyMatchReason = '👯 Friends Squad Top Pick: High Energy Thrills & Group Adventures'
+          partyMatchReason = 'Friends Squad Top Pick: High Energy Thrills & Group Adventures'
           partyBadge = '⚡ Group Adventure'
           isPartyHighlight = true
         } else {
@@ -113,7 +113,7 @@ export default function AttractionsGrid({
 
         if (isSoloSpot) {
           score += 45
-          partyMatchReason = '👤 Solo Explorer Pick: Peaceful Culture Walks & Contemplative Views'
+          partyMatchReason = 'Solo Explorer Pick: Peaceful Culture Walks & Contemplative Views'
           partyBadge = '🚶 Solo Friendly Walk'
           isPartyHighlight = true
         } else {
@@ -124,15 +124,15 @@ export default function AttractionsGrid({
       // 2. Travel Style Vibes Affinity (groupPreferences.vibes)
       if (vibes.includes('foodie') && (nameAndDesc.includes('food') || nameAndDesc.includes('market') || nameAndDesc.includes('chinatown') || nameAndDesc.includes('street'))) {
         score += 22
-        styleTags.push('🍜 Foodie Sights')
+        styleTags.push('Foodie Sights')
       }
       if (vibes.includes('culture') && (nameAndDesc.includes('temple') || nameAndDesc.includes('culture') || nameAndDesc.includes('heritage') || nameAndDesc.includes('historic') || nameAndDesc.includes('museum'))) {
         score += 22
-        styleTags.push('🏛️ Heritage & Culture')
+        styleTags.push('Heritage & Culture')
       }
       if (vibes.includes('nature') && (nameAndDesc.includes('nature') || nameAndDesc.includes('park') || nameAndDesc.includes('garden') || nameAndDesc.includes('lake') || nameAndDesc.includes('botanical') || nameAndDesc.includes('hill'))) {
         score += 22
-        styleTags.push('🌿 Nature & Views')
+        styleTags.push('Nature & Views')
       }
       if (vibes.includes('adventure') && (nameAndDesc.includes('thrill') || nameAndDesc.includes('theme park') || nameAndDesc.includes('waterplay') || nameAndDesc.includes('sky') || nameAndDesc.includes('adventure'))) {
         score += 25
@@ -144,7 +144,7 @@ export default function AttractionsGrid({
       }
       if (vibes.includes('relaxed') && (nameAndDesc.includes('garden') || nameAndDesc.includes('park') || nameAndDesc.includes('walk') || nameAndDesc.includes('botanical') || nameAndDesc.includes('peaceful'))) {
         score += 20
-        styleTags.push('☕ Chill & Unhurried')
+        styleTags.push('Chill & Unhurried')
       }
 
       // 3. Daily Pace Adjustment
@@ -173,7 +173,7 @@ export default function AttractionsGrid({
         tailorScore: score,
         matchPercent,
         partyMatchReason: partyMatchReason || `⭐ Highly Recommended Google Attraction in ${city?.city || 'the Area'}`,
-        partyBadge: partyBadge || (travelParty === 'couple' ? '💖 Couple Friendly' : travelParty === 'family' ? '👨‍👩‍👧‍👦 Family Friendly' : '⭐ Top Attraction'),
+        partyBadge: partyBadge || (travelParty === 'couple' ? 'Couple Friendly' : travelParty === 'family' ? '👨‍👩‍👧‍👦 Family Friendly' : '⭐ Top Attraction'),
         isPartyHighlight,
         styleTags
       }
@@ -245,7 +245,7 @@ export default function AttractionsGrid({
               onChange={e => setSortBy(e.target.value)}
               className="sort-dropdown"
             >
-              <option value="tailored">✨ Best Match for Trip Profile</option>
+              <option value="tailored">Best Match for Trip Profile</option>
               <option value="rating">⭐ Google Rating (Highest first)</option>
               <option value="reviews">👥 Review Volume (Most popular)</option>
             </select>
@@ -273,7 +273,7 @@ export default function AttractionsGrid({
           <CurrentPartyIcon size={13} />
           <span>
             {travelParty === 'family' ? '🎠 Playgrounds & Kids Only' :
-             travelParty === 'couple' ? '💖 Romantic & Sunset Only' :
+             travelParty === 'couple' ? 'Romantic & Sunset Only' :
              travelParty === 'friends' ? '⚡ Thrills & Adventures Only' : '🚶 Solo Culture Walks Only'}
           </span>
         </button>
@@ -319,7 +319,7 @@ export default function AttractionsGrid({
                 <span className="place-category-badge">{attraction.category}</span>
 
                 <div className="google-review-badge">
-                  <Star size={13} className="star-icon filled" fill="#f59e0b" color="#f59e0b" />
+                  <Star size={13} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
                   <strong>{typeof attraction.rating === 'number' ? attraction.rating.toFixed(1) : String(attraction.rating || '4.8').replace('★', '').trim()}</strong>
                 </div>
               </div>

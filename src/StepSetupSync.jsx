@@ -43,12 +43,12 @@ export default function StepSetupSync({
 
   // Vibe tags
   const vibeOptions = [
-    { id: 'foodie', label: '🍜 Local Food', desc: 'Must-try dishes & street eats' },
-    { id: 'culture', label: '🏛️ Heritage & Culture', desc: 'Landmarks & museums' },
+    { id: 'foodie', label: 'Local Food', desc: 'Must-try dishes & street eats' },
+    { id: 'culture', label: 'Heritage & Culture', desc: 'Landmarks & museums' },
     { id: 'nature', label: '🌿 Nature & Views', desc: 'Parks, viewpoints & sea' },
-    { id: 'adventure', label: '⚡ Thrills & Theme Parks', desc: 'Outdoor & adventures' },
+    { id: 'adventure', label: 'Thrills & Theme Parks', desc: 'Outdoor & adventures' },
     { id: 'shopping', label: '🛍️ Markets & Malls', desc: 'Boutiques & night markets' },
-    { id: 'relaxed', label: '☕ Chill & Cafes', desc: 'Slow mornings & cafe hopping' }
+    { id: 'relaxed', label: 'Chill & Cafes', desc: 'Slow mornings & cafe hopping' }
   ]
 
   // Dietary options
@@ -83,7 +83,7 @@ export default function StepSetupSync({
     const newM = {
       id: `m-${Date.now()}`,
       name: newMemberName.trim(),
-      avatar: ['🧑', '👩', '👱‍♂️', '👩‍🦰', '🧔'][members.length % 5],
+      avatar: ['YO', 'PS', 'MC', 'VK', 'AL'][members.length % 5],
       votedVibes: ['foodie', 'relaxed'],
       dietary: 'None',
       budgetRange: 'Balanced'
@@ -312,8 +312,8 @@ export default function StepSetupSync({
             <span className="pacing-label">Daily Pace:</span>
             <div className="pacing-buttons-group">
               {[
-                { id: 'relaxed', label: '☕ Relaxed' },
-                { id: 'moderate', label: '⚖️ Balanced' },
+                { id: 'relaxed', label: 'Relaxed' },
+                { id: 'moderate', label: 'Balanced' },
                 { id: 'packed', label: '🚀 Action-Packed' }
               ].map(p => (
                 <button

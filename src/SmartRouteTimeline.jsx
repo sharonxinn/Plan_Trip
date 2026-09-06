@@ -24,21 +24,21 @@ export default function SmartRouteTimeline({
 
   // Copy WhatsApp Run-sheet for current day or entire trip
   const handleCopyWhatsApp = () => {
-    let msg = `🌴 *${cityName}, ${countryName} Smart Route Itinerary!* 🚗\n`
-    msg += `📍 *Starting Hub:* ${smartItinerary.startingPoint?.name || cityName}\n`
-    msg += `📅 *Total Days:* ${smartItinerary.totalDays} Days · ${smartItinerary.totalSpotsScheduled} Spots · Total ${smartItinerary.totalEstimatedKm} km (Optimized No-Backtrack)\n\n`
+    let msg = `*${cityName}, ${countryName} Smart Route Itinerary!*\n`
+    msg += `*Starting Hub:* ${smartItinerary.startingPoint?.name || cityName}\n`
+    msg += `Total Days: ${smartItinerary.totalDays} Days · ${smartItinerary.totalSpotsScheduled} Spots · Total ${smartItinerary.totalEstimatedKm} km (Optimized No-Backtrack)\n\n`
 
     smartItinerary.days.forEach(day => {
-      msg += `📌 *${day.title}* (${day.dayTotalKm} km)\n`
+      msg += `*${day.title}* (${day.dayTotalKm} km)\n`
       day.spots.forEach(s => {
-        const icon = s.type === 'restaurant' ? '🍽️' : s.category?.includes('Cafe') ? '☕' : s.type === 'start_hub' ? '🚩' : '🏛️'
-        msg += `  ${icon} *${s.arriveTime || s.timeSlot}* - ${s.name}\n`
+        const icon = ''
+        msg += `  • *${s.arriveTime || s.timeSlot}* - ${s.name}\n`
         if (s.transitToNextMinutes > 0 && s.transitToNextKm > 0) {
-          msg += `     └── 🚗 Drive ${s.transitToNextMinutes} mins (${s.transitToNextKm} km)\n`
+          msg += `     └── Drive ${s.transitToNextMinutes} mins (${s.transitToNextKm} km)\n`
         }
       })
       if (day.googleMapsMultiStopUrl) {
-        msg += `  🗺️ Google Maps Navigation: ${day.googleMapsMultiStopUrl}\n`
+        msg += `  Google Maps Navigation: ${day.googleMapsMultiStopUrl}\n`
       }
       msg += `\n`
     })
@@ -54,9 +54,9 @@ export default function SmartRouteTimeline({
       <div className="timeline-hero-header">
         <div className="hero-left-info">
           <div className="route-badge-row">
-            <span className="route-smart-badge">⚡ Smart Route Generated</span>
-            <span className="route-dist-badge">🚗 Total {smartItinerary.totalEstimatedKm} km (No Backtrack)</span>
-            <span className="route-hub-badge">🚩 Start: {smartItinerary.startingPoint?.name || 'Central Hub'}</span>
+            <span className="route-smart-badge">Smart Route Generated</span>
+            <span className="route-dist-badge">Total {smartItinerary.totalEstimatedKm} km (No Backtrack)</span>
+            <span className="route-hub-badge">Start: {smartItinerary.startingPoint?.name || 'Central Hub'}</span>
           </div>
           <h2 className="timeline-main-title">
             {cityName} {smartItinerary.totalDays}-Day Optimized Smart Schedule
@@ -127,7 +127,7 @@ export default function SmartRouteTimeline({
                 <div className={`timeline-spot-card ${isStart ? 'start-hub' : isDining ? 'dining-spot' : 'sight-spot'}`}>
                   {/* Left Column: Sequence Number & Time Slot */}
                   <div className="spot-time-col">
-                    <span className="step-number-circle">{spot.stepNumber || '🚩'}</span>
+                    <span className="step-number-circle">{spot.stepNumber || 1}</span>
                     <span className="spot-clock-text">{spot.arriveTime || spot.timeSlot}</span>
                     {spot.stayDurationMins && (
                       <span className="stay-duration-tag">~{spot.stayDurationMins} mins</span>
@@ -140,7 +140,7 @@ export default function SmartRouteTimeline({
                       <h4 className="spot-name-text">{spot.name}</h4>
                       {spot.suggestedBy && (
                         <span className="suggested-by-pill">
-                          👤 Suggested by {spot.suggestedBy}
+                          Suggested by {spot.suggestedBy}
                         </span>
                       )}
                     </div>

@@ -65,13 +65,13 @@ export default function RealMapView({
             className={`map-filter-pill ${activeTab === 'attractions' ? 'active' : ''}`}
             onClick={() => setActiveTab('attractions')}
           >
-            🏛️ Sights ({attractions.length})
+            Sights ({attractions.length})
           </button>
           <button
             className={`map-filter-pill ${activeTab === 'restaurants' ? 'active' : ''}`}
             onClick={() => setActiveTab('restaurants')}
           >
-            🍽️ Dining ({restaurants.length})
+            Dining ({restaurants.length})
           </button>
         </div>
 
@@ -155,7 +155,7 @@ export default function RealMapView({
                       style={{ backgroundImage: `url(${item.image})` }}
                     >
                       <span className={`spot-type-tag ${item.pinType}`}>
-                        {item.pinType === 'attraction' ? '🏛️ Sights' : '🍽️ Food'}
+                        {item.pinType === 'attraction' ? 'Sights' : 'Food'}
                       </span>
                     </div>
 
@@ -163,7 +163,7 @@ export default function RealMapView({
                       <div className="spot-title-row">
                         <h5>{item.name}</h5>
                         <div className="spot-rating-badge">
-                          <Star size={12} fill="#f59e0b" color="#f59e0b" />
+                          <Star size={12} fill="#38bdf8" color="#38bdf8" />
                           <span>{item.rating || '4.8'}</span>
                         </div>
                       </div>

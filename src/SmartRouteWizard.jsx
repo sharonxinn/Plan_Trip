@@ -132,7 +132,7 @@ export default function SmartRouteWizard({
               <Sparkles size={20} />
             </div>
             <div>
-              <h2 className="wizard-modal-title">⚡ Generate Smart Route</h2>
+              <h2 className="wizard-modal-title">Generate Smart Route</h2>
               <p className="wizard-subtitle">
                 3-Step non-backtracking route optimization for {cityName}, {countryName}
               </p>
@@ -166,7 +166,7 @@ export default function SmartRouteWizard({
           {/* ================= STEP 1: DATES & DURATION ================= */}
           {wizardStep === 1 && (
             <div className="wizard-step-panel fade-in">
-              <h3 className="panel-section-title">📅 Step 1: Input Travel Dates & Duration</h3>
+              <h3 className="panel-section-title">Step 1: Input Travel Dates & Duration</h3>
               <p className="panel-section-desc">
                 Select your departure and return dates. The engine will balance daily paces automatically.
               </p>
@@ -196,7 +196,7 @@ export default function SmartRouteWizard({
                 <div className="duration-pill">
                   <strong>{durationDays} Days · {Math.max(1, durationDays - 1)} Nights ({durationDays}D{Math.max(1, durationDays - 1)}N)</strong>
                 </div>
-                <span>✨ Destination: <strong>{cityName}, {countryName}</strong></span>
+                <span>Destination: <strong>{cityName}, {countryName}</strong></span>
               </div>
             </div>
           )}
@@ -206,7 +206,7 @@ export default function SmartRouteWizard({
             <div className="wizard-step-panel fade-in">
               <div className="panel-header-flex">
                 <div>
-                  <h3 className="panel-section-title">📍 Step 2: Confirm Places Dropped in Chat</h3>
+                  <h3 className="panel-section-title">Step 2: Confirm Places Dropped in Chat</h3>
                   <p className="panel-section-desc">
                     Check off which spots are Must-Visit, assign specific days, or click AI Auto-Assign.
                   </p>
@@ -230,7 +230,7 @@ export default function SmartRouteWizard({
                         <div className="spot-title-line">
                           <strong>{spot.name}</strong>
                           {spot.suggestedBy && (
-                            <span className="spot-suggester-tag">👤 {spot.suggestedBy}</span>
+                            <span className="spot-suggester-tag">By: {spot.suggestedBy}</span>
                           )}
                         </div>
                         <span className="spot-cat-text">{spot.category || spot.type}</span>
@@ -245,7 +245,7 @@ export default function SmartRouteWizard({
                           onClick={() => toggleMustVisit(spot.id)}
                           title="Mark as Must-Visit"
                         >
-                          <Star size={13} fill={spot.isMustVisit ? '#f59e0b' : 'none'} color={spot.isMustVisit ? '#f59e0b' : '#94a3b8'} />
+                          <Star size={13} fill={spot.isMustVisit ? '#38bdf8' : 'none'} color={spot.isMustVisit ? '#38bdf8' : '#94a3b8'} />
                           <span>{spot.isMustVisit ? 'Must-Visit ⭐' : 'Optional'}</span>
                         </button>
 
@@ -254,7 +254,7 @@ export default function SmartRouteWizard({
                           onChange={e => handleAssignDay(spot.id, e.target.value)}
                           className="spot-day-select"
                         >
-                          <option value="auto">🤖 AI Auto-Assign</option>
+                          <option value="auto">Auto-Assign</option>
                           {Array.from({ length: durationDays }, (_, i) => i + 1).map(d => (
                             <option key={d} value={d.toString()}>Day {d}</option>
                           ))}
@@ -270,7 +270,7 @@ export default function SmartRouteWizard({
           {/* ================= STEP 3: STARTING POINT & ARRIVAL TIME ================= */}
           {wizardStep === 3 && (
             <div className="wizard-step-panel fade-in">
-              <h3 className="panel-section-title">🚀 Step 3: Starting Point Hub & Arrival Time</h3>
+              <h3 className="panel-section-title">Step 3: Starting Point Hub & Arrival Time</h3>
               <p className="panel-section-desc">
                 The engine will optimize sequence from this hub with zero backtracking and synchronized opening hours!
               </p>
@@ -318,8 +318,8 @@ export default function SmartRouteWizard({
                       onChange={e => setPace(e.target.value)}
                       className="wizard-select"
                     >
-                      <option value="relaxed">☕ Relaxed (2-3 spots/day)</option>
-                      <option value="balanced">⚡ Balanced (4 spots/day)</option>
+                      <option value="relaxed">Relaxed (2-3 spots/day)</option>
+                      <option value="balanced">Balanced (4 spots/day)</option>
                       <option value="packed">🚀 Packed (5-6 spots/day)</option>
                     </select>
                   </div>
@@ -332,7 +332,7 @@ export default function SmartRouteWizard({
                   <strong>Smart Routing Engine Ready:</strong>
                 </div>
                 <ul>
-                  <li>✅ Nearest-Neighbor spatial distance sequencing (zero backtracking).</li>
+                  <li>Nearest-Neighbor spatial distance sequencing (zero backtracking).</li>
                   <li>✅ Synchronized meal and activity time slots (Breakfast ➔ Morning Sights ➔ Lunch ➔ Cafe/Indoor ➔ Sunset ➔ Dinner).</li>
                   <li>✅ 1-Click Multi-Stop Google Maps navigation deep links!</li>
                 </ul>
@@ -364,7 +364,7 @@ export default function SmartRouteWizard({
               disabled={isGenerating}
             >
               {isGenerating ? <Zap size={16} className="spin" /> : <Sparkles size={16} />}
-              {isGenerating ? 'Calculating Optimal Route...' : '⚡ Generate Smart Route'}
+              {isGenerating ? 'Calculating Optimal Route...' : 'Generate Smart Route'}
             </button>
           )}
         </div>

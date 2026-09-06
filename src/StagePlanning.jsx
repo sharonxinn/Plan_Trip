@@ -177,7 +177,7 @@ export default function StagePlanning({
               <div className="discover-hub-header">
                 <div className="hub-badge-row">
                   <span className="hub-badge">Step 3 · Stays & Spots</span>
-                  <span className="hub-city-pill">📍 {selectedCity?.city || 'Destination'}</span>
+                  <span className="hub-city-pill">{selectedCity?.city || 'Destination'}</span>
                 </div>
                 <h2>Find your kind of place.</h2>
                 <p>Compare quiet stays, scenic journeys, and neighborhood dining in {selectedCity?.city}</p>
@@ -384,21 +384,21 @@ export default function StagePlanning({
                     <span className="sync-title">Personalized for:</span>
                     <div className="sync-tags-scroll">
                       <span className="sync-tag party">
-                        {travelParty === 'couple' ? '💑 Romantic Couple' :
-                         travelParty === 'family' ? '👨‍👩‍👧‍👦 Family with Kids' :
-                         travelParty === 'friends' ? '👯 Friends Squad' : '👤 Solo Explorer'} ({travellers} Pax)
+                        {travelParty === 'couple' ? 'Romantic Couple' :
+                         travelParty === 'family' ? 'Family with Kids' :
+                         travelParty === 'friends' ? 'Friends Squad' : 'Solo Explorer'} ({travellers} Pax)
                       </span>
                       <span className="sync-tag pace">
-                        {travelPace === 'relaxed' ? '☕ Relaxed Pace' :
-                         travelPace === 'packed' ? '🚀 Action-Packed' : '⚖️ Balanced Pace'}
+                        {travelPace === 'relaxed' ? 'Relaxed Pace' :
+                         travelPace === 'packed' ? 'Action-Packed' : 'Balanced Pace'}
                       </span>
                       {(groupPreferences?.vibes || []).map(v => (
                         <span key={v} className="sync-tag vibe">
-                          {v === 'foodie' ? '🍜 Local Food' :
-                           v === 'culture' ? '🏛️ Heritage & Culture' :
-                           v === 'nature' ? '🌿 Nature & Views' :
-                           v === 'adventure' ? '⚡ Thrills & Parks' :
-                           v === 'shopping' ? '🛍️ Markets & Malls' : '☕ Chill & Cafes'}
+                          {v === 'foodie' ? 'Local Food' :
+                           v === 'culture' ? 'Heritage & Culture' :
+                           v === 'nature' ? 'Nature & Views' :
+                           v === 'adventure' ? 'Thrills & Parks' :
+                           v === 'shopping' ? 'Markets & Malls' : 'Chill & Cafes'}
                         </span>
                       ))}
                       {(groupPreferences?.dietary || []).map(d => (

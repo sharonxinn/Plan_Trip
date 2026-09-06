@@ -59,7 +59,7 @@ export default function LinkCollectorDrawer({
     onAddToBucket(newItem)
     setPlaceNameInput('')
     setSingleLink('')
-    setParseStatus(`✅ Added "${name}" into ${cityName} Bucket List!`)
+    setParseStatus(`Added "${name}" into ${cityName} Bucket List!`)
     setTimeout(() => setParseStatus(null), 3000)
   }
 
@@ -133,7 +133,7 @@ export default function LinkCollectorDrawer({
 
     if (detectedItems.length > 0) {
       detectedItems.forEach(item => onAddToBucket(item))
-      setParseStatus(`✨ Extracted & collected ${detectedItems.length} spots from group chat into your Bucket List!`)
+      setParseStatus(`Extracted & collected ${detectedItems.length} spots from group chat into your Bucket List!`)
       setChatLogText('')
     }
   }
@@ -224,11 +224,11 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
                     onChange={e => setCategoryInput(e.target.value)}
                     className="collector-select"
                   >
-                    <option value="Cafe & Dining">☕ Cafe & Artisan Coffee</option>
-                    <option value="Local Gastronomy">🍽️ Restaurant & Street Food</option>
-                    <option value="Scenic & Heritage">🏛️ Heritage Landmark & Sights</option>
-                    <option value="Nature & Viewpoint">🌿 Nature & Viewpoints</option>
-                    <option value="Night Market">🏮 Night Market & Evening</option>
+                    <option value="Cafe & Dining">Cafe & Artisan Coffee</option>
+                    <option value="Local Gastronomy">Restaurant & Street Food</option>
+                    <option value="Scenic & Heritage">Heritage Landmark & Sights</option>
+                    <option value="Nature & Viewpoint">Nature & Viewpoints</option>
+                    <option value="Night Market">Night Market & Evening</option>
                   </select>
                 </div>
               </div>
@@ -262,7 +262,7 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
                   className="btn-load-sample"
                   onClick={handleLoadSampleChat}
                 >
-                  ⚡ Load Sample {cityName} Chat
+                  Load Sample {cityName} Chat
                 </button>
               </div>
 
@@ -292,7 +292,7 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
           <div className="collector-bucket-section">
             <div className="bucket-section-header">
               <h3>
-                🎯 Current Wishlist / Bucket List ({bucketList.length} spots)
+                Current Wishlist / Bucket List ({bucketList.length} spots)
               </h3>
               {bucketList.length > 0 && (
                 <button
@@ -302,7 +302,7 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
                     onOpenSmartRouteWizard()
                   }}
                 >
-                  <Sparkles size={15} /> ⚡ Generate Smart Route
+                  <Sparkles size={15} /> Generate Smart Route
                 </button>
               )}
             </div>
@@ -332,7 +332,7 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
                         <span className="bucket-cat-pill">{item.category}</span>
                         {item.suggestedBy && (
                           <span className="bucket-suggester-tag">
-                            👤 {item.suggestedBy}
+                            By: {item.suggestedBy}
                           </span>
                         )}
                       </div>
@@ -357,7 +357,7 @@ Alex: Don't forget Perak Cave Temple for the scenic limestone murals & mountain 
               onOpenSmartRouteWizard()
             }}
           >
-            <Sparkles size={16} /> ⚡ Generate Smart Route ({bucketList.length} Places)
+            <Sparkles size={16} /> Generate Smart Route ({bucketList.length} Places)
           </button>
         </div>
       </div>

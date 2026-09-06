@@ -15,16 +15,16 @@ function exportToWordDocument(plan, destination, travellers, travelParty, budget
       <title>${plan.tripTitle || 'Trip Itinerary'}</title>
       <style>
         body { font-family: 'Calibri', 'Arial', sans-serif; line-height: 1.6; color: #2C241E; padding: 30px; background-color: #FAF7F2; }
-        h1 { color: #E06D53; font-size: 24pt; border-bottom: 2px solid #E06D53; padding-bottom: 8px; margin-bottom: 5px; }
+        h1 { color: #38bdf8; font-size: 24pt; border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-bottom: 5px; }
         h2 { color: #3E7B6C; font-size: 16pt; margin-top: 20px; border-bottom: 1px solid #E6DFD5; padding-bottom: 4px; }
         h3 { color: #2C241E; font-size: 13pt; margin-top: 15px; }
-        .summary-box { background-color: #FAF7F2; border-left: 4px solid #E06D53; padding: 15px; margin: 15px 0; }
+        .summary-box { background-color: #FAF7F2; border-left: 4px solid #38bdf8; padding: 15px; margin: 15px 0; }
         .meta-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
         .meta-table td { padding: 8px 12px; border: 1px solid #E6DFD5; font-size: 10.5pt; color: #2C241E; }
         .meta-table th { background-color: #F3EFE6; padding: 8px 12px; border: 1px solid #E6DFD5; text-align: left; color: #2C241E; }
-        .day-header { background-color: #E06D53; color: white; padding: 8px 12px; font-weight: bold; font-size: 12pt; margin-top: 20px; border-radius: 4px; }
-        .slot-card { margin: 10px 0; padding: 10px; background-color: #FFFFFF; border-left: 3px solid #E06D53; border: 1px solid #E6DFD5; }
-        .time-badge { font-weight: bold; color: #E06D53; font-size: 10pt; }
+        .day-header { background-color: #38bdf8; color: white; padding: 8px 12px; font-weight: bold; font-size: 12pt; margin-top: 20px; border-radius: 4px; }
+        .slot-card { margin: 10px 0; padding: 10px; background-color: #FFFFFF; border-left: 3px solid #38bdf8; border: 1px solid #E6DFD5; }
+        .time-badge { font-weight: bold; color: #38bdf8; font-size: 10pt; }
         .rating-badge { color: #d97706; font-weight: bold; }
         .tips-list { background-color: #fffbeb; border: 1px solid #fde68a; padding: 12px 20px; border-radius: 4px; }
         .footer { font-size: 9pt; color: #64748b; margin-top: 30px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 10px; }
@@ -80,31 +80,31 @@ function exportToWordDocument(plan, destination, travellers, travelParty, budget
         <div class="slot-card">
           <span class="time-badge">MORNING (${day.morning?.time || '09:00 - 12:00'})</span><br>
           <strong>${day.morning?.title}</strong> <span class="rating-badge">${day.morning?.rating || ''}</span><br>
-          <small>📍 ${day.morning?.location || ''}</small><br>
+          <small>${day.morning?.location || ''}</small><br>
           ${day.morning?.description || ''}
         </div>
 
-        <div class="slot-card" style="border-left-color: #f59e0b;">
-          <span class="time-badge" style="color: #b45309;">LUNCH (${day.lunch?.time || '12:30 - 14:00'})</span><br>
-          <strong>🍽️ ${day.lunch?.name}</strong> (${day.lunch?.cuisine} · Price: ${day.lunch?.priceTier})<br>
+        <div class="slot-card" style="border-left-color: #38BDF8;">
+          <span class="time-badge" style="color: #0284C7;">LUNCH (${day.lunch?.time || '12:30 - 14:00'})</span><br>
+          <strong>${day.lunch?.name}</strong> (${day.lunch?.cuisine} · Price: ${day.lunch?.priceTier})<br>
           <em>Must Try:</em> ${day.lunch?.mustTry || 'Chef signature specialty'}
         </div>
 
         <div class="slot-card">
           <span class="time-badge">AFTERNOON (${day.afternoon?.time || '14:30 - 17:30'})</span><br>
           <strong>${day.afternoon?.title}</strong> <span class="rating-badge">${day.afternoon?.rating || ''}</span><br>
-          <small>📍 ${day.afternoon?.location || ''}</small><br>
+          <small>${day.afternoon?.location || ''}</small><br>
           ${day.afternoon?.description || ''}
         </div>
 
-        <div class="slot-card" style="border-left-color: #f59e0b;">
-          <span class="time-badge" style="color: #b45309;">DINNER (${day.dinner?.time || '18:30 - 20:30'})</span><br>
-          <strong>🍷 ${day.dinner?.name}</strong> (${day.dinner?.cuisine} · Price: ${day.dinner?.priceTier})<br>
+        <div class="slot-card" style="border-left-color: #38BDF8;">
+          <span class="time-badge" style="color: #0284C7;">DINNER (${day.dinner?.time || '18:30 - 20:30'})</span><br>
+          <strong>${day.dinner?.name}</strong> (${day.dinner?.cuisine} · Price: ${day.dinner?.priceTier})<br>
           <em>Specialty:</em> ${day.dinner?.mustTry || 'Signature tasting dinner'}
         </div>
 
-        <div class="slot-card" style="border-left-color: #8b5cf6;">
-          <span class="time-badge" style="color: #6d28d9;">EVENING (${day.evening?.time || '21:00 - 22:30'})</span><br>
+        <div class="slot-card" style="border-left-color: #38BDF8;">
+          <span class="time-badge" style="color: #0284C7;">EVENING (${day.evening?.time || '21:00 - 22:30'})</span><br>
           <strong>${day.evening?.title}</strong><br>
           ${day.evening?.description || ''}
         </div>

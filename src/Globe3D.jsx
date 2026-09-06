@@ -43,9 +43,9 @@ function createEarthCanvasTexture() {
     ctx.stroke()
   }
 
-  // Draw continent landmass approximations (Warm soft sand)
-  ctx.fillStyle = '#E8DFC8'
-  ctx.shadowColor = '#D5C6AC'
+  // Draw continent landmass approximations (Clean minimalist contrast)
+  ctx.fillStyle = '#F8FAFC'
+  ctx.shadowColor = '#E2E8F0'
   ctx.shadowBlur = 8
 
   const continents = [
@@ -75,9 +75,9 @@ function createEarthCanvasTexture() {
     ctx.fill()
   })
 
-  // City glow clusters worldwide (Warm terracotta pins)
-  ctx.fillStyle = '#E06D53'
-  ctx.shadowColor = '#E89858'
+  // City glow clusters worldwide (Light blue pins)
+  ctx.fillStyle = '#38BDF8'
+  ctx.shadowColor = '#38BDF8'
   ctx.shadowBlur = 10
   const cityDots = [
     [1620, 365], [1480, 530], [1495, 545], [1040, 310], [980, 280],
@@ -190,7 +190,7 @@ export default function Globe3D({
         varying vec3 vNormal;
         void main() {
           float intensity = pow(0.6 - dot(vNormal, vec3(0, 0, 1.0)), 2.2);
-          gl_FragColor = vec4(0.88, 0.55, 0.45, 0.6) * intensity;
+          gl_FragColor = vec4(0.22, 0.74, 0.97, 0.7) * intensity;
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -212,14 +212,14 @@ export default function Globe3D({
     globeGroup.add(cloudMesh)
 
     // Lighting (Warm Daylight)
-    const ambientLight = new THREE.AmbientLight(0xfff8f0, 1.6)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.6)
     scene.add(ambientLight)
 
     const sunLight = new THREE.DirectionalLight(0xffffff, 2.0)
     sunLight.position.set(5, 3, 5)
     scene.add(sunLight)
 
-    const blueBackLight = new THREE.DirectionalLight(0x0284c7, 1.5)
+    const blueBackLight = new THREE.DirectionalLight(0x38bdf8, 1.5)
     blueBackLight.position.set(-5, -2, -4)
     scene.add(blueBackLight)
 
@@ -235,7 +235,7 @@ export default function Globe3D({
       const dotGeometry = new THREE.SphereGeometry(0.045, 16, 16)
       const isSelected = selectedCity?.id === dest.id || selectedCity?.city?.toLowerCase() === dest.city.toLowerCase()
       const dotMaterial = new THREE.MeshBasicMaterial({
-        color: isSelected ? 0xf59e0b : 0x38bdf8
+        color: isSelected ? 0x000000 : 0x38bdf8
       })
       const dotMesh = new THREE.Mesh(dotGeometry, dotMaterial)
       dotMesh.position.copy(pos)
@@ -246,10 +246,10 @@ export default function Globe3D({
       // Pulsing Ring
       const ringGeometry = new THREE.RingGeometry(0.05, 0.085, 24)
       const ringMaterial = new THREE.MeshBasicMaterial({
-        color: isSelected ? 0xf59e0b : 0x00f2fe,
+        color: 0x38bdf8,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.85
+        opacity: isSelected ? 0.95 : 0.65
       })
       const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial)
       ringMesh.position.copy(pos)

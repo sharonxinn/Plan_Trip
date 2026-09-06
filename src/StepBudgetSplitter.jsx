@@ -38,10 +38,10 @@ export default function StepBudgetSplitter({
   const squadMembers = useMemo(() => {
     if (members && members.length > 0) return members
     return [
-      { id: 'm1', name: 'You (Organizer)', avatar: '🌟', isOrganizer: true },
-      { id: 'm2', name: 'Pei Shan', avatar: '👩', isOrganizer: false },
-      { id: 'm3', name: 'Marcus', avatar: '👱‍♂️', isOrganizer: false },
-      { id: 'm4', name: 'Vicky', avatar: '🧑', isOrganizer: false }
+      { id: 'm1', name: 'You (Organizer)', avatar: 'YO', isOrganizer: true },
+      { id: 'm2', name: 'Pei Shan', avatar: 'PS', isOrganizer: false },
+      { id: 'm3', name: 'Marcus', avatar: 'MC', isOrganizer: false },
+      { id: 'm4', name: 'Vicky', avatar: 'VK', isOrganizer: false }
     ]
   }, [members])
 
@@ -111,10 +111,10 @@ export default function StepBudgetSplitter({
   const categoryAllocations = useMemo(() => {
     const total = safeBudgetAmount
     return {
-      accommodation: { label: '🏨 Stays & Accommodation', pct: 35, amount: Math.round(total * 0.35), icon: '🏨' },
-      flightsTransport: { label: '✈️ Flights & Transit', pct: 25, amount: Math.round(total * 0.25), icon: '✈️' },
-      foodDining: { label: '🍽️ Food & Dining', pct: 20, amount: Math.round(total * 0.20), icon: '🍽️' },
-      activities: { label: '🎟️ Activities & Attractions', pct: 15, amount: Math.round(total * 0.15), icon: '🎟️' },
+      accommodation: { label: 'Stays & Accommodation', pct: 35, amount: Math.round(total * 0.35), icon: '' },
+      flightsTransport: { label: 'Flights & Transit', pct: 25, amount: Math.round(total * 0.25), icon: '' },
+      foodDining: { label: 'Food & Dining', pct: 20, amount: Math.round(total * 0.20), icon: '' },
+      activities: { label: 'Activities & Attractions', pct: 15, amount: Math.round(total * 0.15), icon: '' },
       contingency: { label: '🛡️ Emergency & Buffer Fund', pct: 5, amount: Math.round(total * 0.05), icon: '🛡️' }
     }
   }, [safeBudgetAmount])
@@ -206,7 +206,6 @@ export default function StepBudgetSplitter({
         id: 'item-1',
         name: 'BIL-CHANTI (Chianti Classico Wine)',
         category: 'drink',
-        emoji: '🍷',
         price: 38.00,
         qty: 3,
         total: 114.00,
@@ -216,7 +215,6 @@ export default function StepBudgetSplitter({
         id: 'item-2',
         name: 'KETEL ONE Vodka Special',
         category: 'drink',
-        emoji: '🍸',
         price: 10.00,
         qty: 1,
         total: 10.00,
@@ -226,7 +224,6 @@ export default function StepBudgetSplitter({
         id: 'item-3',
         name: 'Grigliata Appetizer Platter',
         category: 'food',
-        emoji: '🍤',
         price: 19.00,
         qty: 3,
         total: 57.00,
@@ -236,7 +233,6 @@ export default function StepBudgetSplitter({
         id: 'item-4',
         name: 'Antipasto Tradizionale',
         category: 'food',
-        emoji: '🥗',
         price: 20.00,
         qty: 2,
         total: 40.00,
@@ -246,7 +242,6 @@ export default function StepBudgetSplitter({
         id: 'item-5',
         name: 'Caesar Salad with Shaved Parmesan',
         category: 'food',
-        emoji: '🥗',
         price: 8.00,
         qty: 4,
         total: 32.00,
@@ -256,7 +251,6 @@ export default function StepBudgetSplitter({
         id: 'item-6',
         name: 'Orata Filet (Mediterranean Sea Bream)',
         category: 'food',
-        emoji: '🐟',
         price: 35.00,
         qty: 1,
         total: 35.00,
@@ -266,7 +260,6 @@ export default function StepBudgetSplitter({
         id: 'item-7',
         name: 'Seabass Escarola',
         category: 'food',
-        emoji: '🐟',
         price: 35.00,
         qty: 1,
         total: 35.00,
@@ -276,7 +269,6 @@ export default function StepBudgetSplitter({
         id: 'item-8',
         name: 'Vegetable Terrine',
         category: 'food',
-        emoji: '🥦',
         price: 9.00,
         qty: 1,
         total: 9.00,
@@ -286,7 +278,6 @@ export default function StepBudgetSplitter({
         id: 'item-9',
         name: 'Lasagna Cinghiale (Wild Boar Lasagna)',
         category: 'food',
-        emoji: '🍝',
         price: 24.00,
         qty: 3,
         total: 72.00,
@@ -296,7 +287,6 @@ export default function StepBudgetSplitter({
         id: 'item-10',
         name: 'Mach Pesce Spada Sicilia (Swordfish)',
         category: 'food',
-        emoji: '🐟',
         price: 26.00,
         qty: 1,
         total: 26.00,
@@ -306,7 +296,6 @@ export default function StepBudgetSplitter({
         id: 'item-11',
         name: 'V. Chop Spc Valdostana (Veal Chop)',
         category: 'food',
-        emoji: '🥩',
         price: 68.00,
         qty: 1,
         total: 68.00,
@@ -324,17 +313,17 @@ export default function StepBudgetSplitter({
       confidenceScore: '99.9%',
       currency: '$',
       items: [
-        { id: 'item-1', name: 'BIL-CHANTI (Chianti Classico Wine)', category: 'drink', emoji: '🍷', price: 38.00, qty: 3, total: 114.00 },
-        { id: 'item-2', name: 'KETEL ONE Vodka Special', category: 'drink', emoji: '🍸', price: 10.00, qty: 1, total: 10.00 },
-        { id: 'item-3', name: 'Grigliata Appetizer Platter', category: 'food', emoji: '🍤', price: 19.00, qty: 3, total: 57.00 },
-        { id: 'item-4', name: 'Antipasto Tradizionale', category: 'food', emoji: '🥗', price: 20.00, qty: 2, total: 40.00 },
-        { id: 'item-5', name: 'Caesar Salad with Shaved Parmesan', category: 'food', emoji: '🥗', price: 8.00, qty: 4, total: 32.00 },
-        { id: 'item-6', name: 'Orata Filet (Mediterranean Sea Bream)', category: 'food', emoji: '🐟', price: 35.00, qty: 1, total: 35.00 },
-        { id: 'item-7', name: 'Seabass Escarola', category: 'food', emoji: '🐟', price: 35.00, qty: 1, total: 35.00 },
-        { id: 'item-8', name: 'Vegetable Terrine', category: 'food', emoji: '🥦', price: 9.00, qty: 1, total: 9.00 },
-        { id: 'item-9', name: 'Lasagna Cinghiale (Wild Boar Lasagna)', category: 'food', emoji: '🍝', price: 24.00, qty: 3, total: 72.00 },
-        { id: 'item-10', name: 'Mach Pesce Spada Sicilia (Swordfish)', category: 'food', emoji: '🐟', price: 26.00, qty: 1, total: 26.00 },
-        { id: 'item-11', name: 'V. Chop Spc Valdostana (Veal Chop)', category: 'food', emoji: '🥩', price: 68.00, qty: 1, total: 68.00 }
+        { id: 'item-1', name: 'BIL-CHANTI (Chianti Classico Wine)', category: 'drink', price: 38.00, qty: 3, total: 114.00 },
+        { id: 'item-2', name: 'KETEL ONE Vodka Special', category: 'drink', price: 10.00, qty: 1, total: 10.00 },
+        { id: 'item-3', name: 'Grigliata Appetizer Platter', category: 'food', price: 19.00, qty: 3, total: 57.00 },
+        { id: 'item-4', name: 'Antipasto Tradizionale', category: 'food', price: 20.00, qty: 2, total: 40.00 },
+        { id: 'item-5', name: 'Caesar Salad with Shaved Parmesan', category: 'food', price: 8.00, qty: 4, total: 32.00 },
+        { id: 'item-6', name: 'Orata Filet (Mediterranean Sea Bream)', category: 'food', price: 35.00, qty: 1, total: 35.00 },
+        { id: 'item-7', name: 'Seabass Escarola', category: 'food', price: 35.00, qty: 1, total: 35.00 },
+        { id: 'item-8', name: 'Vegetable Terrine', category: 'food', price: 9.00, qty: 1, total: 9.00 },
+        { id: 'item-9', name: 'Lasagna Cinghiale (Wild Boar Lasagna)', category: 'food', price: 24.00, qty: 3, total: 72.00 },
+        { id: 'item-10', name: 'Mach Pesce Spada Sicilia (Swordfish)', category: 'food', price: 26.00, qty: 1, total: 26.00 },
+        { id: 'item-11', name: 'V. Chop Spc Valdostana (Veal Chop)', category: 'food', price: 68.00, qty: 1, total: 68.00 }
       ]
     },
     seafood: {
@@ -343,13 +332,13 @@ export default function StepBudgetSplitter({
       category: 'Seafood Banquet & Bar',
       confidenceScore: '99.8%',
       items: [
-        { id: 'item-1', name: 'Signature Butter Prawns (L)', category: 'food', emoji: '🦐', price: 68.00, qty: 1, total: 68.00 },
-        { id: 'item-2', name: 'Grilled Sambal Stingray (M)', category: 'food', emoji: '🐟', price: 42.00, qty: 1, total: 42.00 },
-        { id: 'item-3', name: 'Chicken Satay with Peanut Sauce (20 sticks)', category: 'food', emoji: '🍢', price: 30.00, qty: 1, total: 30.00 },
-        { id: 'item-4', name: 'Signature Hokkien Charcoal Fried Mee', category: 'food', emoji: '🍜', price: 22.00, qty: 1, total: 22.00 },
-        { id: 'item-5', name: 'Fresh Tropical Coconut (Chilled)', category: 'drink', emoji: '🥥', price: 9.00, qty: 2, total: 18.00 },
-        { id: 'item-6', name: 'Fresh Sugar Cane Juice w/ Lemon', category: 'drink', emoji: '🥤', price: 7.00, qty: 2, total: 14.00 },
-        { id: 'item-7', name: 'Tiger Draught Beer (Pint)', category: 'drink', emoji: '🍺', price: 18.00, qty: 2, total: 36.00 }
+        { id: 'item-1', name: 'Signature Butter Prawns (L)', category: 'food', price: 68.00, qty: 1, total: 68.00 },
+        { id: 'item-2', name: 'Grilled Sambal Stingray (M)', category: 'food', price: 42.00, qty: 1, total: 42.00 },
+        { id: 'item-3', name: 'Chicken Satay with Peanut Sauce (20 sticks)', category: 'food', price: 30.00, qty: 1, total: 30.00 },
+        { id: 'item-4', name: 'Signature Hokkien Charcoal Fried Mee', category: 'food', price: 22.00, qty: 1, total: 22.00 },
+        { id: 'item-5', name: 'Fresh Tropical Coconut (Chilled)', category: 'drink', price: 9.00, qty: 2, total: 18.00 },
+        { id: 'item-6', name: 'Fresh Sugar Cane Juice w/ Lemon', category: 'drink', price: 7.00, qty: 2, total: 14.00 },
+        { id: 'item-7', name: 'Tiger Draught Beer (Pint)', category: 'drink', price: 18.00, qty: 2, total: 36.00 }
       ]
     },
     cafe: {
@@ -358,12 +347,12 @@ export default function StepBudgetSplitter({
       category: 'Cafe & Brunch',
       confidenceScore: '99.5%',
       items: [
-        { id: 'item-1', name: 'Avocado Sourdough Toast & Poached Egg', category: 'food', emoji: '🥑', price: 28.00, qty: 2, total: 56.00 },
-        { id: 'item-2', name: 'Truffle Mushroom Scrambled Croissant', category: 'food', emoji: '🥐', price: 32.00, qty: 1, total: 32.00 },
-        { id: 'item-3', name: 'Matcha Basque Burnt Cheesecake', category: 'food', emoji: '🍰', price: 18.00, qty: 1, total: 18.00 },
-        { id: 'item-4', name: 'Iced Spanish Latte (Oat Milk)', category: 'drink', emoji: '☕', price: 16.00, qty: 2, total: 32.00 },
-        { id: 'item-5', name: 'Single Origin Ethiopia Cold Brew', category: 'drink', emoji: '🧊', price: 15.00, qty: 1, total: 15.00 },
-        { id: 'item-6', name: 'Ceremonial Uji Dirty Matcha Latte', category: 'drink', emoji: '🍵', price: 17.00, qty: 1, total: 17.00 }
+        { id: 'item-1', name: 'Avocado Sourdough Toast & Poached Egg', category: 'food', price: 28.00, qty: 2, total: 56.00 },
+        { id: 'item-2', name: 'Truffle Mushroom Scrambled Croissant', category: 'food', price: 32.00, qty: 1, total: 32.00 },
+        { id: 'item-3', name: 'Matcha Basque Burnt Cheesecake', category: 'food', price: 18.00, qty: 1, total: 18.00 },
+        { id: 'item-4', name: 'Iced Spanish Latte (Oat Milk)', category: 'drink', price: 16.00, qty: 2, total: 32.00 },
+        { id: 'item-5', name: 'Single Origin Ethiopia Cold Brew', category: 'drink', price: 15.00, qty: 1, total: 15.00 },
+        { id: 'item-6', name: 'Ceremonial Uji Dirty Matcha Latte', category: 'drink', price: 17.00, qty: 1, total: 17.00 }
       ]
     },
     izakaya: {
@@ -372,12 +361,12 @@ export default function StepBudgetSplitter({
       category: 'Japanese Izakaya & Cocktails',
       confidenceScore: '99.2%',
       items: [
-        { id: 'item-1', name: 'Salmon & Hamachi Sashimi Moriawase', category: 'food', emoji: '🍣', price: 78.00, qty: 1, total: 78.00 },
-        { id: 'item-2', name: 'A5 Miyazaki Wagyu Skewers (4 pcs)', category: 'food', emoji: '🥩', price: 96.00, qty: 1, total: 96.00 },
-        { id: 'item-3', name: 'Crispy Garlic Yakitori Skewer Combo', category: 'food', emoji: '🍢', price: 44.00, qty: 1, total: 44.00 },
-        { id: 'item-4', name: 'Truffle Unagi Fried Rice (Stone Pot)', category: 'food', emoji: '🍚', price: 38.00, qty: 1, total: 38.00 },
-        { id: 'item-5', name: 'Yuzu Suntory Highball Cocktail', category: 'drink', emoji: '🍹', price: 32.00, qty: 3, total: 96.00 },
-        { id: 'item-6', name: 'Chilled Japanese Genmaicha Green Tea', category: 'drink', emoji: '🍵', price: 8.00, qty: 2, total: 16.00 }
+        { id: 'item-1', name: 'Salmon & Hamachi Sashimi Moriawase', category: 'food', price: 78.00, qty: 1, total: 78.00 },
+        { id: 'item-2', name: 'A5 Miyazaki Wagyu Skewers (4 pcs)', category: 'food', price: 96.00, qty: 1, total: 96.00 },
+        { id: 'item-3', name: 'Crispy Garlic Yakitori Skewer Combo', category: 'food', price: 44.00, qty: 1, total: 44.00 },
+        { id: 'item-4', name: 'Truffle Unagi Fried Rice (Stone Pot)', category: 'food', price: 38.00, qty: 1, total: 38.00 },
+        { id: 'item-5', name: 'Yuzu Suntory Highball Cocktail', category: 'drink', price: 32.00, qty: 3, total: 96.00 },
+        { id: 'item-6', name: 'Chilled Japanese Genmaicha Green Tea', category: 'drink', price: 8.00, qty: 2, total: 16.00 }
       ]
     },
     streetfood: {
@@ -386,12 +375,12 @@ export default function StepBudgetSplitter({
       category: 'Hawker Street Food',
       confidenceScore: '98.9%',
       items: [
-        { id: 'item-1', name: 'Duck Egg Char Kway Teow w/ Giant Prawns', category: 'food', emoji: '🥢', price: 16.00, qty: 2, total: 32.00 },
-        { id: 'item-2', name: 'Crispy Penang Oyster Omelette (Or Chien)', category: 'food', emoji: '🦪', price: 24.00, qty: 1, total: 24.00 },
-        { id: 'item-3', name: 'Penang Famous Asam Laksa', category: 'food', emoji: '🍜', price: 12.00, qty: 1, total: 12.00 },
-        { id: 'item-4', name: 'Signature Durian Cendol Bowl', category: 'food', emoji: '🍧', price: 10.00, qty: 2, total: 20.00 },
-        { id: 'item-5', name: 'Iced Milo Dinosaur Special', category: 'drink', emoji: '🥤', price: 6.50, qty: 2, total: 13.00 },
-        { id: 'item-6', name: 'Fresh Calamansi Plum Juice', category: 'drink', emoji: '🍋', price: 5.00, qty: 2, total: 10.00 }
+        { id: 'item-1', name: 'Duck Egg Char Kway Teow w/ Giant Prawns', category: 'food', price: 16.00, qty: 2, total: 32.00 },
+        { id: 'item-2', name: 'Crispy Penang Oyster Omelette (Or Chien)', category: 'food', price: 24.00, qty: 1, total: 24.00 },
+        { id: 'item-3', name: 'Penang Famous Asam Laksa', category: 'food', price: 12.00, qty: 1, total: 12.00 },
+        { id: 'item-4', name: 'Signature Durian Cendol Bowl', category: 'food', price: 10.00, qty: 2, total: 20.00 },
+        { id: 'item-5', name: 'Iced Milo Dinosaur Special', category: 'drink', price: 6.50, qty: 2, total: 13.00 },
+        { id: 'item-6', name: 'Fresh Calamansi Plum Juice', category: 'drink', price: 5.00, qty: 2, total: 10.00 }
       ]
     }
   }
@@ -481,7 +470,7 @@ export default function StepBudgetSplitter({
   // Trigger Scanning (Tesseract.js Client OCR + Gemini Multimodal Vision API + Fallback)
   const handleScanReceipt = async (presetKey = 'custom', customText = '', imageFileOrData = null) => {
     setIsScanning(true)
-    setScanProgressText('📷 Reading image & performing Optical Character Recognition (OCR)...')
+    setScanProgressText('Reading image & performing Optical Character Recognition (OCR)...')
 
     const applyReceiptData = (receiptData) => {
       const rawItems = receiptData.items || []
@@ -510,7 +499,7 @@ export default function StepBudgetSplitter({
         confidenceScore: receiptData.confidenceScore || '99.4%',
         items: initializedItems
       }))
-      showToast(`⚡ OCR extracted ${initializedItems.length} items from ${receiptData.merchantName || 'receipt'}!`)
+      showToast(`OCR extracted ${initializedItems.length} items from ${receiptData.merchantName || 'receipt'}!`)
       setIsScanning(false)
     }
 
@@ -526,7 +515,7 @@ export default function StepBudgetSplitter({
     // 2. If real image file/data provided, run Tesseract.js real OCR
     if (imageFileOrData) {
       try {
-        setScanProgressText('🧠 AI Vision running deep text & price extraction...')
+        setScanProgressText('AI Vision running deep text & price extraction...')
         // Try backend Gemini Multimodal first
         const apiRes = await fetch('/api/receipt/scan', {
           method: 'POST',
@@ -546,7 +535,7 @@ export default function StepBudgetSplitter({
         // Run Real Client-side Tesseract.js OCR directly on the image
         const { createWorker } = await import('tesseract.js')
         const worker = await createWorker('eng')
-        setScanProgressText('🔍 Scanning text lines with OCR engine...')
+        setScanProgressText('Scanning text lines with OCR engine...')
         const ret = await worker.recognize(imageFileOrData)
         await worker.terminate()
 
@@ -648,7 +637,6 @@ export default function StepBudgetSplitter({
       id: `item-${Date.now()}`,
       name: 'Extra Dish / Beverage',
       category: 'food',
-      emoji: '🍽️',
       price: 15.00,
       qty: 1,
       total: 15.00,
@@ -715,7 +703,7 @@ export default function StepBudgetSplitter({
       assignees.forEach(name => {
         if (!memberBreakdown[name]) {
           memberBreakdown[name] = {
-            member: { name, avatar: '🧑' },
+            member: { name, avatar: 'VK' },
             foodTotal: 0,
             drinkTotal: 0,
             itemsList: [],
@@ -782,42 +770,42 @@ export default function StepBudgetSplitter({
     }
 
     setExpenses([newExp, ...expenses])
-    showToast(`✅ Added "${scannedReceipt.merchantName}" (${curr.symbol} ${receiptCalculations.grandTotal.toFixed(2)}) to Group Expenses!`)
+    showToast(`Added "${scannedReceipt.merchantName}" (${curr.symbol} ${receiptCalculations.grandTotal.toFixed(2)}) to Group Expenses!`)
     setActiveTab('ledger')
   }
 
   // Copy Itemized WhatsApp Summary
   const handleCopyWhatsAppBreakdown = () => {
     const lines = [
-      `🧾 *${scannedReceipt.merchantName}* - Food & Drinks Breakdown`,
-      `📅 Date: ${scannedReceipt.date} | 💳 Paid by: *${scannedReceipt.payer}*`,
+      `*${scannedReceipt.merchantName}* - Food & Drinks Breakdown`,
+      `Date: ${scannedReceipt.date} | Paid by: *${scannedReceipt.payer}*`,
       `💰 Grand Total: *${curr.symbol} ${receiptCalculations.grandTotal.toFixed(2)}* (incl. SST & Service Charge)`,
       ``,
-      `🍔 *FOOD ITEMS (${curr.symbol} ${receiptCalculations.foodSubtotal.toFixed(2)}):*`,
+      `*FOOD ITEMS (${curr.symbol} ${receiptCalculations.foodSubtotal.toFixed(2)}):*`,
       ...scannedReceipt.items.filter(i => i.category === 'food').map(i => {
         const shareStr = i.assignedTo.length === squadMembers.length ? 'All Squad' : i.assignedTo.join(', ')
-        return `• ${i.emoji} ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) ➔ ${shareStr}`
+        return `• ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) ➔ ${shareStr}`
       }),
       ``,
-      `🍹 *DRINK ITEMS (${curr.symbol} ${receiptCalculations.drinkSubtotal.toFixed(2)}):*`,
+      `*DRINK ITEMS (${curr.symbol} ${receiptCalculations.drinkSubtotal.toFixed(2)}):*`,
       ...scannedReceipt.items.filter(i => i.category === 'drink').map(i => {
         const shareStr = i.assignedTo.length === squadMembers.length ? 'All Squad' : i.assignedTo.join(', ')
-        return `• ${i.emoji} ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) ➔ ${shareStr}`
+        return `• ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) ➔ ${shareStr}`
       }),
       ``,
-      `📊 *PER-PERSON AMOUNTS TO PAY ${scannedReceipt.payer}:*`,
+      `*PER-PERSON AMOUNTS TO PAY ${scannedReceipt.payer}:*`,
       ...Object.keys(receiptCalculations.memberBreakdown).map(name => {
         const mb = receiptCalculations.memberBreakdown[name]
-        return `👉 *${name}*: ${curr.symbol} ${mb.grandTotal.toFixed(2)} (Food: ${curr.symbol}${mb.foodTotal.toFixed(2)} | Drinks: ${curr.symbol}${mb.drinkTotal.toFixed(2)} | Tax/Svc: ${curr.symbol}${mb.taxAndServiceShare.toFixed(2)})`
+        return `*${name}*: ${curr.symbol} ${mb.grandTotal.toFixed(2)} (Food: ${curr.symbol}${mb.foodTotal.toFixed(2)} | Drinks: ${curr.symbol}${mb.drinkTotal.toFixed(2)} | Tax/Svc: ${curr.symbol}${mb.taxAndServiceShare.toFixed(2)})`
       }),
       ``,
-      `✨ Generated by PlanTrip AI · Less Math, More Fun!`
+      `Generated by PlanTrip AI · Less Math, More Fun!`
     ]
 
     navigator.clipboard.writeText(lines.join('\n'))
     setCopiedItemizedWhatsApp(true)
     setTimeout(() => setCopiedItemizedWhatsApp(false), 3000)
-    showToast('📋 Formatted WhatsApp Breakdown copied to clipboard!')
+    showToast('Formatted WhatsApp Breakdown copied to clipboard!')
   }
 
   // Add Manual Real Expense
@@ -897,12 +885,12 @@ export default function StepBudgetSplitter({
 
   const handleCopySettlement = () => {
     const lines = [
-      `💰 *PlanTrip Group Expense Settlement*`,
+      `*PlanTrip Group Expense Settlement*`,
       `Total Spent: ${curr.symbol} ${(settlementData.totalSpent * curr.rate).toFixed(2)}`,
       `Fair Share Per Person: ${curr.symbol} ${(settlementData.fairSharePerPax * curr.rate).toFixed(2)}`,
       ``,
       `--- Minimal Transfers to Settle ---`,
-      ...settlementData.transactions.map(t => `👉 *${t.from}* pays *${t.to}*: ${curr.symbol} ${(t.amount * curr.rate).toFixed(2)}`),
+      ...settlementData.transactions.map(t => `*${t.from}* pays *${t.to}*: ${curr.symbol} ${(t.amount * curr.rate).toFixed(2)}`),
       ``,
       `Generated by PlanTrip AI · Less Stress, Fair Travel!`
     ]
@@ -1075,9 +1063,9 @@ export default function StepBudgetSplitter({
                     </span>
                   </div>
                   <div className="merchant-sub-meta">
-                    <span>📅 {scannedReceipt.date}</span>
+                    <span>{scannedReceipt.date}</span>
                     <span>·</span>
-                    <span>🏷️ {scannedReceipt.category}</span>
+                    <span>{scannedReceipt.category}</span>
                     <span>·</span>
                     <span className="badge-item-count">{scannedReceipt.items.length} Items Detected</span>
                   </div>
@@ -1085,7 +1073,7 @@ export default function StepBudgetSplitter({
 
                 {/* Master Payer Selector */}
                 <div className="master-payer-box">
-                  <label>💳 Paid at Cashier by:</label>
+                  <label>Paid at Cashier by:</label>
                   <select
                     value={scannedReceipt.payer}
                     onChange={e => setScannedReceipt({ ...scannedReceipt, payer: e.target.value })}
@@ -1093,7 +1081,7 @@ export default function StepBudgetSplitter({
                   >
                     {squadMembers.map(m => (
                       <option key={m.id || m.name} value={m.name}>
-                        {m.avatar || '🧑'} {m.name} {m.isOrganizer ? '(Organizer)' : ''}
+                        {m.avatar || 'YO'} {m.name} {m.isOrganizer ? '(Organizer)' : ''}
                       </option>
                     ))}
                   </select>
@@ -1103,17 +1091,17 @@ export default function StepBudgetSplitter({
               {/* Items Category Bar */}
               <div className="items-category-summary-row">
                 <div className="cat-chip-summary food">
-                  <span className="cat-icon">🍔</span>
+                  
                   <span className="cat-name">Food Dishes:</span>
                   <strong>{curr.symbol} {receiptCalculations.foodSubtotal.toFixed(2)}</strong>
                 </div>
                 <div className="cat-chip-summary drink">
-                  <span className="cat-icon">🍹</span>
+                  
                   <span className="cat-name">Drinks & Beverages:</span>
                   <strong>{curr.symbol} {receiptCalculations.drinkSubtotal.toFixed(2)}</strong>
                 </div>
                 <div className="cat-chip-summary tax">
-                  <span className="cat-icon">🧾</span>
+                  
                   <span className="cat-name">SST & Service (16%):</span>
                   <strong>{curr.symbol} {(receiptCalculations.taxAmount + receiptCalculations.serviceChargeAmount).toFixed(2)}</strong>
                 </div>
@@ -1136,7 +1124,7 @@ export default function StepBudgetSplitter({
                             onClick={() => handleToggleItemCategory(item.id)}
                             title="Click to switch category (Food / Drink)"
                           >
-                            <span>{item.emoji || (isFood ? '🍔' : '🍹')}</span>
+                            
                             <span>{isFood ? 'Food' : 'Drink'}</span>
                           </button>
 
@@ -1170,7 +1158,7 @@ export default function StepBudgetSplitter({
                           <span className="assignees-caption">Who ordered / consumed this?</span>
                           <span className="assignees-share-calc">
                             {assignees.length === 0 ? (
-                              <span className="text-rose font-bold">⚠️ Not assigned!</span>
+                              <span className="text-rose font-bold">Not assigned!</span>
                             ) : (
                               <span>
                                 = <strong>{curr.symbol}{perPersonShare.toFixed(2)}</strong> each ({assignees.length} pax)
@@ -1189,7 +1177,7 @@ export default function StepBudgetSplitter({
                                 onClick={() => handleToggleItemMember(item.id, m.name)}
                                 title={isAssigned ? `Remove ${m.name}` : `Assign to ${m.name}`}
                               >
-                                <span className="m-avatar">{m.avatar || '🧑'}</span>
+                                <span className="m-avatar">{m.avatar || 'YO'}</span>
                                 <span className="m-name">{m.name.split(' ')[0]}</span>
                                 {isAssigned && <Check size={12} className="check-icon" />}
                               </button>
@@ -1251,11 +1239,11 @@ export default function StepBudgetSplitter({
 
                 <div className="receipt-calculation-rows">
                   <div className="calc-row">
-                    <span>🍔 Food Subtotal</span>
+                    <span>Food Subtotal</span>
                     <strong>{curr.symbol} {receiptCalculations.foodSubtotal.toFixed(2)}</strong>
                   </div>
                   <div className="calc-row">
-                    <span>🍹 Drinks Subtotal</span>
+                    <span>Drinks Subtotal</span>
                     <strong>{curr.symbol} {receiptCalculations.drinkSubtotal.toFixed(2)}</strong>
                   </div>
                   <div className="calc-row subtotal-divider">
@@ -1299,7 +1287,7 @@ export default function StepBudgetSplitter({
                           <div className="tile-member-name">
                             <span className="m-avatar">{mb.member.avatar || '🧑'}</span>
                             <strong>{name}</strong>
-                            {isPayer && <span className="payer-badge">💳 Paid Master Bill</span>}
+                            {isPayer && <span className="payer-badge">Paid Master Bill</span>}
                           </div>
                           <div className="tile-grand-share">
                             {curr.symbol} {mb.grandTotal.toFixed(2)}
@@ -1307,9 +1295,9 @@ export default function StepBudgetSplitter({
                         </div>
 
                         <div className="tile-details-sub">
-                          <span>🍔 Food: {curr.symbol}{mb.foodTotal.toFixed(2)}</span>
+                          <span>Food: {curr.symbol}{mb.foodTotal.toFixed(2)}</span>
                           <span>·</span>
-                          <span>🍹 Drinks: {curr.symbol}{mb.drinkTotal.toFixed(2)}</span>
+                          <span>Drinks: {curr.symbol}{mb.drinkTotal.toFixed(2)}</span>
                           <span>·</span>
                           <span>Tax/Svc: {curr.symbol}{mb.taxAndServiceShare.toFixed(2)}</span>
                         </div>
@@ -1375,7 +1363,7 @@ export default function StepBudgetSplitter({
                     <div className="exp-title-row">
                       <span className="exp-title">{exp.title}</span>
                       {exp.splitType === 'itemized' && (
-                        <span className="badge-itemized-tag">🍔 Itemized Food/Drinks</span>
+                        <span className="badge-itemized-tag">Itemized Food/Drinks</span>
                       )}
                     </div>
                     <div className="exp-meta">
@@ -1427,7 +1415,7 @@ export default function StepBudgetSplitter({
                   >
                     {squadMembers.map(m => (
                       <option key={m.id || m.name} value={m.name}>
-                        {m.avatar || '🧑'} {m.name}
+                        {m.avatar || 'YO'} {m.name}
                       </option>
                     ))}
                   </select>
@@ -1473,7 +1461,7 @@ export default function StepBudgetSplitter({
                   <div key={idx} className="settle-transfer-tile highlight-transfer">
                     <div className="transfer-from-to">
                       <span className="debtor-name">{t.from}</span>
-                      <span className="transfer-arrow">➔ pays ➔</span>
+                      <span className="transfer-arrow">pays</span>
                       <span className="creditor-name">{t.to}</span>
                     </div>
                     <div className="transfer-amount-badge">

@@ -35,11 +35,11 @@ export default function StageMemory({
   
   // Actual spending calculation (simulated around 90-95% of budget or user logged items)
   const actualCategories = [
-    { name: 'Accommodation & Stays', planned: Math.round(initialBudget * 0.38), actual: Math.round(initialBudget * 0.35), icon: '🏨' },
-    { name: 'Flights & Transportation', planned: Math.round(initialBudget * 0.25), actual: Math.round(initialBudget * 0.26), icon: '✈️' },
-    { name: 'Food & Local Gastronomy', planned: Math.round(initialBudget * 0.22), actual: Math.round(initialBudget * 0.19), icon: '🍜' },
-    { name: 'Attractions & Experiences', planned: Math.round(initialBudget * 0.10), actual: Math.round(initialBudget * 0.08), icon: '🎟️' },
-    { name: 'Shopping & Contingency', planned: Math.round(initialBudget * 0.05), actual: Math.round(initialBudget * 0.03), icon: '🛍️' },
+    { name: 'Accommodation & Stays', planned: Math.round(initialBudget * 0.38), actual: Math.round(initialBudget * 0.35), icon: '' },
+    { name: 'Flights & Transportation', planned: Math.round(initialBudget * 0.25), actual: Math.round(initialBudget * 0.26), icon: '' },
+    { name: 'Food & Local Gastronomy', planned: Math.round(initialBudget * 0.22), actual: Math.round(initialBudget * 0.19), icon: '' },
+    { name: 'Attractions & Experiences', planned: Math.round(initialBudget * 0.10), actual: Math.round(initialBudget * 0.08), icon: '' },
+    { name: 'Shopping & Contingency', planned: Math.round(initialBudget * 0.05), actual: Math.round(initialBudget * 0.03), icon: '' },
   ]
 
   const totalActual = actualCategories.reduce((sum, cat) => sum + cat.actual, 0)
@@ -308,7 +308,7 @@ export default function StageMemory({
                 <button
                   className="btn-clean-secondary"
                   onClick={() => {
-                    const text = `🎉 Trip Expense Summary for ${selectedCity?.city || 'Our Trip'}:\nInitial Budget: RM ${initialBudget}\nFinal Total Spent: RM ${totalActual}\nTotal Saved: RM ${varianceAmount}\nPer Person: RM ${perPaxActual}\nSettlement complete on PlanTrip.ai!`
+                    const text = `Trip Expense Summary for ${selectedCity?.city || 'Our Trip'}:\nInitial Budget: RM ${initialBudget}\nFinal Total Spent: RM ${totalActual}\nTotal Saved: RM ${varianceAmount}\nPer Person: RM ${perPaxActual}\nSettlement complete on PlanTrip.ai!`
                     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
                   }}
                 >
@@ -324,7 +324,7 @@ export default function StageMemory({
           </div>
         )}
 
-        {/* TAB 3: 📜 TRAVEL HISTORY */}
+        {/* TAB 3: TRAVEL HISTORY */}
         {activeTab === 'history' && (
           <div className="memory-tab-pane travel-history-pane fade-in">
             {/* LIFETIME STATS BANNER */}

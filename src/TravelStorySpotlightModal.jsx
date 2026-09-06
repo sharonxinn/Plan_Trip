@@ -10,7 +10,7 @@ import './travel-story-spotlight.css'
 // Curated traveler intelligence for featured destinations
 const PLACE_INTEL_DIRECTORY = {
   'petronas twin towers & klcc park': {
-    vibe: '🌆 Skyline & Architecture',
+    vibe: 'Skyline & Architecture',
     timeOfDay: 'Blue Hour · 7:15 PM',
     weather: '29°C · Clear & Warm',
     duration: '1.5 – 2.5 hours',
@@ -22,7 +22,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'city'
   },
   'suria klcc': {
-    vibe: '🌆 Skyline & Architecture',
+    vibe: 'Skyline & Architecture',
     timeOfDay: 'Blue Hour · 7:15 PM',
     weather: '29°C · Clear & Warm',
     duration: '1.5 – 2.5 hours',
@@ -34,7 +34,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'city'
   },
   'batu caves': {
-    vibe: '🛕 Heritage & Sacred Heights',
+    vibe: 'Heritage & Sacred Heights',
     timeOfDay: 'Early Morning · 7:45 AM',
     weather: '26°C · Morning Fresh',
     duration: '2.0 – 3.0 hours',
@@ -46,7 +46,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'temple'
   },
   'jalan alor & city centre': {
-    vibe: '🍜 Street Food & Night Market',
+    vibe: 'Street Food & Night Market',
     timeOfDay: 'Supper Time · 9:30 PM',
     weather: '28°C · Lively Night',
     duration: '1.5 – 2.0 hours',
@@ -58,7 +58,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'market'
   },
   'heritage avenue & arts quarter': {
-    vibe: '🎨 Heritage Arts & Boutiques',
+    vibe: 'Heritage Arts & Boutiques',
     timeOfDay: 'Mid Morning · 10:30 AM',
     weather: '28°C · Sunny',
     duration: '2.0 – 2.5 hours',
@@ -70,7 +70,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'cafe'
   },
   'the exchange trx sky park': {
-    vibe: '🌳 Modern Rooftop Oasis',
+    vibe: 'Modern Rooftop Oasis',
     timeOfDay: 'Sunset · 6:30 PM',
     weather: '28°C · Sunset Breeze',
     duration: '1.5 hours',
@@ -82,7 +82,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'city'
   },
   'armenian street': {
-    vibe: '🚲 Street Murals & Heritage Core',
+    vibe: 'Street Murals & Heritage Core',
     timeOfDay: 'Morning · 9:00 AM',
     weather: '27°C · Sea Breeze',
     duration: '2.0 hours',
@@ -94,7 +94,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'cafe'
   },
   'chew jetty': {
-    vibe: '🌊 Wooden Stilt Clan Houses',
+    vibe: 'Wooden Stilt Clan Houses',
     timeOfDay: 'Late Afternoon · 5:30 PM',
     weather: '29°C · Coastal Breeze',
     duration: '1.0 – 1.5 hours',
@@ -106,7 +106,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'coastal'
   },
   'senso-ji asakusa': {
-    vibe: '🏮 Historic Courtyard & Lanterns',
+    vibe: 'Historic Courtyard & Lanterns',
     timeOfDay: 'Early Morning · 8:00 AM',
     weather: '21°C · Crisp Air',
     duration: '2.0 hours',
@@ -118,7 +118,7 @@ const PLACE_INTEL_DIRECTORY = {
     soundscapeType: 'temple'
   },
   'shibuya crossing': {
-    vibe: '⚡ High-Energy Urban Pulse',
+    vibe: 'High-Energy Urban Pulse',
     timeOfDay: 'Evening · 8:15 PM',
     weather: '22°C · Neon Glow',
     duration: '1.0 hour',
@@ -144,7 +144,7 @@ function resolvePlaceIntel(placeKey, postcard) {
     }
   }
   return {
-    vibe: '📍 Must-Visit Destination',
+    vibe: 'Must-Visit Destination',
     timeOfDay: 'Golden Hour · 6:00 PM',
     weather: '28°C · Pleasant',
     duration: '1.5 – 2.0 hours',
@@ -438,7 +438,7 @@ export default function TravelStorySpotlightModal({
                   onClick={() => triggerReaction('love')}
                   title="Loved this memory"
                 >
-                  <span className="emoji">❤️</span>
+                  <Heart size={16} />
                   <span className="count">{reactions.love}</span>
                 </button>
 
@@ -448,7 +448,7 @@ export default function TravelStorySpotlightModal({
                   onClick={() => triggerReaction('fire')}
                   title="Must visit place!"
                 >
-                  <span className="emoji">🔥</span>
+                  <Flame size={16} />
                   <span className="count">{reactions.fire}</span>
                 </button>
 
@@ -458,7 +458,7 @@ export default function TravelStorySpotlightModal({
                   onClick={() => triggerReaction('tip')}
                   title="Super useful tip"
                 >
-                  <span className="emoji">💡</span>
+                  <Lightbulb size={16} />
                   <span className="count">{reactions.tip}</span>
                 </button>
 
@@ -468,7 +468,7 @@ export default function TravelStorySpotlightModal({
                   onClick={() => triggerReaction('camera')}
                   title="Great photography spot"
                 >
-                  <span className="emoji">📸</span>
+                  <Camera size={16} />
                   <span className="count">{reactions.camera}</span>
                 </button>
               </div>
