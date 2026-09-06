@@ -1,0 +1,1226 @@
+/* ==========================================================================
+   GOOGLE STREET VIEW 3D PLACE EXPLORER & FLOATING TRAVEL POSTCARD
+   Exact visual match to Google Street View navigation UI & Floating Postcard
+   ========================================================================== */
+
+/* Main Fullscreen Modal Shell */
+.postcard-3d-modal.is-streetview-mode {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #000000;
+  color: #ffffff;
+  overflow: hidden;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  animation: gsv-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes gsv-fade-in {
+  from { opacity: 0; transform: scale(0.995); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 1. FULL-SCREEN 3D STREET VIEW VIEWPORT */
+.streetview-main-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000000;
+  z-index: 1;
+}
+
+.streetview-360-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.streetview-360-canvas:active {
+  cursor: grabbing;
+}
+
+.streetview-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Subtle Vignette Overlay for Depth */
+.streetview-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 65%, rgba(0, 0, 0, 0.35) 100%);
+  z-index: 2;
+}
+
+/* Interactive Drag Hint Overlay */
+.streetview-drag-hint {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  font-size: 12px;
+  color: #e8eaed;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: gsv-hint-fade 4s forwards ease-in-out;
+}
+
+@keyframes gsv-hint-fade {
+  0% { opacity: 0; transform: translate(-50%, -6px); }
+  15% { opacity: 1; transform: translate(-50%, 0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -6px); pointer-events: none; }
+}
+
+/* ==========================================================================
+   2. TOP-LEFT ROUTE CARD (Exact Google Street View navigation style)
+   ========================================================================== */
+.gsv-top-left-card {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  background: rgba(28, 28, 30, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.2);
+  padding: 14px 16px 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  pointer-events: auto;
+}
+
+.gsv-back-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+  transition: background 0.18s ease;
+  flex-shrink: 0;
+}
+
+.gsv-back-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.gsv-route-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.gsv-route-stops-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* Vertical Connected Dots Between Origin & Destination */
+.gsv-stops-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 6px;
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.stop-circle {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid #bdc1c6;
+  background: transparent;
+}
+
+.stop-dots {
+  width: 1.5px;
+  height: 16px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #bdc1c6 0,
+    #bdc1c6 2px,
+    transparent 2px,
+    transparent 5px
+  );
+  margin: 2px 0;
+}
+
+.stop-pin-icon {
+  color: #ea4335;
+  display: grid;
+  place-items: center;
+}
+
+.gsv-stops-text-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.gsv-origin-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.origin-label, .dest-label {
+  color: #9aa0a6;
+  font-size: 13px;
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.origin-name {
+  color: #ffffff;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gsv-route-icons-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #bdc1c6;
+}
+
+.route-pin-icon, .route-more-icon {
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.route-pin-icon:hover, .route-more-icon:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
+.gsv-dest-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.dest-name {
+  color: #ffffff;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Brand Row: Google logo + Google Street View + Date */
+.gsv-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+.gsv-logo-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.google-color-g {
+  flex-shrink: 0;
+}
+
+.gsv-date-pill {
+  font-size: 12px;
+  color: #9aa0a6;
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   3. TOP-RIGHT HUD (Share, View Modes & Close)
+   ========================================================================== */
+.gsv-top-right-bar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.gsv-mode-switch-group {
+  display: flex;
+  align-items: center;
+  background: rgba(28, 28, 30, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 3px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.gsv-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+  color: #9aa0a6;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.gsv-mode-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.gsv-mode-btn.active {
+  background: #1a73e8;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.4);
+}
+
+.gsv-icon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  background: rgba(28, 28, 30, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: all 0.18s ease;
+}
+
+.gsv-icon-action-btn:hover {
+  background: rgba(48, 48, 52, 0.96);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.gsv-close-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(28, 28, 30, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: all 0.18s ease;
+}
+
+.gsv-close-btn:hover {
+  background: rgba(239, 68, 68, 0.85);
+  border-color: #ef4444;
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   4. BOTTOM-LEFT ROUTE STEP CARD (Matching Screenshot "Step 19 of 19")
+   ========================================================================== */
+.gsv-bottom-step-card {
+  position: absolute;
+  bottom: 24px;
+  left: 16px;
+  z-index: 50;
+  width: 410px;
+  max-width: calc(100vw - 32px);
+  background: rgba(24, 24, 26, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65), 0 0 1px rgba(255, 255, 255, 0.2);
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.step-count-badge {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.step-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 1px;
+}
+
+.step-pin {
+  color: #bdc1c6;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.step-place-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.step-full-address {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #c4c7c5;
+  margin: 0;
+  font-weight: 400;
+}
+
+.step-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+.step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.step-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.step-btn.restart:hover {
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.step-open-native-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  color: #8ab4f8;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.step-open-native-btn:hover {
+  color: #aecbfa;
+  background: rgba(138, 180, 248, 0.12);
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   5. BOTTOM-RIGHT COMPASS & ZOOM CONTROLS (Exact Google Street View UI)
+   ========================================================================== */
+.gsv-bottom-right-controls {
+  position: absolute;
+  bottom: 24px;
+  right: 20px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+/* Interactive Rotating Compass Rose */
+.gsv-compass-rose {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(28, 28, 30, 0.95);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(12px);
+  transition: transform 0.1s ease-out;
+}
+
+.gsv-compass-rose:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.06);
+}
+
+.compass-dial {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.compass-needle {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.compass-needle.north {
+  border-bottom: 12px solid #ea4335;
+  margin-bottom: 1px;
+}
+
+.compass-needle.south {
+  border-top: 12px solid #ffffff;
+  opacity: 0.85;
+}
+
+.compass-n-label {
+  position: absolute;
+  top: -2px;
+  font-size: 8px;
+  font-weight: 800;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+/* Zoom Controls Stack */
+.gsv-zoom-controls {
+  display: flex;
+  flex-direction: column;
+  background: rgba(28, 28, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+  width: 36px;
+  backdrop-filter: blur(12px);
+}
+
+.gsv-zoom-btn {
+  width: 36px;
+  height: 34px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.gsv-zoom-btn:first-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.gsv-zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ==========================================================================
+   6. FLOATING TRAVEL POSTCARD (Anchored in Top Right)
+   ========================================================================== */
+.floating-postcard-container {
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  z-index: 70;
+  perspective: 1400px;
+  pointer-events: auto;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Minimized Floating Pill */
+.minimized-postcard-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 10px;
+  background: rgba(20, 24, 33, 0.94);
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  border-radius: 999px;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minimized-postcard-pill:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: #38bdf8;
+  box-shadow: 0 16px 44px rgba(14, 165, 233, 0.4);
+}
+
+.mini-thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #ffffff;
+}
+
+.mini-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.mini-info strong {
+  font-size: 13px;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.mini-info small {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.mini-icon {
+  color: #38bdf8;
+  margin-left: 4px;
+}
+
+/* 3D Flip Card Container */
+.postcard-card-wrapper {
+  position: relative;
+  width: 360px;
+  min-height: 470px;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 1px rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+}
+
+.postcard-card-wrapper.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Postcard Surfaces */
+.postcard-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* FRONT FACE (Photograph & Story Excerpt) */
+.postcard-front {
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(28px);
+  padding: 16px 18px 18px;
+}
+
+.postcard-controls-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.postcard-stamp-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+}
+
+.postcard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.postcard-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.postcard-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.postcard-photo-frame {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #020617;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+.postcard-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.postcard-photo-frame:hover .postcard-photo-img {
+  transform: scale(1.04);
+}
+
+.photo-zoom-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 999px;
+  color: #f1f5f9;
+  font-size: 10px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+}
+
+.postcard-photo-frame:hover .photo-zoom-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.postcard-front-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 12px;
+}
+
+.postcard-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.postcard-title-row h3 {
+  font-size: 15.5px;
+  font-weight: 750;
+  color: #f8fafc;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.postcard-date-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  color: #94a3b8;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.postcard-landmark-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #38bdf8;
+  margin: 0 0 8px;
+}
+
+.postcard-quote {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #fed7aa;
+  margin: 0 0 10px;
+  background: rgba(254, 215, 170, 0.08);
+  padding: 8px 12px;
+  border-left: 2.5px solid #f97316;
+  border-radius: 0 6px 6px 0;
+}
+
+.postcard-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.author-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.btn-flip-prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-flip-prompt:hover {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: #38bdf8;
+}
+
+/* BACK FACE (Vintage Airmail Stationery & Letter) */
+.postcard-back {
+  transform: rotateY(180deg);
+  background: #fcfaf6;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  padding: 16px 18px 18px;
+  box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.03);
+}
+
+.airmail-strip {
+  height: 6px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #ef4444 0,
+    #ef4444 14px,
+    #ffffff 14px,
+    #ffffff 20px,
+    #3b82f6 20px,
+    #3b82f6 34px,
+    #ffffff 34px,
+    #ffffff 40px
+  );
+  margin: -16px -18px 12px;
+}
+
+.postcard-back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.post-card-title {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #64748b;
+}
+
+.postcard-back .postcard-tool-btn {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.postcard-back .postcard-tool-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.postcard-back-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1px 1fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 220px;
+}
+
+.postcard-message-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.handwritten-greeting {
+  font-family: 'Caveat', 'Dancing Script', cursive, Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 6px;
+}
+
+.handwritten-text {
+  font-family: 'Caveat', 'Dancing Script', cursive, Georgia, serif;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #1e293b;
+  margin: 0 0 10px;
+  flex: 1;
+}
+
+.handwritten-signoff {
+  font-family: 'Caveat', 'Dancing Script', cursive, Georgia, serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 8px;
+}
+
+.postmark-date-stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1.5px dashed #94a3b8;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  justify-content: center;
+  color: #64748b;
+  transform: rotate(-8deg);
+  margin-top: auto;
+}
+
+.postmark-date-stamp span {
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.postmark-date-stamp small {
+  font-size: 7px;
+  letter-spacing: 0.1em;
+}
+
+.postcard-divider-line {
+  background: #e2e8f0;
+  height: 100%;
+}
+
+.postcard-address-area {
+  display: flex;
+  flex-direction: column;
+  padding-left: 4px;
+}
+
+.postal-stamp-box {
+  position: relative;
+  margin-left: auto;
+  margin-bottom: 16px;
+}
+
+.stamp-inner {
+  width: 58px;
+  height: 68px;
+  background: #f8fafc;
+  border: 2px dashed #94a3b8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #0284c7;
+}
+
+.stamp-cost {
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.stamp-inner small {
+  font-size: 7px;
+  color: #64748b;
+  letter-spacing: 0.05em;
+}
+
+.stamp-cancellation-wavy {
+  position: absolute;
+  top: 10px;
+  left: -20px;
+  width: 50px;
+  height: 20px;
+  border-top: 2px solid rgba(100, 116, 139, 0.4);
+  border-bottom: 2px solid rgba(100, 116, 139, 0.4);
+  transform: rotate(-12deg);
+}
+
+.recipient-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+  padding-bottom: 6px;
+}
+
+.addr-line {
+  height: 1px;
+  background: #cbd5e1;
+  width: 100%;
+}
+
+.addr-label {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-align: right;
+}
+
+.postcard-back-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-postcard-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-postcard-action:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.btn-postcard-action.primary {
+  background: #1a73e8;
+  border-color: #1a73e8;
+  color: #ffffff;
+}
+
+.btn-postcard-action.primary:hover {
+  background: #1557b0;
+}
+
+/* ==========================================================================
+   7. FULL PHOTO LIGHTBOX PREVIEW
+   ========================================================================== */
+.photo-lightbox-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  animation: gsv-fade-in 0.2s ease-out;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-caption {
+  margin-top: 14px;
+  text-align: center;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lightbox-caption strong {
+  font-size: 16px;
+}
+
+.lightbox-caption span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0f172a;
+  border: none;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s;
+}
+
+.lightbox-close-btn:hover {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   8. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 840px) {
+  .gsv-top-left-card {
+    width: 320px;
+    padding: 10px 12px;
+    top: 12px;
+    left: 12px;
+  }
+  .gsv-top-right-bar {
+    top: 12px;
+    right: 12px;
+  }
+  .gsv-mode-switch-group {
+    display: none;
+  }
+  .gsv-bottom-step-card {
+    width: calc(100vw - 24px);
+    left: 12px;
+    bottom: 12px;
+    padding: 12px 14px;
+  }
+  .gsv-bottom-right-controls {
+    bottom: 120px;
+    right: 12px;
+  }
+  .floating-postcard-container {
+    top: 60px;
+    right: 12px;
+    max-width: calc(100vw - 24px);
+  }
+  .postcard-card-wrapper {
+    width: 320px;
+    min-height: 420px;
+  }
+  .postcard-photo-frame {
+    height: 150px;
+  }
+}

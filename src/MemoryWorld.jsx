@@ -4,7 +4,7 @@ import {
   Camera, Check, Coins, DollarSign, FileText, Globe2, History,
   MapPin, Pause, Play, Rocket, Send, Sparkles, Users2
 } from 'lucide-react'
-import LyraSpatialMemoryModal from './LyraSpatialMemoryModal'
+import TravelStorySpotlightModal from './TravelStorySpotlightModal'
 
 const STORAGE_KEY = 'plantrip-public-memory-posts-v1'
 
@@ -415,7 +415,7 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
   )
 }
 
-function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpen3DPostcard }) {
+function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpenSpotlight }) {
   if (!story) return null
 
   // Deduplicate personal postcards
@@ -484,19 +484,19 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpen3DPost
         <div className="public-blog-section-title">
           <Camera size={17}/>
           <div>
-            <h3>Postcards</h3>
-            <p>{story.postcards.length + personalPostcards.length} frames from this trip · Click any postcard to enter in 3D</p>
+            <h3>Memories & Postcards</h3>
+            <p>{story.postcards.length + personalPostcards.length} featured moments · Click any card to view insider travel guide & story</p>
           </div>
         </div>
         <div className="public-postcard-gallery">
           {story.postcards.map(([title, place, image, note], index) => (
             <figure
               key={`${title}-${index}`}
-              className="is-3d-postcard"
+              className="is-spotlight-card"
               tabIndex={0}
               role="button"
-              aria-label={`Step inside ${title} in 3D`}
-              onClick={() => onOpen3DPostcard?.({
+              aria-label={`View story and place guide for ${title}`}
+              onClick={() => onOpenSpotlight?.({
                 title,
                 place,
                 image,
@@ -509,7 +509,7 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpen3DPost
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  onOpen3DPostcard?.({
+                  onOpenSpotlight?.({
                     title,
                     place,
                     image,
@@ -524,27 +524,27 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpen3DPost
             >
               <div className="postcard-image-wrap">
                 <img src={image} alt={`${title} at ${place}`} loading="lazy"/>
-                <span className="postcard-3d-pill">
+                <span className="postcard-spotlight-pill">
                   <Sparkles size={11} />
-                  <span>3D View</span>
+                  <span>Story & Place Guide</span>
                 </span>
               </div>
               <figcaption>
                 <small>{place}</small>
                 <strong>{title}</strong>
                 <p>{note}</p>
-                <span className="postcard-3d-action-hint">Click to step inside in 3D →</span>
+                <span className="postcard-spotlight-action-hint">View guide & diary →</span>
               </figcaption>
             </figure>
           ))}
           {personalPostcards.map(post => (
             <figure
               key={post.id}
-              className="is-personal-post is-3d-postcard"
+              className="is-personal-post is-spotlight-card"
               tabIndex={0}
               role="button"
-              aria-label={`Step inside ${post.title} in 3D`}
-              onClick={() => onOpen3DPostcard?.({
+              aria-label={`View story and place guide for ${post.title}`}
+              onClick={() => onOpenSpotlight?.({
                 title: post.title,
                 place: `${post.city}, ${post.country}`,
                 image: post.image,
@@ -557,7 +557,7 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpen3DPost
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  onOpen3DPostcard?.({
+                  onOpenSpotlight?.({
                     title: post.title,
                     place: `${post.city}, ${post.country}`,
                     image: post.image,
@@ -572,16 +572,16 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpen3DPost
             >
               <div className="postcard-image-wrap">
                 <img src={post.image} alt={`${post.title} shared by you`} loading="lazy"/>
-                <span className="postcard-3d-pill personal">
+                <span className="postcard-spotlight-pill personal">
                   <Sparkles size={11} />
-                  <span>Your 3D Postcard</span>
+                  <span>Your Memory Guide</span>
                 </span>
               </div>
               <figcaption>
                 <small>Shared by you</small>
                 <strong>{post.title}</strong>
                 <p>{post.excerpt || post.publicNote}</p>
-                <span className="postcard-3d-action-hint">Click to step inside in 3D →</span>
+                <span className="postcard-spotlight-action-hint">View guide & diary →</span>
               </figcaption>
             </figure>
           ))}
@@ -694,7 +694,7 @@ export default function MemoryWorld({
   const [playing, setPlaying] = useState(true)
   const [rocketLaunching, setRocketLaunching] = useState(false)
   const [publishComplete, setPublishComplete] = useState(false)
-  const [selectedPostcard3D, setSelectedPostcard3D] = useState(null)
+  const [spotlightStory, setSpotlightStory] = useState(null)
 
   const selectedStory = PUBLIC_LOCATION_STORIES.find(story => `${story.city}-${story.country}` === selectedLocationKey) || PUBLIC_LOCATION_STORIES[0]
   const personalPosts = posts.filter(post => post.mine && `${post.city}-${post.country}` === selectedLocationKey)
@@ -856,16 +856,33 @@ export default function MemoryWorld({
           story={selectedStory}
           personalPosts={personalPosts}
           onRemovePersonalPost={handleRemovePersonalPost}
-          onOpen3DPostcard={setSelectedPostcard3D}
+          onOpenSpotlight={setSpotlightStory}
         />
       </div>
 
-      {selectedPostcard3D && (
-        <LyraSpatialMemoryModal
-          postcard={selectedPostcard3D}
-          onClose={() => setSelectedPostcard3D(null)}
+      {spotlightStory && (
+        <TravelStorySpotlightModal
+          postcard={spotlightStory}
+          onClose={() => setSpotlightStory(null)}
+          onAddToTrip={(spotData) => {
+            try {
+              const existing = JSON.parse(localStorage.getItem('roamly-trip-basket') || '[]')
+              const newItem = {
+                id: `basket-${Date.now()}`,
+                name: spotData.place || spotData.title,
+                title: spotData.title,
+                city: spotData.city,
+                country: spotData.country,
+                image: spotData.image,
+                category: 'Sightseeing',
+                cost: 0
+              }
+              localStorage.setItem('roamly-trip-basket', JSON.stringify([...existing, newItem]))
+            } catch {}
+          }}
         />
       )}
     </section>
   )
 }
+

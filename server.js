@@ -1308,34 +1308,36 @@ app.post('/api/ai/chat', async (req, res) => {
       ? destMatch.restaurants
       : popularDestinations[0].restaurants
 
-    // Clone current plan to modify
     let updatedPlan = currentPlan ? JSON.parse(JSON.stringify(currentPlan)) : null
+    let changesNotice = ''
+    let reply = ''
 
-    // 1. Try Gemini 1.5 if API key is provided
-    if (effectiveApiKey && updatedPlan) {
+    // 1. Try Gemini if API key is provided
+    if (effectiveApiKey) {
       try {
-        const geminiPrompt = `You are a world-class AI travel concierge.
-The user wants to refine their existing travel itinerary for ${destMatch.city}.
-User Request: "${rawMsg}"
+        const geminiPrompt = `You are PlanTrip's helpful, friendly, and knowledgeable AI travel companion for ${destMatch.city}.
+User said: "${rawMsg}"
 
-Current Itinerary JSON:
-${JSON.stringify(updatedPlan)}
+Current Plan:
+${updatedPlan ? JSON.stringify(updatedPlan) : 'No plan yet'}
 
-Available Real Attractions in ${destMatch.city}:
-${JSON.stringify(realAttractions)}
+Real Attractions in ${destMatch.city}:
+${JSON.stringify(realAttractions.slice(0, 6))}
 
-Available Real Restaurants in ${destMatch.city}:
-${JSON.stringify(realRestaurants)}
+Real Restaurants in ${destMatch.city}:
+${JSON.stringify(realRestaurants.slice(0, 6))}
 
 Instructions:
-1. Update the appropriate day(s) and slot(s) in "days" based on the user's request. Always use real places with accurate Google review ratings and addresses.
-2. In each modified slot, add "aiRefined": true.
-3. In each modified day, add "aiRefined": true.
-4. Set "aiRefined": true at the root of the plan.
-5. Provide a friendly, helpful 2-sentence response in "reply" explaining the changes.
-6. Provide a concise summary of the changes in "changesNotice" (e.g., "✨ Day 2 dinner updated to Wong Ah Wah (4.7★)!").
+1. If the user is just saying hello, asking a question, asking for food/attraction recommendations, asking about transport, weather, or tips:
+   - Reply conversationally with warm, helpful, and specific details.
+   - Do NOT modify the plan. Set "updatedPlan": null and "changesNotice": null.
+2. If the user explicitly asks to add, change, swap, or update their itinerary:
+   - Modify ONLY the specific day and slot requested.
+   - Set "updatedPlan": <the full modified plan JSON>.
+   - Set "changesNotice": "✨ Day X slot updated to Place Name!".
+   - Explain what was changed in "reply".
 
-Return a valid JSON object ONLY with properties: "reply", "updatedPlan", "changesNotice". Do not include markdown fences.`
+Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do not include markdown fences.`
 
         const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${effectiveApiKey}`, {
           method: 'POST',
@@ -1351,12 +1353,12 @@ Return a valid JSON object ONLY with properties: "reply", "updatedPlan", "change
           const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
           if (text) {
             const parsed = JSON.parse(text)
-            if (parsed.updatedPlan && parsed.reply) {
+            if (parsed.reply) {
               return res.json({
                 success: true,
                 reply: parsed.reply,
-                updatedPlan: parsed.updatedPlan,
-                changesNotice: parsed.changesNotice || '✨ Itinerary schedule updated by AI!'
+                updatedPlan: parsed.updatedPlan || null,
+                changesNotice: parsed.changesNotice || ''
               })
             }
           }
@@ -1364,12 +1366,229 @@ Return a valid JSON object ONLY with properties: "reply", "updatedPlan", "change
       } catch (_err) {}
     }
 
-    // 2. Built-in High-Intelligence Rule & Fuzzy Matching Engine
-    let changesNotice = ''
-    let reply = ''
+    // 2. High-Intelligence Built-in Conversation Engine (No fixed robotic answers)
+    const isExplicitPlanEdit = (
+      /\b(add|put|insert|change|replace|update|swap|switch|schedule|set|remove|delete)\b/i.test(lower) &&
+      (/\b(day\s*\d+|day\s*one|day\s*two|day\s*three|slot|itinerary|schedule|timeline|morning|lunch|afternoon|dinner)\b/i.test(lower) || lower.includes('to my plan') || lower.includes('to my trip'))
+    ) || lower.includes('plan a rainy afternoon') || lower.includes('rainy afternoon')
 
+    // INTENT A: Greetings, Chit-chat, Help
+    const isGreeting = /^(hi|hello|hey|yo|howdy|greetings|morning|good morning|good afternoon|good evening|sup|hola)\b/i.test(lower) ||
+                       /^(who are you|what can you do|what are you|help|help me|start)\b/i.test(lower) ||
+                       (rawMsg.length <= 12 && /\b(hi|hello|hey|yo)\b/i.test(lower))
+
+    const isGratitude = /\b(thanks|thank you|thx|appreciate it|awesome|great|perfect|cool|good job)\b/i.test(lower)
+    const isFarewell = /\b(bye|goodbye|see you|cya|good night)\b/i.test(lower)
+
+    if (isGreeting) {
+      const city = destMatch.city
+      const greetings = [
+        `Hello! 👋 I'm your PlanTrip travel assistant for ${city}. How can I help you today? I can recommend top dining spots, iconic sights, train routes, or adjust your daily schedule.`,
+        `Hi there! 😊 Ready to explore ${city}? You can ask me for dinner ideas, top landmarks, transit directions, or tell me to customize any day of your trip. What would you like to know?`
+      ]
+      reply = greetings[Math.floor(Math.random() * greetings.length)]
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    if (isGratitude) {
+      reply = `You're very welcome! 😊 Let me know if you need any more recommendations for ${destMatch.city} — from great food spots to easy transit directions!`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    if (isFarewell) {
+      reply = `Have a wonderful time in ${destMatch.city}! Feel free to message me anytime if your plans change or if you need a quick tip on the road. Safe travels! ✈️`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT B: Food & Dining Inquiry (NOT asking to edit plan)
+    const isFoodInquiry = !isExplicitPlanEdit && (
+      /\b(food|dinner|lunch|breakfast|eat|eating|restaurant|restaurants|cafe|dining|supper|makan|cuisine|dishes|hungry|delicious)\b/i.test(lower)
+    )
+
+    if (isFoodInquiry) {
+      let filteredRests = [...realRestaurants]
+      let diningCategory = 'dining spots'
+      
+      if (lower.includes('halal')) {
+        filteredRests = realRestaurants.filter(r => (r.cuisine && r.cuisine.toLowerCase().includes('halal')) || r.name.toLowerCase().includes('village park') || r.name.toLowerCase().includes('pelita') || r.name.toLowerCase().includes('bijan'))
+        diningCategory = 'Halal-friendly restaurants'
+      } else if (lower.includes('street food') || lower.includes('night market') || lower.includes('hawker') || lower.includes('cheap')) {
+        filteredRests = realRestaurants.filter(r => r.priceTier === '$' || r.name.toLowerCase().includes('wong ah wah') || r.name.toLowerCase().includes('alor') || r.name.toLowerCase().includes('siam road') || r.name.toLowerCase().includes('thean chun'))
+        diningCategory = 'street food & night market hawkers'
+      } else if (lower.includes('cafe') || lower.includes('coffee') || lower.includes('brunch')) {
+        filteredRests = realRestaurants.filter(r => r.name.toLowerCase().includes('nam heong') || r.name.toLowerCase().includes('cafe') || r.name.toLowerCase().includes('choon hui') || (r.cuisine && r.cuisine.toLowerCase().includes('cafe')))
+        diningCategory = 'cafes & brunch spots'
+      } else if (lower.includes('seafood')) {
+        filteredRests = realRestaurants.filter(r => (r.cuisine && r.cuisine.toLowerCase().includes('seafood')) || r.name.toLowerCase().includes('top spot') || r.name.toLowerCase().includes('cliff'))
+        diningCategory = 'fresh seafood destinations'
+      }
+
+      const topSpots = filteredRests.slice(0, 3)
+      if (topSpots.length === 0) topSpots.push(...realRestaurants.slice(0, 3))
+
+      reply = `Here are 3 top-rated ${diningCategory} in ${destMatch.city}:\n\n`
+      topSpots.forEach((r, idx) => {
+        const rating = (r.rating || 4.8).toFixed(1)
+        const reviews = r.reviewsCount ? `${r.reviewsCount.toLocaleString()} reviews` : 'Google verified'
+        const dish = r.description ? r.description.split('.')[0] : 'Chef signature special'
+        reply += `${idx + 1}. **${r.name}** (★ ${rating} · ${reviews})\n   • *Cuisine*: ${r.cuisine || 'Authentic Local Dining'} (${r.priceTier || '$$'})\n   • *Must-Try*: ${dish}\n\n`
+      })
+      reply += `👉 *Want to add any of these to your schedule? Just say:* \`Add ${topSpots[0].name} to Day 2 dinner\`!`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT C: Attractions / Sightseeing Inquiry (NOT asking to edit plan)
+    const isAttractionInquiry = !isExplicitPlanEdit && (
+      /\b(places?|attractions?|sights?|things to do|what to do|what to see|visit|must visit|landmarks?|sightseeing|places to go)\b/i.test(lower)
+    )
+
+    if (isAttractionInquiry) {
+      let filteredAttrs = [...realAttractions]
+      if (lower.includes('nature') || lower.includes('park') || lower.includes('green')) {
+        filteredAttrs = realAttractions.filter(a => (a.category && a.category.includes('Nature')) || a.name.toLowerCase().includes('park') || a.name.toLowerCase().includes('garden'))
+      } else if (lower.includes('culture') || lower.includes('temple') || lower.includes('heritage') || lower.includes('museum')) {
+        filteredAttrs = realAttractions.filter(a => (a.category && (a.category.includes('Culture') || a.category.includes('Temple'))) || a.name.toLowerCase().includes('caves') || a.name.toLowerCase().includes('museum'))
+      } else if (lower.includes('sunset') || lower.includes('view') || lower.includes('tower')) {
+        filteredAttrs = realAttractions.filter(a => a.name.toLowerCase().includes('tower') || a.name.toLowerCase().includes('view') || (a.category && a.category.includes('Viewpoint')))
+      }
+
+      const topAttrs = filteredAttrs.slice(0, 3)
+      if (topAttrs.length === 0) topAttrs.push(...realAttractions.slice(0, 3))
+
+      reply = `Here are 3 must-visit attractions in ${destMatch.city}:\n\n`
+      topAttrs.forEach((a, idx) => {
+        const rating = (a.rating || 4.8).toFixed(1)
+        const reviews = a.reviewsCount ? `${a.reviewsCount.toLocaleString()} reviews` : 'Google verified'
+        const desc = a.description ? a.description.split('.')[0] : 'Iconic landmark highlights'
+        reply += `${idx + 1}. **${a.name}** (★ ${rating} · ${reviews})\n   • *Category*: ${a.category || 'Sightseeing & Culture'}\n   • *Highlights*: ${desc}\n\n`
+      })
+      reply += `👉 *Want to add any of these to your trip? Just tell me:* \`Add ${topAttrs[0].name} to Day 1 morning\`!`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT D: Transport / Train / Directions Inquiry
+    const isTransitInquiry = !isExplicitPlanEdit && (
+      /\b(transit|train|trains|bus|buses|lrt|mrt|monorail|ktm|subway|metro|grab|taxi|how to get|how do i get|how to go|how do i go|directions?|routes?|fare|ticket|touch n go)\b/i.test(lower) ||
+      ((lower.includes('batu caves') || lower.includes('klcc') || lower.includes('trx')) && (lower.includes('how') || lower.includes('get') || lower.includes('go') || lower.includes('reach')))
+    )
+
+    if (isTransitInquiry) {
+      if (lower.includes('batu caves')) {
+        reply = `🚆 **Getting to Batu Caves from Central KL (KL Sentral)**:\n• **Best Route**: Take the direct **KTM Komuter train** (Batu Caves Line) from Platform 3 at KL Sentral.\n• **Travel Time**: ~30 minutes straight to Batu Caves station (right at the entrance gates).\n• **Fare**: RM 2.40 using your Touch 'n Go card.\n• **Tip**: Climb the famous 272 rainbow steps in the morning to beat the midday heat!`
+      } else if (lower.includes('klcc') || lower.includes('petronas') || lower.includes('twin towers')) {
+        reply = `🚆 **Getting to Petronas Twin Towers & Suria KLCC**:\n• **Best Route**: Take the **Kelana Jaya LRT (Line 5)** directly to **KLCC Station (KJ10)**.\n• **Underground Connection**: Walk directly through the air-conditioned tunnel into Suria KLCC and KLCC Park.\n• **Fare**: ~RM 1.60 - RM 2.40 depending on your starting station.`
+      } else if (lower.includes('trx') || lower.includes('exchange')) {
+        reply = `🚆 **Getting to The Exchange TRX**:\n• **Best Route**: Take either the **MRT Kajang Line (Line 9)** or **MRT Putrajaya Line (Line 12)** directly to **Tun Razak Exchange (TRX) Station**.\n• **Entrance**: Take Exit A or B directly into the mall concourse and 10-acre rooftop City Park.\n• **Fare**: ~RM 1.50 - RM 2.50 across central KL.`
+      } else {
+        reply = `🚆 **Public Transit in ${destMatch.city}**:\n• **Rail Lines**: Connected by LRT (Lines 3, 4, 5), MRT (Lines 9, 12), and the KL Monorail (Line 8).\n• **Payment**: Conveniently cashless using a **Touch 'n Go** card or MyRapid tokens. Fares range from RM 1.20 to RM 4.00.\n• **Ride-Hailing**: The **Grab** app is widely available and affordable for group travel.\n\nNeed directions to a specific place? Just ask e.g. *'How to get to Batu Caves?'*!`
+      }
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT E: Weather & Rain Inquiry
+    const isWeatherInquiry = !isExplicitPlanEdit && (
+      /\b(weather|rain|raining|monsoon|umbrella|sunny|forecast|hot|temperature)\b/i.test(lower)
+    )
+
+    if (isWeatherInquiry) {
+      reply = `☀️ **Weather in ${destMatch.city}**:\n• **Climate**: Warm and tropical year-round (~28°C to 33°C).\n• **Pattern**: Mornings are typically sunny. Brief afternoon tropical downpours are common between 3:00 PM and 5:30 PM.\n• **Tip**: Always keep a compact umbrella handy. If rain starts, ask me to *'Plan a rainy afternoon'* to swap to indoor spots like Aquaria KLCC or Petrosains!`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT F: Budget, Money, Tipping, Safety
+    const isBudgetInquiry = !isExplicitPlanEdit && (
+      /\b(budget|currency|money|ringgit|myr|cash|card|cards|tip|tipping|safety|safe|water|tap water)\b/i.test(lower)
+    )
+
+    if (isBudgetInquiry) {
+      reply = `💡 **Practical Money & Safety Tips for ${destMatch.city}**:\n• **Currency**: Malaysian Ringgit (MYR / RM).\n• **Cards & Cash**: Credit cards and Touch 'n Go / DuitNow are widely accepted in malls and cafes. Hawker stalls prefer cash.\n• **Tipping**: Tipping is not customary in Malaysia. Most restaurants include a 10% service charge and 6% SST.\n• **Safety**: Malaysia is very safe for solo and group travelers. Keep an eye on bags in crowded night markets.\n• **Drinking Water**: Bottled or filtered water is recommended over tap water.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT G: Packing & Dress Code
+    const isPackingInquiry = !isExplicitPlanEdit && (
+      /\b(pack|packing|clothes|clothing|wear|dress code|attire|shoes|what to bring|plug|adapter)\b/i.test(lower)
+    )
+    if (isPackingInquiry) {
+      reply = `🧳 **What to Pack for ${destMatch.city}**:\n• **Clothing**: Lightweight, breathable cotton or linen for warm tropical weather (~30°C).\n• **Rain Gear**: A compact travel umbrella or lightweight rain jacket for quick afternoon showers.\n• **Footwear**: Comfortable walking shoes (crucial if climbing the 272 steps at Batu Caves!).\n• **Temple & Mosque Etiquette**: Long pants or skirts covering knees, and shirts covering shoulders. Scarves/robes are usually provided free at major mosques.\n• **Power Plug**: Malaysia uses UK-standard **Type G** 3-pin rectangular plugs (240V, 50Hz).\n• **Indoor Layer**: A light sweater or cardigan because shopping malls and trains have icy air conditioning!`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT H: Shopping & Souvenirs
+    const isShoppingInquiry = !isExplicitPlanEdit && (
+      /\b(shop|shopping|souvenir|souvenirs|mall|malls|buy|buying|market|central market|pasar seni|batik)\b/i.test(lower)
+    )
+    if (isShoppingInquiry) {
+      reply = `🛍️ **Best Shopping & Souvenirs in ${destMatch.city}**:\n• **Authentic Souvenirs & Crafts**: **Central Market (Pasar Seni)** & Kasturi Walk — famous for handmade Malaysian batik shirts, pewter crafts (Royal Selangor), songket fabrics, and wooden carvings.\n• **Luxury & Lifestyle**: **Pavilion Kuala Lumpur** (Bukit Bintang) & **The Exchange TRX** (luxury designer boutiques and 10-acre rooftop park).\n• **Bargains & Street Fashion**: **Petaling Street Chinatown** & Sungei Wang Plaza for street fashion, accessories, and sunglasses.\n• **Electronics & Gadgets**: **Plaza Low Yat** — Malaysia's premier IT and tech shopping center.\n• **Local Food Gifts**: Beryl's Malaysian chocolates, OldTown white coffee sachets, and Dodol sweets from local supermarkets.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT I: Photography & Instagram Spots
+    const isPhotoInquiry = !isExplicitPlanEdit && (
+      /\b(photo|photos|photography|instagram|insta|instagrammable|pictures|viewpoint|golden hour|shots|camera|best view)\b/i.test(lower)
+    )
+    if (isPhotoInquiry) {
+      reply = `📸 **Top Photography & Instagram Spots in ${destMatch.city}**:\n1. **Petronas Twin Towers at Blue Hour (7:15 PM)**: Stand at the rim of the KLCC Lake Symphony fountain facing upward with a wide-angle lens for the glowing reflection.\n2. **Batu Caves Rainbow Steps (8:00 AM)**: Arrive early in the morning before crowds for vibrant shots ascending the 272 multicolored steps.\n3. **Kwai Chai Hong (Chinatown)**: A restored 1960s alleyway featuring nostalgic heritage murals, red lantern archways, and a wooden bridge.\n4. **The Exchange TRX Rooftop City Park**: Futuristic glass architecture framed against green rooftop lawns and the KL skyline.\n5. **Thean Hou Temple at Dusk**: Thousands of glowing red and yellow paper lanterns glowing against ornate tiered Chinese pagodas.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT J: Nightlife & Rooftop Bars
+    const isNightlifeInquiry = !isExplicitPlanEdit && (
+      /\b(nightlife|night life|bars?|rooftop|pubs?|club|clubs|evening|cocktail|cocktails|drinks?)\b/i.test(lower)
+    )
+    if (isNightlifeInquiry) {
+      reply = `🍸 **Nightlife & Rooftop Bars in ${destMatch.city}**:\n• **Heli Lounge Bar (Menara KH)**: A real operational helicopter landing pad converted into an open-air rooftop bar with completely unobstructed 360° sunset views over the entire city skyline.\n• **Jalan Alor Night Market**: Open until 3:00 AM for buzzing outdoor street food, cold tiger beer, satay skewers, and grilled seafood.\n• **Changkat Bukit Bintang**: Vibrant pedestrian street packed with Irish pubs, live music bars, and cocktail lounges.\n• **PS150 (Chinatown)**: Famous hidden speakeasy cocktail bar disguised behind a vintage stationery toy shopfront on Petaling Street.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT K: Local Phrases & Language
+    const isLanguageInquiry = !isExplicitPlanEdit && (
+      /\b(language|phrases|words|malay|bahasa|say|how to say|speak|slang)\b/i.test(lower)
+    )
+    if (isLanguageInquiry) {
+      reply = `🗣️ **Useful Local Phrases in Malaysia (Bahasa Melayu)**:\n• **Terima kasih** (*te-ree-mah kah-seh*) = Thank you\n• **Sama-sama** = You're welcome\n• **Berapa ini?** (*be-rah-pah ee-nee*) = How much is this?\n• **Tandas di mana?** (*tahn-dahs dee mah-nah*) = Where is the restroom?\n• **Kurang manis** (*koo-rahng mah-nees*) = Less sweet (vital when ordering local tea/coffee!)\n• **Satu lagi** = One more please\n• **Sedap!** (*seh-dahp*) = Delicious!\n\n💡 *Tip: English is widely and fluently spoken throughout Kuala Lumpur, in hotels, malls, transit stations, and restaurants!*`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT L: Hidden Gems & Secret Spots
+    const isHiddenGemsInquiry = !isExplicitPlanEdit && (
+      /\b(hidden|gem|gems|secret|off the beaten|unique|unusual)\b/i.test(lower)
+    )
+    if (isHiddenGemsInquiry) {
+      reply = `💎 **Hidden Gems & Secret Spots in ${destMatch.city}**:\n1. **KL Forest Eco Park (Bukit Nanas)**: One of Malaysia's oldest permanent forest reserves right in the city center, featuring a canopy skywalk bridge suspended among rainforest trees.\n2. **REXKL**: A historic 1947 cinema transformed into an arts, indie bookstore, and trendy artisan dining collective.\n3. **Sin Sze Si Ya Temple**: Hidden down a narrow alleyway near Central Market, this is KL's oldest Taoist temple (built in 1864).\n4. **Kwai Chai Hong**: A picturesque heritage conservation laneway with interactive augmented-reality murals.\n5. **Taman Tugu**: Lush hiking trails across 66 acres of conserved jungle right behind the National Monument.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT M: Family & Kids Activities
+    const isFamilyInquiry = !isExplicitPlanEdit && (
+      /\b(family|kids|children|child|toddler|baby|stroller)\b/i.test(lower)
+    )
+    if (isFamilyInquiry) {
+      reply = `👨‍👩‍👧‍👦 **Family & Kid-Friendly Highlights in ${destMatch.city}**:\n1. **Petrosains Discovery Centre (Suria KLCC)**: Highly engaging, interactive science and tech museum with earthquake simulators and oil rig rides.\n2. **Aquaria KLCC**: World-class aquarium with a 90-meter underwater tunnel where kids can watch sharks, giant stingrays, and sea turtles.\n3. **KLCC Park Wading Pool & Playground**: A massive, completely **FREE** public adventure playground with shaded climbing structures and a shallow wading pool for children.\n4. **Sunway Lagoon Theme Park**: Mega waterpark, wildlife animal petting zoo, and amusement rides located just 25 minutes from the city center.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT N: Luggage Storage & Late Flights
+    const isLuggageInquiry = !isExplicitPlanEdit && (
+      /\b(luggage|baggage|bags?|storage|locker|lockers|late flight|check out|checkout|store bag)\b/i.test(lower)
+    )
+    if (isLuggageInquiry) {
+      reply = `🧳 **Luggage Storage & Late Flight Tips in ${destMatch.city}**:\n• **KL Sentral Transit Lockers**: Automated lockers and left-luggage counters located on Level 1 (around RM 10 to RM 30 per day depending on size).\n• **In-Town Flight Check-In**: If flying with Malaysia Airlines or Batik Air, you can check your luggage and print boarding passes directly at KL Sentral station before taking the KLIA Ekspres train!\n• **Mall Concierges**: Suria KLCC and Pavilion KL offer bag drop facilities for shoppers.\n• **Luggage Apps**: Services like *Bounce* and *Stasher* have dozens of verified partner hotels and shops in Bukit Bintang for flexible hourly/daily luggage storage.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT O: Day Trips from City
+    const isDayTripInquiry = !isExplicitPlanEdit && (
+      /\b(day trip|day trips|excursion|nearby|melaka|malacca|genting|putrajaya|cameron)\b/i.test(lower)
+    )
+    if (isDayTripInquiry) {
+      reply = `🚗 **Top Day Trips from ${destMatch.city}**:\n1. **Batu Caves** (30 mins via KTM Komuter): Iconic limestone caves, golden statue, and 272 steps.\n2. **Putrajaya** (20 mins via KLIA Transit): Malaysia's federal administrative center, famous for the stunning pink Putra Mosque and scenic lake cruises.\n3. **Genting Highlands** (45 mins drive + Awana SkyWay Cable Car): Cool mountain getaway with indoor theme parks, shopping outlets, and casinos.\n4. **Historical Melaka (Malacca)** (2 hours by bus/car): UNESCO World Heritage town featuring Dutch Red Square, Jonker Street night market, and riverboat cruises.`
+      return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+    }
+
+    // INTENT P: Explicit Itinerary Customization (Add, Swap, or Rainy Day Adjustment)
     if (updatedPlan && updatedPlan.days && updatedPlan.days.length > 0) {
-      // Detect target day
+      // Determine day
       let targetDayIndex = 0
       if (lower.includes('day 2') || lower.includes('2nd day') || lower.includes('第二天') || lower.includes('第2天') || lower.includes('day two')) targetDayIndex = 1
       else if (lower.includes('day 3') || lower.includes('3rd day') || lower.includes('第三天') || lower.includes('第3天') || lower.includes('day three')) targetDayIndex = 2
@@ -1377,198 +1596,99 @@ Return a valid JSON object ONLY with properties: "reply", "updatedPlan", "change
       else if (lower.includes('day 5') || lower.includes('5th day') || lower.includes('第五天') || lower.includes('第5天') || lower.includes('day five')) targetDayIndex = 4
       else if (lower.includes('day 1') || lower.includes('1st day') || lower.includes('第一天') || lower.includes('第1天') || lower.includes('day one')) targetDayIndex = 0
       else if (lower.includes('last day') || lower.includes('最后一天')) targetDayIndex = updatedPlan.days.length - 1
-      else {
-        // Default to Day 2 for variety if more than 1 day exists
-        targetDayIndex = updatedPlan.days.length > 1 ? 1 : 0
-      }
+      else targetDayIndex = 0
 
       if (targetDayIndex >= updatedPlan.days.length) targetDayIndex = updatedPlan.days.length - 1
       const targetDay = updatedPlan.days[targetDayIndex]
-      targetDay.aiRefined = true
-      updatedPlan.aiRefined = true
 
-      // Search for specific attraction match in prompt
+      // Determine slot
+      const isMorning = lower.includes('morning') || lower.includes('breakfast') || lower.includes('早上')
+      const isLunch = lower.includes('lunch') || lower.includes('noon') || lower.includes('午餐')
+      const isDinner = lower.includes('dinner') || lower.includes('evening') || lower.includes('night') || lower.includes('晚餐') || lower.includes('夜市')
+      const isAfternoon = lower.includes('afternoon') || lower.includes('sunset') || lower.includes('rainy') || lower.includes('rain') || lower.includes('下午')
+
+      // Case 1: Rainy afternoon backup
+      if (lower.includes('rain') || lower.includes('storm')) {
+        const indoorSpot = realAttractions.find(a =>
+          a.name.toLowerCase().includes('aquaria') ||
+          a.name.toLowerCase().includes('petrosains') ||
+          a.name.toLowerCase().includes('museum') ||
+          a.name.toLowerCase().includes('gallery') ||
+          a.name.toLowerCase().includes('mall')
+        ) || realAttractions[3] || realAttractions[0]
+
+        targetDay.afternoon = {
+          time: '14:30 - 17:30 (Covered Indoor)',
+          title: indoorSpot.name,
+          rating: `${(indoorSpot.rating || 4.7).toFixed(1)}★ (${(indoorSpot.reviewsCount || 18000).toLocaleString()} reviews)`,
+          location: indoorSpot.address || destMatch.city,
+          description: indoorSpot.description || `Sheltered indoor attraction safely protected from tropical rain.`,
+          aiRefined: true
+        }
+        targetDay.aiRefined = true
+        updatedPlan.aiRefined = true
+        changesNotice = `✨ Day ${targetDayIndex + 1} afternoon updated to indoor: ${indoorSpot.name}!`
+        reply = `Stay dry! 🌧️ I've updated Day ${targetDayIndex + 1}'s afternoon to **${indoorSpot.name}** (${(indoorSpot.rating || 4.7).toFixed(1)}★), a wonderful covered indoor destination. Your timetable and map have refreshed in real time!`
+        return res.json({ success: true, reply, updatedPlan, changesNotice })
+      }
+
+      // Case 2: Specific restaurant match or meal request
+      const matchedRest = realRestaurants.find(r => {
+        const rName = r.name.toLowerCase()
+        const words = rName.replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length >= 3)
+        return words.some(w => lower.includes(w))
+      })
+
+      if (matchedRest || isDinner || isLunch) {
+        const mealToUpdate = matchedRest || realRestaurants[0]
+        const slotKey = isLunch ? 'lunch' : 'dinner'
+        
+        targetDay[slotKey] = {
+          time: slotKey === 'lunch' ? '12:30 - 14:00' : '18:30 - 20:30',
+          name: mealToUpdate.name,
+          cuisine: mealToUpdate.cuisine || 'Authentic Local Dining',
+          priceTier: mealToUpdate.priceTier || '$$',
+          mustTry: mealToUpdate.description ? mealToUpdate.description.split('.')[0] : 'Chef signature dish',
+          aiRefined: true
+        }
+        targetDay.aiRefined = true
+        updatedPlan.aiRefined = true
+        changesNotice = `✨ Day ${targetDayIndex + 1} ${slotKey} updated to ${mealToUpdate.name} (${(mealToUpdate.rating || 4.8).toFixed(1)}★)!`
+        reply = `Done! 🍽️ I've updated Day ${targetDayIndex + 1}'s ${slotKey} to **${mealToUpdate.name}** (${(mealToUpdate.rating || 4.8).toFixed(1)}★). Your schedule timetable and map have refreshed in real time!`
+        return res.json({ success: true, reply, updatedPlan, changesNotice })
+      }
+
+      // Case 3: Specific attraction match or sight slot request
       const matchedAttr = realAttractions.find(a => {
         const aName = a.name.toLowerCase()
         const words = aName.replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length >= 3)
         return words.some(w => lower.includes(w))
       })
 
-      // Search for specific restaurant match in prompt
-      const matchedRest = realRestaurants.find(r => {
-        const rName = r.name.toLowerCase()
-        const rCuisine = (r.cuisine || '').toLowerCase()
-        const words = (rName + ' ' + rCuisine).replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length >= 3)
-        return words.some(w => lower.includes(w))
-      })
-
-      // Check slot target
-      const isMorning = lower.includes('morning') || lower.includes('breakfast') || lower.includes('早上') || lower.includes('上午') || lower.includes('早')
-      const isLunch = lower.includes('lunch') || lower.includes('noon') || lower.includes('午餐') || lower.includes('中午') || lower.includes('午')
-      const isAfternoon = lower.includes('afternoon') || lower.includes('下午') || lower.includes('sunset') || lower.includes('日落')
-      const isDinner = lower.includes('dinner') || lower.includes('晚餐') || lower.includes('晚饭') || lower.includes('晚')
-      const isEvening = lower.includes('evening') || lower.includes('night') || lower.includes('夜市') || lower.includes('晚上')
-
-      // Case A: User explicitly requested a specific real landmark
-      if (matchedAttr) {
+      if (matchedAttr || isMorning || isAfternoon) {
+        const attrToUpdate = matchedAttr || realAttractions[0]
         const slotKey = isMorning ? 'morning' : 'afternoon'
+
         targetDay[slotKey] = {
           time: slotKey === 'morning' ? '09:00 - 12:00' : '14:30 - 17:30',
-          title: matchedAttr.name,
-          rating: `${(matchedAttr.rating || 4.8).toFixed(1)}★ (${(matchedAttr.reviewsCount || 15000).toLocaleString()} Google reviews)`,
-          location: matchedAttr.address || destMatch.city,
-          description: matchedAttr.description || `Explore ${matchedAttr.name} with insider guided highlights.`,
+          title: attrToUpdate.name,
+          rating: `${(attrToUpdate.rating || 4.8).toFixed(1)}★ (${(attrToUpdate.reviewsCount || 15000).toLocaleString()} reviews)`,
+          location: attrToUpdate.address || destMatch.city,
+          description: attrToUpdate.description || `Explore ${attrToUpdate.name} with insider highlights.`,
           aiRefined: true
         }
-        changesNotice = `✨ Day ${targetDayIndex + 1} ${slotKey} updated to ${matchedAttr.name} (${(matchedAttr.rating || 4.8).toFixed(1)}★)!`
-        reply = `I've updated Day ${targetDayIndex + 1}'s ${slotKey} schedule to feature "${matchedAttr.name}" (${(matchedAttr.rating || 4.8).toFixed(1)}★, ${(matchedAttr.reviewsCount || 15000).toLocaleString()} Google Reviews) in ${destMatch.city}. Your itinerary timetable has been updated in real time!`
+        targetDay.aiRefined = true
+        updatedPlan.aiRefined = true
+        changesNotice = `✨ Day ${targetDayIndex + 1} ${slotKey} updated to ${attrToUpdate.name} (${(attrToUpdate.rating || 4.8).toFixed(1)}★)!`
+        reply = `Done! 📍 I've updated Day ${targetDayIndex + 1}'s ${slotKey} to **${attrToUpdate.name}** (${(attrToUpdate.rating || 4.8).toFixed(1)}★). Your Official Trip Itinerary document has refreshed in real time!`
+        return res.json({ success: true, reply, updatedPlan, changesNotice })
       }
-      // Case B: User explicitly requested a specific real restaurant
-      else if (matchedRest) {
-        const mealSlot = (isLunch || (!isDinner && !isEvening)) ? 'lunch' : 'dinner'
-        targetDay[mealSlot] = {
-          time: mealSlot === 'lunch' ? '12:30 - 14:00' : '18:30 - 20:30',
-          name: matchedRest.name,
-          cuisine: matchedRest.cuisine || 'Authentic Regional Cuisine',
-          priceTier: matchedRest.priceTier || '$$',
-          mustTry: matchedRest.description ? matchedRest.description.split('.')[0] : 'Chef signature special',
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} ${mealSlot} updated to ${matchedRest.name} (${(matchedRest.rating || 4.8).toFixed(1)}★)!`
-        reply = `Done! I've updated Day ${targetDayIndex + 1}'s ${mealSlot} to "${matchedRest.name}" (${(matchedRest.rating || 4.8).toFixed(1)}★). Your Official Trip Itinerary document has been refreshed in real time!`
-      }
-      // Case C: Halal dining
-      else if (lower.includes('halal') || lower.includes('nasi lemak') || lower.includes('pelita') || lower.includes('muslim') || lower.includes('清真')) {
-        const halalSpot = realRestaurants.find(r => (r.cuisine && r.cuisine.toLowerCase().includes('halal')) || r.name.toLowerCase().includes('pelita') || r.name.toLowerCase().includes('village park') || r.name.toLowerCase().includes('lepau')) || realRestaurants[0]
-        targetDay.lunch = {
-          time: '12:30 - 14:00',
-          name: halalSpot.name,
-          cuisine: `${halalSpot.cuisine} (100% Halal Verified)`,
-          priceTier: halalSpot.priceTier || '$',
-          mustTry: halalSpot.description ? halalSpot.description.split('.')[0] : 'Signature certified halal dish',
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} lunch updated to 100% Halal: ${halalSpot.name}!`
-        reply = `I've updated Day ${targetDayIndex + 1}'s lunch to "${halalSpot.name}" (${(halalSpot.rating || 4.8).toFixed(1)}★ Google Reviews), renowned for authentic Halal specialties in ${destMatch.city}.`
-      }
-      // Case D: Street food & Night market
-      else if (lower.includes('street food') || lower.includes('night market') || lower.includes('hawker') || lower.includes('char kway teow') || lower.includes('wong ah wah') || lower.includes('alor') || lower.includes('街头小吃') || lower.includes('夜市') || lower.includes('大排档')) {
-        const streetSpot = realRestaurants.find(r => r.name.toLowerCase().includes('wong ah wah') || r.name.toLowerCase().includes('siam road') || r.name.toLowerCase().includes('thean chun') || r.name.toLowerCase().includes('lau ya keng') || r.name.toLowerCase().includes('alor')) || realRestaurants[realRestaurants.length - 1]
-        targetDay.dinner = {
-          time: '18:30 - 20:30',
-          name: streetSpot.name,
-          cuisine: `${streetSpot.cuisine} · Famous Night Street Hawker`,
-          priceTier: '$',
-          mustTry: streetSpot.description ? streetSpot.description.split('.')[0] : 'Authentic local street food',
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} dinner updated to street food: ${streetSpot.name}!`
-        reply = `Done! I've updated Day ${targetDayIndex + 1}'s dinner to legendary street food spot "${streetSpot.name}" (${(streetSpot.rating || 4.7).toFixed(1)}★, ${streetSpot.reviewsCount?.toLocaleString() || '9,000+'} reviews).`
-      }
-      // Case E: Seafood
-      else if (lower.includes('seafood') || lower.includes('top spot') || lower.includes('crab') || lower.includes('prawn') || lower.includes('fish') || lower.includes('海鲜')) {
-        const seafoodSpot = realRestaurants.find(r => (r.cuisine && r.cuisine.toLowerCase().includes('seafood')) || r.name.toLowerCase().includes('top spot') || r.name.toLowerCase().includes('cliff')) || realRestaurants[0]
-        targetDay.dinner = {
-          time: '18:30 - 20:30',
-          name: seafoodSpot.name,
-          cuisine: `${seafoodSpot.cuisine} · Fresh Catch Dining`,
-          priceTier: '$$$',
-          mustTry: seafoodSpot.description ? seafoodSpot.description.split('.')[0] : 'Fresh grilled seafood specialty',
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} dinner updated to fresh seafood: ${seafoodSpot.name}!`
-        reply = `Delicious choice! I've replaced Day ${targetDayIndex + 1}'s dinner with "${seafoodSpot.name}" (${(seafoodSpot.rating || 4.8).toFixed(1)}★), famous for fresh local seafood and vibrant atmosphere.`
-      }
-      // Case F: Cafe & White coffee & Brunch
-      else if (lower.includes('cafe') || lower.includes('coffee') || lower.includes('brunch') || lower.includes('nam heong') || lower.includes('breakfast') || lower.includes('咖啡') || lower.includes('早餐') || lower.includes('下午茶')) {
-        const cafeSpot = realRestaurants.find(r => r.name.toLowerCase().includes('nam heong') || r.name.toLowerCase().includes('choon hui') || r.name.toLowerCase().includes('thean chun') || (r.mealType && r.mealType.includes('Breakfast'))) || realRestaurants[0]
-        targetDay.lunch = {
-          time: '12:00 - 13:30',
-          name: cafeSpot.name,
-          cuisine: `${cafeSpot.cuisine} · Heritage Coffee & Brunch`,
-          priceTier: '$',
-          mustTry: cafeSpot.description ? cafeSpot.description.split('.')[0] : 'Aromatic White Coffee & Egg Tarts',
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} updated to heritage cafe & coffee: ${cafeSpot.name}!`
-        reply = `Added a relaxed coffee and brunch break! Day ${targetDayIndex + 1} now features "${cafeSpot.name}" (${(cafeSpot.rating || 4.8).toFixed(1)}★), perfect for authentic local brews and artisan brunch.`
-      }
-      // Case G: Sunset & Panoramic Viewpoints
-      else if (lower.includes('sunset') || lower.includes('view') || lower.includes('sky deck') || lower.includes('tower') || lower.includes('rooftop') || lower.includes('日落') || lower.includes('夜景') || lower.includes('观景台')) {
-        const viewSpot = realAttractions.find(a => a.category?.includes('Viewpoints') || a.name.toLowerCase().includes('tower') || a.name.toLowerCase().includes('skybridge') || a.name.toLowerCase().includes('kek lok tong') || a.name.toLowerCase().includes('waterfront')) || realAttractions[0]
-        targetDay.afternoon = {
-          time: '16:00 - 18:30 (Sunset Window)',
-          title: `${viewSpot.name} (Sunset Viewing)`,
-          rating: `${(viewSpot.rating || 4.8).toFixed(1)}★ (${(viewSpot.reviewsCount || 40000).toLocaleString()} reviews)`,
-          location: viewSpot.address || destMatch.city,
-          description: `Timed specifically for golden hour and panoramic 360° sunset vistas over ${destMatch.city}.`,
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} afternoon timed for sunset at ${viewSpot.name}!`
-        reply = `I've adjusted Day ${targetDayIndex + 1}'s afternoon schedule to catch golden hour sunset at "${viewSpot.name}" (${(viewSpot.rating || 4.8).toFixed(1)}★)! The timing (16:00 - 18:30) is optimized for stunning photography.`
-      }
-      // Case H: Relaxed pacing & Late morning
-      else if (lower.includes('relax') || lower.includes('sleep') || lower.includes('slow') || lower.includes('late') || lower.includes('轻松') || lower.includes('睡迟') || lower.includes('慢节奏')) {
-        targetDay.morning = {
-          time: '10:30 - 12:30',
-          title: `Leisurely Morning & Relaxed Stroll around ${destMatch.city}`,
-          rating: '5.0★ (Relaxed Pacing Mode)',
-          location: targetDay.morning?.location || destMatch.city,
-          description: `Enjoy a slow-paced morning with late breakfast and gentle exploration without morning rush.`,
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} morning adjusted to relaxed leisurely pacing!`
-        reply = `Done! I've rescheduled Day ${targetDayIndex + 1}'s morning start to 10:30 AM for a relaxed start, giving you ample time to sleep in and enjoy your hotel breakfast.`
-      }
-      // Case I: Nature & Cultural heritage
-      else if (lower.includes('nature') || lower.includes('caves') || lower.includes('temple') || lower.includes('park') || lower.includes('museum') || lower.includes('自然') || lower.includes('洞穴') || lower.includes('公园') || lower.includes('博物馆')) {
-        const natureSpot = realAttractions.find(a => a.category?.includes('Nature') || a.category?.includes('Cultural') || a.name.toLowerCase().includes('caves') || a.name.toLowerCase().includes('bako') || a.name.toLowerCase().includes('museum') || a.name.toLowerCase().includes('temple')) || realAttractions[1] || realAttractions[0]
-        targetDay.morning = {
-          time: '09:00 - 12:00',
-          title: natureSpot.name,
-          rating: `${(natureSpot.rating || 4.8).toFixed(1)}★ (${(natureSpot.reviewsCount || 20000).toLocaleString()} reviews)`,
-          location: natureSpot.address || destMatch.city,
-          description: natureSpot.description || `Immerse in ${natureSpot.name}'s lush natural landscape and rich heritage.`,
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} updated to nature & heritage: ${natureSpot.name}!`
-        reply = `Added! Day ${targetDayIndex + 1} now starts with an immersive visit to "${natureSpot.name}" (${(natureSpot.rating || 4.8).toFixed(1)}★). Perfect for heritage exploration and scenic greenery.`
-      }
-      // Case J: General modification / Swap fallback
-      else {
-        // Pick an alternative spot from realAttractions not currently on this day
-        const altAttr = realAttractions.find(a => a.name !== targetDay.morning?.title && a.name !== targetDay.afternoon?.title) || realAttractions[0]
-        const altRest = realRestaurants.find(r => r.name !== targetDay.lunch?.name && r.name !== targetDay.dinner?.name) || realRestaurants[0]
-
-        targetDay.afternoon = {
-          time: '14:30 - 17:30',
-          title: altAttr.name,
-          rating: `${(altAttr.rating || 4.8).toFixed(1)}★ (${(altAttr.reviewsCount || 15000).toLocaleString()} reviews)`,
-          location: altAttr.address || destMatch.city,
-          description: altAttr.description || `Refined spot in ${destMatch.city} based on your preferences.`,
-          aiRefined: true
-        }
-        targetDay.dinner = {
-          time: '18:30 - 20:30',
-          name: altRest.name,
-          cuisine: altRest.cuisine || 'Authentic Regional Dining',
-          priceTier: altRest.priceTier || '$$',
-          mustTry: altRest.description ? altRest.description.split('.')[0] : 'Chef signature dish',
-          aiRefined: true
-        }
-        changesNotice = `✨ Day ${targetDayIndex + 1} refined: ${altAttr.name} & ${altRest.name}!`
-        reply = `I've personalized Day ${targetDayIndex + 1} based on your prompt ("${rawMsg}")! Updated the afternoon to "${altAttr.name}" (${(altAttr.rating || 4.8).toFixed(1)}★) and dinner to "${altRest.name}" (${(altRest.rating || 4.8).toFixed(1)}★) in ${destMatch.city}. Your Official Trip Itinerary timetable has updated in real time!`
-      }
-    } else {
-      reply = `I've noted your preference: "${rawMsg}". I'm ready to fine-tune your itinerary whenever you regenerate!`
     }
 
-    res.json({
-      success: true,
-      reply,
-      updatedPlan,
-      changesNotice
-    })
+    // INTENT H: General conversational fallback
+    reply = `I'm here to help with your trip in ${destMatch.city}! You can ask me:\n• *"Where should I go for a local dinner?"*\n• *"What are the top sights to visit?"*\n• *"How do I get to Batu Caves by train?"*\n• *"Update Day 2 dinner to Wong Ah Wah"*`
+    res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
+
   } catch (err) {
     res.status(500).json({ success: false, error: err.message })
   }

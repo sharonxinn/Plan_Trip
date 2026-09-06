@@ -5,6 +5,9 @@ const emergencyPattern = /passport|medical|injur|sprain|lost|stolen|emergency|da
 
 function offlineReply(message, city) {
   const lower = message.toLowerCase()
+  if (/^(hi|hello|hey|yo|greetings|morning|good morning|good afternoon)\b/i.test(lower)) {
+    return { text: `Hello! 👋 I'm your PlanTrip AI companion for ${city}. You can ask me for top local dinner spots, iconic attractions, train directions, or ask me to adjust your daily schedule!` }
+  }
   if (lower.includes('passport') || lower.includes('stolen')) {
     return {
       text: `First, make a police report and contact your embassy or consulate in ${city}. Keep digital copies of your passport, report, and flight details together, then tell your accommodation and airline that your documents are being replaced.`,
@@ -12,12 +15,15 @@ function offlineReply(message, city) {
     }
   }
   if (lower.includes('rain') || lower.includes('storm')) {
-    return { text: `I’d switch the next outdoor stop in ${city} for a nearby museum, gallery, covered market, or long lunch. Keep the original stop saved and move it to the clearest remaining morning.` }
+    return { text: `For rainy weather in ${city}, head to a covered indoor spot like Aquaria KLCC, Petrosains Discovery Centre, the Islamic Arts Museum, or explore the Pavilion mall.` }
   }
-  if (lower.includes('food') || lower.includes('eat') || lower.includes('restaurant')) {
-    return { text: `Tell me your budget, dietary needs, and how far you want to travel in ${city}. I can narrow it to a practical meal stop that fits the rest of the day.` }
+  if (lower.includes('food') || lower.includes('eat') || lower.includes('dinner') || lower.includes('restaurant')) {
+    return { text: `In ${city}, top dining picks include Village Park Restaurant for authentic Nasi Lemak, Wong Ah Wah on Jalan Alor for street food & BBQ wings, or Bijan for fine Malay dining. Let me know if you'd like to add one to your itinerary!` }
   }
-  return { text: `I’ve noted that for your ${city} trip. Add a little more detail about the day, budget, or people involved and I’ll suggest a practical next step.` }
+  if (lower.includes('transit') || lower.includes('train') || lower.includes('batu caves') || lower.includes('lrt') || lower.includes('mrt')) {
+    return { text: `Public transit in ${city} is fast and cashless! Use a Touch 'n Go card for LRT, MRT, and Monorail. To reach Batu Caves, take the direct KTM Komuter from KL Sentral Platform 3 (RM 2.40).` }
+  }
+  return { text: `I'm here to help with your ${city} trip! Ask me about top places to eat, sights to see, train directions, or tell me to tweak a day in your schedule.` }
 }
 
 export default function GlobalAiAssistant({ destination, country, travelParty, durationDays, budgetAmount, currentPlan, onPlanUpdate }) {
@@ -119,8 +125,33 @@ export default function GlobalAiAssistant({ destination, country, travelParty, d
           <footer>Travel suggestions can change. Check urgent local advice directly.</footer>
         </section>
       )}
-      <button className="global-ai-launcher" onClick={() => setOpen(value => !value)} aria-label={open ? 'Close AI assistant' : 'Open AI assistant'} aria-expanded={open}>
-        {open ? <X size={23}/> : <><Bot size={25}/><span className="ai-launcher-spark"><Sparkles size={11}/></span></>}
+      <button 
+        className={`global-ai-launcher ${open ? 'is-active' : 'is-floating'}`} 
+        onClick={() => setOpen(value => !value)} 
+        aria-label={open ? 'Close AI assistant' : 'Open AI assistant'} 
+        aria-expanded={open}
+        title="Ask PlanTrip AI Assistant"
+      >
+        {open ? (
+          <span className="ai-close-icon-wrap">
+            <X size={24} />
+          </span>
+        ) : (
+          <>
+            <span className="ai-launcher-pulse-wave wave-1" aria-hidden="true" />
+            <span className="ai-launcher-pulse-wave wave-2" aria-hidden="true" />
+            <span className="ai-launcher-shimmer" aria-hidden="true" />
+            <span className="ai-bot-motion-wrap">
+              <Bot size={27} className="ai-bot-animated-icon" />
+            </span>
+            <span className="ai-launcher-spark" aria-hidden="true">
+              <Sparkles size={12} className="ai-spark-animated-icon" />
+            </span>
+            <span className="ai-launcher-caption" aria-hidden="true">
+              Ask AI
+            </span>
+          </>
+        )}
       </button>
     </div>
   )
