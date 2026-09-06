@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import PostcardCheckinPage from './PostcardCheckinPage'
 import AIAgentPage from './AIAgentPage'
+import JourneyMapPage from './JourneyMapPage'
 
 export default function StageMemory({
   selectedCity,
@@ -163,6 +164,13 @@ export default function StageMemory({
           >
             <FileText size={16} />
             <span>4. Word Trip Recap</span>
+          </button>
+          <button
+            className={`memory-tab-btn ${activeTab === 'journey' ? 'active' : ''}`}
+            onClick={() => setActiveTab('journey')}
+          >
+            <Plane size={16} />
+            <span>5. Journey Route & Album</span>
           </button>
         </div>
       </div>
@@ -413,6 +421,20 @@ export default function StageMemory({
               itinerary={smartItinerary}
               bucketList={basket}
               onBack={() => setActiveTab('budget-summary')}
+            />
+          </div>
+        )}
+
+        {/* TAB 5: JOURNEY ROUTE MAP & MEMORY ALBUM */}
+        {activeTab === 'journey' && (
+          <div className="memory-tab-pane fade-in">
+            <JourneyMapPage
+              selectedCity={selectedCity}
+              selectedCountry={selectedCountry}
+              travellers={travellers}
+              budgetCategories={actualCategories}
+              initialBudget={initialBudget}
+              totalActual={totalActual}
             />
           </div>
         )}
