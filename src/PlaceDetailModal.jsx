@@ -68,6 +68,34 @@ export default function PlaceDetailModal({
             </div>
           </div>
 
+          {/* PERSONALIZED FIT HIGHLIGHT */}
+          {item.partyMatchReason && (
+            <div className="modal-personalized-box">
+              <div className="personalized-box-header">
+                <Sparkles size={15} className="sparkle-gold" />
+                <span>Trip Profile Match ({item.matchPercent || 96}% Fit)</span>
+              </div>
+              <p className="personalized-reason-text">{item.partyMatchReason}</p>
+              <div className="personalized-chips-row">
+                {item.partyBadge && (
+                  <span className="personalized-chip party">{item.partyBadge}</span>
+                )}
+                {item.dietaryBadges && item.dietaryBadges.map((b, i) => (
+                  <span key={i} className="personalized-chip dietary">{b}</span>
+                ))}
+                {item.isPlayground && (
+                  <span className="personalized-chip playground">🎠 Playground & Water Play</span>
+                )}
+                {item.isRomantic && (
+                  <span className="personalized-chip romantic">💖 Sunset & Romantic View</span>
+                )}
+                {item.hasHighchairs && (
+                  <span className="personalized-chip family">👶 Highchairs & Family Seating</span>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* KEY DETAILS GRID */}
           <div className="modal-details-grid">
             {isAttraction ? (

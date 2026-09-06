@@ -4026,6 +4026,305 @@ input, select, textarea {
 }
 
 /* ==========================================================================
+   DYNAMIC RECOMMENDATIONS & PROFILE SYNC BAR
+   ========================================================================== */
+.tailored-profile-sync-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(224, 109, 83, 0.08) 0%, rgba(245, 158, 11, 0.08) 100%);
+  border: 1px solid rgba(224, 109, 83, 0.22);
+  border-radius: var(--radius-lg, 12px);
+  padding: 12px 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.sync-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sync-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-cyan, #0ea5e9);
+  box-shadow: 0 0 10px var(--accent-cyan, #0ea5e9);
+  animation: syncDotPulse 2s infinite ease-in-out;
+}
+
+@keyframes syncDotPulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.sync-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-primary, #1e293b);
+}
+
+.sync-tags-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.sync-tag {
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--text-secondary, #475569);
+  backdrop-filter: blur(4px);
+}
+
+.sync-tag.party {
+  background: rgba(224, 109, 83, 0.12);
+  color: #c04528;
+  border-color: rgba(224, 109, 83, 0.25);
+  font-weight: 700;
+}
+
+.sync-tag.pace {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.sync-tag.vibe {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.sync-tag.dietary {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0284c7;
+  border-color: rgba(14, 165, 233, 0.25);
+  font-weight: 700;
+}
+
+.btn-sync-adjust {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid rgba(224, 109, 83, 0.3);
+  color: var(--text-primary, #1e293b);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.btn-sync-adjust:hover {
+  background: var(--accent-coral, #e06d53);
+  color: #ffffff;
+  border-color: var(--accent-coral, #e06d53);
+  transform: translateY(-1px);
+}
+
+/* Match Chip On Image */
+.attraction-match-chip {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #fef08a;
+  border: 1px solid rgba(254, 240, 138, 0.3);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+.attraction-match-chip.dining {
+  background: rgba(15, 23, 42, 0.85);
+  color: #86efac;
+  border-color: rgba(134, 239, 172, 0.35);
+}
+
+/* Style mini chips */
+.place-style-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin: 6px 0 10px 0;
+}
+
+.place-style-mini-chip {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #64748b;
+  background: rgba(100, 116, 139, 0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(100, 116, 139, 0.15);
+}
+
+/* Dietary badges row */
+.dietary-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 6px 0 10px 0;
+}
+
+.dietary-badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.dietary-badge-chip.success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.28);
+}
+
+.dietary-badge-chip.warning {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.dietary-badge-chip.info {
+  background: rgba(14, 165, 233, 0.1);
+  color: #0369a1;
+  border: 1px solid rgba(14, 165, 233, 0.25);
+}
+
+/* Filter pills highlights */
+.cat-pill.party-pill-highlight {
+  border-color: rgba(224, 109, 83, 0.45);
+  background: rgba(224, 109, 83, 0.08);
+  color: #c04528;
+  font-weight: 700;
+}
+
+.cat-pill.party-pill-highlight.active {
+  background: var(--accent-coral, #e06d53);
+  color: #ffffff;
+  border-color: var(--accent-coral, #e06d53);
+}
+
+.cat-pill.halal-pill-btn {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+  color: #047857;
+  font-weight: 700;
+}
+
+.cat-pill.halal-pill-btn.active {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.cat-pill.veg-pill-btn {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.08);
+  color: #15803d;
+  font-weight: 700;
+}
+
+.cat-pill.veg-pill-btn.active {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+/* Personalized Match Box in Modal */
+.modal-personalized-box {
+  background: linear-gradient(135deg, rgba(224, 109, 83, 0.08) 0%, rgba(245, 158, 11, 0.08) 100%);
+  border: 1px solid rgba(224, 109, 83, 0.25);
+  border-radius: var(--radius-md, 8px);
+  padding: 14px 16px;
+  margin: 14px 0 18px 0;
+}
+
+.personalized-box-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #9a3412;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.personalized-reason-text {
+  font-size: 0.88rem;
+  color: var(--text-primary, #1e293b);
+  margin-bottom: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.personalized-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.personalized-chip {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 9999px;
+}
+
+.personalized-chip.party {
+  background: rgba(224, 109, 83, 0.15);
+  color: #c04528;
+}
+
+.personalized-chip.dietary {
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+}
+
+.personalized-chip.playground {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.personalized-chip.romantic {
+  background: rgba(236, 72, 153, 0.15);
+  color: #be185d;
+}
+
+.personalized-chip.family {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0369a1;
+}
+
+/* ==========================================================================
    PLACE DETAIL MODAL
    ========================================================================== */
 .modal-backdrop {

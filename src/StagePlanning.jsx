@@ -376,6 +376,49 @@ export default function StagePlanning({
                 </div>
               </section>
 
+              {/* ACTIVE TRIP PROFILE SYNC BANNER */}
+              <section className="container mb-3">
+                <div className="tailored-profile-sync-bar">
+                  <div className="sync-bar-left">
+                    <span className="sync-pulse-dot" />
+                    <span className="sync-title">Personalized for:</span>
+                    <div className="sync-tags-scroll">
+                      <span className="sync-tag party">
+                        {travelParty === 'couple' ? '💑 Romantic Couple' :
+                         travelParty === 'family' ? '👨‍👩‍👧‍👦 Family with Kids' :
+                         travelParty === 'friends' ? '👯 Friends Squad' : '👤 Solo Explorer'} ({travellers} Pax)
+                      </span>
+                      <span className="sync-tag pace">
+                        {travelPace === 'relaxed' ? '☕ Relaxed Pace' :
+                         travelPace === 'packed' ? '🚀 Action-Packed' : '⚖️ Balanced Pace'}
+                      </span>
+                      {(groupPreferences?.vibes || []).map(v => (
+                        <span key={v} className="sync-tag vibe">
+                          {v === 'foodie' ? '🍜 Local Food' :
+                           v === 'culture' ? '🏛️ Heritage & Culture' :
+                           v === 'nature' ? '🌿 Nature & Views' :
+                           v === 'adventure' ? '⚡ Thrills & Parks' :
+                           v === 'shopping' ? '🛍️ Markets & Malls' : '☕ Chill & Cafes'}
+                        </span>
+                      ))}
+                      {(groupPreferences?.dietary || []).map(d => (
+                        <span key={d} className="sync-tag dietary">
+                          ✓ {d}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <button
+                    className="btn-sync-adjust"
+                    onClick={() => setCurrentStep('setup')}
+                    title="Change Party, Vibes, Pace or Dietary in Setup"
+                  >
+                    <SlidersHorizontal size={13} />
+                    <span>Adjust in Setup</span>
+                  </button>
+                </div>
+              </section>
+
               {/* MAP VIEW */}
               <section className="container map-section-wrapper">
                 <RealMapView
@@ -400,9 +443,13 @@ export default function StagePlanning({
                   budgetTier={budgetTier}
                   durationDays={durationDays}
                   travellers={travellers}
+                  travelPace={travelPace}
+                  groupPreferences={groupPreferences}
+                  searchQuery={placeSearchQuery}
                   onAddToBasket={addToBasket}
                   onRemoveFromBasket={removeFromBasket}
                   onOpenPostcard={() => {}}
+                  onEditPreferences={() => setCurrentStep('setup')}
                 />
               </section>
 
@@ -416,9 +463,13 @@ export default function StagePlanning({
                   budgetTier={budgetTier}
                   durationDays={durationDays}
                   travellers={travellers}
+                  travelPace={travelPace}
+                  groupPreferences={groupPreferences}
+                  searchQuery={placeSearchQuery}
                   onAddToBasket={addToBasket}
                   onRemoveFromBasket={removeFromBasket}
                   onOpenPostcard={() => {}}
+                  onEditPreferences={() => setCurrentStep('setup')}
                 />
               </section>
             </div>
