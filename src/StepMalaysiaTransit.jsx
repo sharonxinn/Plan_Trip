@@ -29,7 +29,7 @@ export default function StepMalaysiaTransit({
   const popularTripRoutes = [
     {
       id: 'r1',
-      title: 'KL Sentral ➔ KLCC Twin Towers',
+      title: 'KL Sentral -> KLCC Twin Towers',
       icon: '',
       origin: 'KL Sentral (Transit Hub)',
       dest: 'KLCC (Petronas Twin Towers)',
@@ -37,7 +37,7 @@ export default function StepMalaysiaTransit({
     },
     {
       id: 'r2',
-      title: 'Bukit Bintang ➔ TRX Mall',
+      title: 'Bukit Bintang -> TRX Mall',
       icon: '',
       origin: 'Bukit Bintang (Pavilion / Lot 10)',
       dest: 'Tun Razak Exchange (TRX Shopping Gallery)',
@@ -45,7 +45,7 @@ export default function StepMalaysiaTransit({
     },
     {
       id: 'r3',
-      title: 'Pasar Seni ➔ Batu Caves',
+      title: 'Pasar Seni -> Batu Caves',
       icon: '',
       origin: 'Pasar Seni (Chinatown / Central Market)',
       dest: 'Batu Caves (Rainbow Stairs & Temple)',
@@ -53,7 +53,7 @@ export default function StepMalaysiaTransit({
     },
     {
       id: 'r4',
-      title: 'KLCC ➔ Pavilion Bukit Bintang',
+      title: 'KLCC -> Pavilion Bukit Bintang',
       icon: '',
       origin: 'KLCC (Suria Mall Gate)',
       dest: 'Pavilion Bukit Bintang (Main Entrance)',
@@ -61,7 +61,7 @@ export default function StepMalaysiaTransit({
     },
     {
       id: 'r5',
-      title: 'Komtar ➔ Batu Ferringhi Beach',
+      title: 'Komtar -> Batu Ferringhi Beach',
       icon: '',
       origin: 'Komtar Bus Terminal (Central Georgetown Hub)',
       dest: 'Batu Ferringhi Beachfront (Night Market / Resorts)',
@@ -129,9 +129,9 @@ export default function StepMalaysiaTransit({
   const handleCopyTransitGuide = () => {
     if (!activeRouteResult) return
     const text = [
-      `Transit Route: ${activeRouteResult.originName} ➔ ${activeRouteResult.destName}*`,
-      `🚇 Line: ${activeRouteResult.line}`,
-      `⏱️ Travel Time: ${activeRouteResult.durationMins} mins (${activeRouteResult.stopsCount} stops)`,
+      `Transit Route: ${activeRouteResult.originName} -> ${activeRouteResult.destName}*`,
+      `Line: ${activeRouteResult.line}`,
+      `Travel Time: ${activeRouteResult.durationMins} mins (${activeRouteResult.stopsCount} stops)`,
       `Fare: ${activeRouteResult.tngFare} (Free with MyCity Pass)`,
       '',
       `Directions:`,

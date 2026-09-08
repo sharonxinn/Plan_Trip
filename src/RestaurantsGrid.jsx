@@ -84,7 +84,7 @@ export default function RestaurantsGrid({
 
         if (isVegan) {
           score += 70
-          dietaryBadges.push('🌿 100% Vegan Friendly')
+          dietaryBadges.push('100% Vegan Friendly')
         }
       }
 
@@ -95,10 +95,10 @@ export default function RestaurantsGrid({
 
         if (hasSeafood) {
           score -= 35
-          dietaryWarnings.push('🦐 Contains Seafood')
+          dietaryWarnings.push('Contains Seafood')
         } else {
           score += 25
-          dietaryBadges.push('🍗 Seafood-Free Friendly')
+          dietaryBadges.push('Seafood-Free Friendly')
         }
       }
 
@@ -135,12 +135,12 @@ export default function RestaurantsGrid({
 
         if (isRomantic) {
           score += 55
-          partyMatchReason = '💑 Romantic Couple Top Pick: Sunset Ambiance & Intimate Dining'
+          partyMatchReason = 'Romantic Couple Top Pick: Sunset Ambiance & Intimate Dining'
           partyBadge = 'Romantic Date Night'
           isPartyHighlight = true
         } else if (item.priceTier === '$$$' || item.priceTier === '$$$$') {
           score += 25
-          partyMatchReason = '💑 Chic Atmosphere for Two'
+          partyMatchReason = 'Chic Atmosphere for Two'
           partyBadge = 'Couple Dining'
           isPartyHighlight = true
         }
@@ -153,8 +153,8 @@ export default function RestaurantsGrid({
 
         if (isFamilyDining) {
           score += 55
-          partyMatchReason = '👨‍👩‍👧‍👦 Family-Friendly Dining: Spacious Seating, Highchairs & Mild Kids Dishes'
-          partyBadge = '👶 Kid & Family Friendly'
+          partyMatchReason = 'Family-Friendly Dining: Spacious Seating, Highchairs & Mild Kids Dishes'
+          partyBadge = 'Kid & Family Friendly'
           isPartyHighlight = true
         } else {
           score += 15
@@ -168,7 +168,7 @@ export default function RestaurantsGrid({
         if (isFriendsDining) {
           score += 50
           partyMatchReason = 'Friends Squad Top Pick: Big Communal Tables & Late Night Feasts'
-          partyBadge = '🍲 Group Sharing Feast'
+          partyBadge = 'Group Sharing Feast'
           isPartyHighlight = true
         } else {
           score += 18
@@ -181,7 +181,7 @@ export default function RestaurantsGrid({
         if (isSoloDining) {
           score += 45
           partyMatchReason = 'Solo Explorer Pick: Cozy Counter Seating & Easy Single Servings'
-          partyBadge = '☕ Solo Friendly Counter'
+          partyBadge = 'Solo Friendly Counter'
           isPartyHighlight = true
         } else {
           score += 18
@@ -213,8 +213,8 @@ export default function RestaurantsGrid({
         ...item,
         tailorScore: score,
         matchPercent,
-        partyMatchReason: partyMatchReason || `⭐ Top Google Rated Dining in ${city?.city || 'the Area'}`,
-        partyBadge: partyBadge || (travelParty === 'couple' ? 'Couple Friendly' : travelParty === 'family' ? '👶 Family Friendly' : '🍴 Highly Rated'),
+        partyMatchReason: partyMatchReason || `Top Google Rated Dining in ${city?.city || 'the Area'}`,
+        partyBadge: partyBadge || (travelParty === 'couple' ? 'Couple Friendly' : travelParty === 'family' ? 'Family Friendly' : 'Highly Rated'),
         dietaryBadges,
         dietaryWarnings,
         isPartyHighlight
@@ -306,9 +306,9 @@ export default function RestaurantsGrid({
               className="sort-dropdown"
             >
               <option value="tailored">Best Match for Trip & Dietary</option>
-              <option value="rating">⭐ Google Rating (Highest first)</option>
-              <option value="priceAsc">💲 Price ($ to $$$$)</option>
-              <option value="priceDesc">💎 Price ($$$$ to $)</option>
+              <option value="rating">Google Rating (Highest first)</option>
+              <option value="priceAsc">Price ($ to $$$$)</option>
+              <option value="priceDesc">Price ($$$$ to $)</option>
             </select>
           </div>
         </div>
@@ -350,7 +350,7 @@ export default function RestaurantsGrid({
             className={`cat-pill party-pill-highlight ${activeDietaryQuickFilter === 'kidFriendly' ? 'active' : ''}`}
             onClick={() => setActiveDietaryQuickFilter(activeDietaryQuickFilter === 'kidFriendly' ? 'All' : 'kidFriendly')}
           >
-            👶 Family & Highchairs Only
+            Family & Highchairs Only
           </button>
         )}
 
@@ -409,7 +409,7 @@ export default function RestaurantsGrid({
 
                 <div className="google-review-badge">
                   <Star size={13} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
-                  <strong>{typeof restaurant.rating === 'number' ? restaurant.rating.toFixed(1) : String(restaurant.rating || '4.8').replace('★', '').trim()}</strong>
+                  <strong>{typeof restaurant.rating === 'number' ? restaurant.rating.toFixed(1) : String(restaurant.rating || '4.8').replace('', '').trim()}</strong>
                 </div>
               </div>
 
@@ -438,7 +438,7 @@ export default function RestaurantsGrid({
                   ))}
                   {restaurant.hasHighchairs && (
                     <span className="dietary-badge-chip info">
-                      👶 Highchairs Available
+                      Highchairs Available
                     </span>
                   )}
                 </div>

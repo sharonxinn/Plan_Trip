@@ -6,7 +6,7 @@ const emergencyPattern = /passport|medical|injur|sprain|lost|stolen|emergency|da
 function offlineReply(message, city) {
   const lower = message.toLowerCase()
   if (/^(hi|hello|hey|yo|greetings|morning|good morning|good afternoon)\b/i.test(lower)) {
-    return { text: `Hello! 👋 I'm your PlanTrip AI companion for ${city}. You can ask me for top local dinner spots, iconic attractions, train directions, or ask me to adjust your daily schedule!` }
+    return { text: `Hello! I'm your PlanTrip AI companion for ${city}. You can ask me for top local dinner spots, iconic attractions, train directions, or ask me to adjust your daily schedule!` }
   }
   if (lower.includes('passport') || lower.includes('stolen')) {
     return {

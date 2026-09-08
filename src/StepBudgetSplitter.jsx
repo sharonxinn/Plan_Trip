@@ -84,9 +84,9 @@ export default function StepBudgetSplitter({
   // Presets for Planning mode
   const budgetPresets = [
     { id: 'budget', label: 'Budget ($)', baseAmount: 1800, desc: 'Hostels, public transit, street food' },
-    { id: 'balanced', label: 'Balanced ($$)', baseAmount: 3800, desc: '3-4★ hotels, mixed dining, top sights' },
-    { id: 'premium', label: 'Premium ($$$)', baseAmount: 7200, desc: '4-5★ boutique stays, fine dining, private tours' },
-    { id: 'luxury', label: 'Luxury ($$$$)', baseAmount: 14000, desc: '5★ luxury resorts, Michelin dining, VIP experiences' }
+    { id: 'balanced', label: 'Balanced ($$)', baseAmount: 3800, desc: '3-4 hotels, mixed dining, top sights' },
+    { id: 'premium', label: 'Premium ($$$)', baseAmount: 7200, desc: '4-5 boutique stays, fine dining, private tours' },
+    { id: 'luxury', label: 'Luxury ($$$$)', baseAmount: 14000, desc: '5 luxury resorts, Michelin dining, VIP experiences' }
   ]
 
   const handleSelectPreset = preset => {
@@ -115,7 +115,7 @@ export default function StepBudgetSplitter({
       flightsTransport: { label: 'Flights & Transit', pct: 25, amount: Math.round(total * 0.25), icon: '' },
       foodDining: { label: 'Food & Dining', pct: 20, amount: Math.round(total * 0.20), icon: '' },
       activities: { label: 'Activities & Attractions', pct: 15, amount: Math.round(total * 0.15), icon: '' },
-      contingency: { label: '🛡️ Emergency & Buffer Fund', pct: 5, amount: Math.round(total * 0.05), icon: '🛡️' }
+      contingency: { label: 'Emergency & Buffer Fund', pct: 5, amount: Math.round(total * 0.05), icon: '' }
     }
   }, [safeBudgetAmount])
 
@@ -442,7 +442,7 @@ export default function StepBudgetSplitter({
 
         if (name && name.length >= 2 && !/subtotal|total|change|cash|visa|master|card|balance|receipt|table|guest|date|time|thank\s*you|chk|gst/i.test(name)) {
           const isDrink = drinkKeywords.some(k => name.toLowerCase().includes(k))
-          const emoji = isDrink ? '🍹' : '🍽️'
+          const emoji = isDrink ? '' : ''
           items.push({
             id: `item-${Date.now()}-${idx}`,
             name,
@@ -616,7 +616,7 @@ export default function StepBudgetSplitter({
       const updatedItems = prev.items.map(item => {
         if (item.id !== itemId) return item
         const newCat = item.category === 'food' ? 'drink' : 'food'
-        const newEmoji = newCat === 'drink' ? '🍹' : '🍽️'
+        const newEmoji = newCat === 'drink' ? '' : ''
         return { ...item, category: newCat, emoji: newEmoji }
       })
       return { ...prev, items: updatedItems }
@@ -779,18 +779,18 @@ export default function StepBudgetSplitter({
     const lines = [
       `*${scannedReceipt.merchantName}* - Food & Drinks Breakdown`,
       `Date: ${scannedReceipt.date} | Paid by: *${scannedReceipt.payer}*`,
-      `💰 Grand Total: *${curr.symbol} ${receiptCalculations.grandTotal.toFixed(2)}* (incl. SST & Service Charge)`,
+      `Grand Total: *${curr.symbol} ${receiptCalculations.grandTotal.toFixed(2)}* (incl. SST & Service Charge)`,
       ``,
       `*FOOD ITEMS (${curr.symbol} ${receiptCalculations.foodSubtotal.toFixed(2)}):*`,
       ...scannedReceipt.items.filter(i => i.category === 'food').map(i => {
         const shareStr = i.assignedTo.length === squadMembers.length ? 'All Squad' : i.assignedTo.join(', ')
-        return `• ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) ➔ ${shareStr}`
+        return `• ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) -> ${shareStr}`
       }),
       ``,
       `*DRINK ITEMS (${curr.symbol} ${receiptCalculations.drinkSubtotal.toFixed(2)}):*`,
       ...scannedReceipt.items.filter(i => i.category === 'drink').map(i => {
         const shareStr = i.assignedTo.length === squadMembers.length ? 'All Squad' : i.assignedTo.join(', ')
-        return `• ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) ➔ ${shareStr}`
+        return `• ${i.name} (${curr.symbol} ${i.total.toFixed(2)}) -> ${shareStr}`
       }),
       ``,
       `*PER-PERSON AMOUNTS TO PAY ${scannedReceipt.payer}:*`,
@@ -1285,7 +1285,7 @@ export default function StepBudgetSplitter({
                       <div key={name} className={`member-share-tile ${isPayer ? 'is-payer' : ''}`}>
                         <div className="tile-top-header">
                           <div className="tile-member-name">
-                            <span className="m-avatar">{mb.member.avatar || '🧑'}</span>
+                            <span className="m-avatar">{mb.member.avatar || ''}</span>
                             <strong>{name}</strong>
                             {isPayer && <span className="payer-badge">Paid Master Bill</span>}
                           </div>

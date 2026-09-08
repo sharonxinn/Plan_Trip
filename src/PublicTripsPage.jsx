@@ -27,9 +27,9 @@ const MALAYSIA_CITIES = [
 
 const BUDGET_PRESETS = [
   { id: 'budget', label: 'Budget ($)', amount: 1800, desc: 'Hostels, public transit, street food' },
-  { id: 'balanced', label: 'Balanced ($$)', amount: 3800, desc: '3-4★ hotels, mixed dining, top sights' },
-  { id: 'premium', label: 'Premium ($$$)', amount: 7200, desc: '4-5★ boutique stays, fine dining' },
-  { id: 'luxury', label: 'Luxury ($$$$)', amount: 14000, desc: '5★ luxury resorts, Michelin dining' }
+  { id: 'balanced', label: 'Balanced ($$)', amount: 3800, desc: '3-4 hotels, mixed dining, top sights' },
+  { id: 'premium', label: 'Premium ($$$)', amount: 7200, desc: '4-5 boutique stays, fine dining' },
+  { id: 'luxury', label: 'Luxury ($$$$)', amount: 14000, desc: '5 luxury resorts, Michelin dining' }
 ]
 
 const VIBE_OPTIONS = [
@@ -663,7 +663,7 @@ function CreateForm({ busy, disabled, onCancel, onSubmit, defaults }) {
                 className={`pt-vibe-chip ${isSel ? 'is-active' : ''}`}
                 onClick={() => toggleVibeTag(v)}
               >
-                {isSel ? '✓ ' : '+ '}{v}
+                {isSel ? ' ' : '+ '}{v}
               </button>
             )
           })}
@@ -1156,9 +1156,9 @@ function PubTripStyles() {
       .pt-vibe { font-size: 12px; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; padding: 5px 9px; border-radius: 8px; margin-top: 2px; }
       .pt-code { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--text-muted); font-family: var(--font-heading); }
       .pt-status { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: var(--radius-full); }
-      .pt-status-open { background: rgba(71,122,94,0.14); color: #35674E; }
-      .pt-status-full { background: rgba(217,130,43,0.16); color: #A5641C; }
-      .pt-status-locked { background: rgba(124,92,183,0.16); color: #5C43A0; }
+      .pt-status-open { background: rgba(56, 189, 248,0.14); color: #0284c7; }
+      .pt-status-full { background: rgba(56, 189, 248,0.16); color: #0284c7; }
+      .pt-status-locked { background: rgba(15, 23, 42,0.16); color: #0284c7; }
       .pt-card-people { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
       .pt-avatars, .pt-room-title { display: flex; align-items: center; gap: 6px; }
       .pt-avatar { font-size: 16px; }
@@ -1265,7 +1265,7 @@ function PubTripStyles() {
       .pt-col-count { margin-left: auto; background: var(--bg-secondary); border-radius: var(--radius-full); padding: 1px 8px; font-size: 11px; }
       .pt-col-empty { font-size: 12px; color: var(--text-muted); padding: 6px 0; }
       .pt-prop { display: flex; justify-content: space-between; gap: 10px; padding: 11px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: 8px; }
-      .pt-prop.is-in { border-color: var(--accent-emerald); background: rgba(71,122,94,0.05); }
+      .pt-prop.is-in { border-color: var(--accent-emerald); background: rgba(56, 189, 248,0.05); }
       .pt-prop-name { font-size: 13px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
       .pt-in-tag { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--accent-emerald); }
       .pt-prop-sub { display: flex; flex-wrap: wrap; gap: 8px; font-size: 11px; color: var(--text-muted); margin-top: 4px; }

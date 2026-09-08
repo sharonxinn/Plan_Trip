@@ -44,7 +44,7 @@ export default function StepPlanBStudio({
       icon: AlertTriangle,
       title: 'Attraction Closed / Overbooked',
       badge: 'Venue Hiccup',
-      color: 'amber',
+      color: 'blue',
       desc: 'Key planned landmark is unexpectedly closed for private event or tickets sold out.',
       impact: 'Morning schedule stalled',
       solutionSummary: 'Replaces with top-rated nearby alternative with matching cultural vibe and zero wait time.'
@@ -54,7 +54,7 @@ export default function StepPlanBStudio({
       icon: Clock,
       title: 'Flight Delayed / Heavy Traffic',
       badge: 'Transit Jam',
-      color: 'purple',
+      color: 'blue',
       desc: 'Landed 2.5 hours late or stuck in major peak hour highway traffic.',
       impact: 'Day 1 afternoon missed',
       solutionSummary: 'Smart Schedule Compressor: reflows Day 1, trims lowest-priority spot, and extends sunset dining.'
@@ -64,7 +64,7 @@ export default function StepPlanBStudio({
       icon: BatteryCharging,
       title: 'Travel Fatigue / Low Energy',
       badge: 'Pace Relaxer',
-      color: 'emerald',
+      color: 'blue',
       desc: 'Group or kids are exhausted after long flights and intense morning walking.',
       impact: 'Energy level: 20%',
       solutionSummary: 'Swaps intense walking for high-tea cafe lounge, traditional spa wellness, or relaxing scenic river cruise.'
@@ -74,7 +74,7 @@ export default function StepPlanBStudio({
       icon: DollarSign,
       title: 'Budget Alert / Squeeze',
       badge: 'Cost Saver',
-      color: 'rose',
+      color: 'blue',
       desc: 'Spent more on shopping or flights, need to shave 20% off daily meals and tickets.',
       impact: 'Over budget by RM 350',
       solutionSummary: 'Swaps pricey dining for Michelin Bib Gourmand night market stalls & free scenic architectural landmarks.'

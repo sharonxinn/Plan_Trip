@@ -129,11 +129,11 @@ function makeEarthTexture() {
     [[560,650],[720,650],[810,690],[765,720],[600,715]]
   ]
   const land = ctx.createLinearGradient(0, 80, 0, 720)
-  land.addColorStop(0, '#6aa58a')
-  land.addColorStop(.55, '#397965')
-  land.addColorStop(1, '#245747')
+  land.addColorStop(0, '#38bdf8')
+  land.addColorStop(.55, '#38bdf8')
+  land.addColorStop(1, '#0284c7')
   ctx.fillStyle = land
-  ctx.shadowColor = 'rgba(86,208,171,.35)'
+  ctx.shadowColor = 'rgba(56, 189, 248,.35)'
   ctx.shadowBlur = 18
   continents.forEach(points => {
     ctx.beginPath()
@@ -647,7 +647,7 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpenSpotli
                   title="Remove this note"
                   aria-label="Remove note"
                 >
-                  ✕
+                  
                 </button>
               )}
             </blockquote>

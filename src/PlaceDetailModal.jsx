@@ -57,7 +57,7 @@ export default function PlaceDetailModal({
             <div className="modal-rating-row">
               <div className="google-stars-pill">
                 <Star size={16} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
-                <span className="rating-score">{typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('★', '').trim()}</span>
+                <span className="rating-score">{typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('', '').trim()}</span>
                 <span className="reviews-count">
                   ({(item.reviewsCount || 15000).toLocaleString()} verified Google Reviews)
                 </span>
@@ -190,7 +190,7 @@ export default function PlaceDetailModal({
               ) : (
                 <>
                   <li><strong>Signature Dish:</strong> Try their house-specialty {item.cuisine} dishes and chef recommendations.</li>
-                  <li>⏰ <strong>Peak Hours:</strong> Peak dinner times are 7:00 PM – 8:30 PM. Arrive slightly earlier for shorter queues.</li>
+                  <li><strong>Peak Hours:</strong> Peak dinner times are 7:00 PM – 8:30 PM. Arrive slightly earlier for shorter queues.</li>
                   <li><strong>Payment:</strong> Accepts major credit cards, QR payments, and cash.</li>
                 </>
               )}

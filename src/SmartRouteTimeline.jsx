@@ -148,7 +148,7 @@ export default function SmartRouteTimeline({
                     <div className="spot-category-row">
                       <span className="spot-cat-pill">{spot.category || spot.type}</span>
                       {spot.rating && (
-                        <span className="spot-rating-pill">★ {typeof spot.rating === 'number' ? spot.rating.toFixed(1) : spot.rating}</span>
+                        <span className="spot-rating-pill"> {typeof spot.rating === 'number' ? spot.rating.toFixed(1) : spot.rating}</span>
                       )}
                       {spot.priceRange && (
                         <span className="spot-price-pill">{spot.priceRange}</span>

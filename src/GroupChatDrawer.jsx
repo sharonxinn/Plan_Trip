@@ -32,7 +32,7 @@ export default function GroupChatDrawer({
     { id: 'm3', name: 'Vicky', avatar: 'VK', isOrganizer: false }
   ])
   const [newMemberName, setNewMemberName] = useState('')
-  const [newMemberAvatar, setNewMemberAvatar] = useState('🧑')
+  const [newMemberAvatar, setNewMemberAvatar] = useState('')
 
   // In-app group chat messages
   const [chatMessages, setChatMessages] = useState([])
@@ -110,14 +110,14 @@ export default function GroupChatDrawer({
 
   // Generate WhatsApp Share Message with Real Destination Data
   const generateWhatsAppMessage = () => {
-    const attractionsList = basket.filter(b => b.type === 'attraction' || b.category).map(a => `• ${a.name} (${typeof a.rating === 'number' ? a.rating.toFixed(1) : String(a.rating || '4.8').replace('★', '').trim()}★)`).join('\n') || `• Top-rated Google review sights in ${cityName}`
-    const diningList = basket.filter(b => b.type === 'restaurant' || b.cuisine).map(r => `• ${r.name} (${r.priceTier || '$$'} · ${r.cuisine || 'Local'})`).join('\n') || `• Google 4.8★+ verified food spots in ${cityName}`
+    const attractionsList = basket.filter(b => b.type === 'attraction' || b.category).map(a => `• ${a.name} (${typeof a.rating === 'number' ? a.rating.toFixed(1) : String(a.rating || '4.8').replace('', '').trim()})`).join('\n') || `• Top-rated Google review sights in ${cityName}`
+    const diningList = basket.filter(b => b.type === 'restaurant' || b.cuisine).map(r => `• ${r.name} (${r.priceTier || '$$'} · ${r.cuisine || 'Local'})`).join('\n') || `• Google 4.8+ verified food spots in ${cityName}`
 
     const membersListStr = members.map(m => m.name).join(', ')
 
     return `*Our ${cityName}, ${countryName} Trip Plan!*
-Dates: ${departureDate} ➔ ${returnDate} (${durationDays} Days)
-👥 *Group:* ${members.length} Travelers (${membersListStr})
+Dates: ${departureDate} -> ${returnDate} (${durationDays} Days)
+*Group:* ${members.length} Travelers (${membersListStr})
 Target Budget: RM ${budgetAmount.toLocaleString()} (RM ${Math.round(budgetAmount / Math.max(1, members.length)).toLocaleString()}/pax)
 
 *Selected Attractions & Sights:*
@@ -127,7 +127,7 @@ ${attractionsList}
 ${diningList}
 
 *Live Google Maps & Interactive Plan:*
-👉 http://127.0.0.1:5173
+http://127.0.0.1:5173
 
 _Reply in this WhatsApp group with any place suggestions, food wishes, or budget preferences — our AI Trip Planner will automatically capture your real feedback and update our itinerary!_`
   }
@@ -553,7 +553,7 @@ _Reply in this WhatsApp group with any place suggestions, food wishes, or budget
                               <div className="item-preview-info">
                                 <strong>{sug.suggestedItem.name}</strong>
                                 <small>
-                                  {typeof sug.suggestedItem.rating === 'number' ? sug.suggestedItem.rating.toFixed(1) : String(sug.suggestedItem.rating || '4.8').replace('★', '').trim()}★ ({sug.suggestedItem.reviewsCount?.toLocaleString() || sug.suggestedItem.reviewCount?.toLocaleString() || '15,000+'} reviews) · {sug.suggestedItem.category || sug.suggestedItem.cuisine}
+                                  {typeof sug.suggestedItem.rating === 'number' ? sug.suggestedItem.rating.toFixed(1) : String(sug.suggestedItem.rating || '4.8').replace('', '').trim()} ({sug.suggestedItem.reviewsCount?.toLocaleString() || sug.suggestedItem.reviewCount?.toLocaleString() || '15,000+'} reviews) · {sug.suggestedItem.category || sug.suggestedItem.cuisine}
                                 </small>
                               </div>
                             </div>
@@ -690,7 +690,7 @@ _Reply in this WhatsApp group with any place suggestions, food wishes, or budget
                       <div className="bubble-wish-card">
                         <div className="wish-tag">
                           <Sparkles size={12} />
-                          <span>AI Matched Real Spot: <strong>{msg.wish.name}</strong> ({typeof msg.wish.rating === 'number' ? msg.wish.rating.toFixed(1) : String(msg.wish.rating || '4.8').replace('★', '').trim()}★)</span>
+                          <span>AI Matched Real Spot: <strong>{msg.wish.name}</strong> ({typeof msg.wish.rating === 'number' ? msg.wish.rating.toFixed(1) : String(msg.wish.rating || '4.8').replace('', '').trim()})</span>
                         </div>
                         <button
                           className="btn-add-wish"

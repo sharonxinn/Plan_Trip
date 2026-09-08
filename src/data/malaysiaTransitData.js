@@ -308,7 +308,7 @@ export function calculateExactTransitRoute(originInput, destInput) {
   return {
     originName: orig.matchedName,
     destName: dest.matchedName,
-    line: `${orig.line.name} ➔ ${dest.line.name}`,
+    line: `${orig.line.name} -> ${dest.line.name}`,
     lineCode: `${orig.line.code} ⇄ ${dest.line.code}`,
     lineColor: orig.line.color,
     textColor: orig.line.textColor,

@@ -113,7 +113,7 @@ export default function ComparePage({
             {showFlights && (
               <div className="route-info-cell">
                 <span className="cell-label">ROUTE</span>
-                <strong>{originAirport.code} ({originAirport.city}) ➔ {destCode} ({cityName})</strong>
+                <strong>{originAirport.code} ({originAirport.city}) &rarr; {destCode} ({cityName})</strong>
               </div>
             )}
 
@@ -323,7 +323,7 @@ export default function ComparePage({
                       style={{ backgroundImage: `url(${hotel.image})` }}
                     >
                       <div className="star-rating-badge">
-                        {'★'.repeat(hotel.starRating)}
+                        {''.repeat(hotel.starRating)}
                       </div>
                     </div>
 
@@ -335,7 +335,7 @@ export default function ComparePage({
                         </div>
                         <div className="hotel-review-score">
                           <Star size={14} className="star-icon filled" />
-                          <strong>{hotel.rating}★</strong>
+                          <strong>{hotel.rating}</strong>
                           <span>({hotel.reviewsCount} reviews)</span>
                         </div>
                       </div>

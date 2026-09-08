@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Calendar, MapPin, Users, ArrowUpRight, ChevronRight, Compass, Navigation, Camera, Check, Globe2, Sparkles, RotateCcw } from 'lucide-react'
 
 
-export default function OriginDashboard({ selectedCity, selectedCountry, departureDate, returnDate, travellers, budgetAmount, basket = [], isCalendarAdded, onNavigateStage, onOpenDateEditor, onOpenPublicGlobe }) {
+export default function OriginDashboard({ currentUser, selectedCity, selectedCountry, departureDate, returnDate, travellers, budgetAmount, basket = [], isCalendarAdded, onNavigateStage, onOpenDateEditor, onOpenPublicGlobe }) {
   const [now, setNow] = useState(Date.now())
   const [imageFailed, setImageFailed] = useState(false)
   const [postcardFlipped, setPostcardFlipped] = useState(false)
@@ -26,7 +26,13 @@ export default function OriginDashboard({ selectedCity, selectedCountry, departu
   const spots = selectedCity?.attractions?.slice(0, 3) || []
   return (
     <main className="trip-home">
-      <div className="trip-home-heading"><div><p>Your travel space</p><h1>A little closer to going.</h1></div><button className="trip-text-button" onClick={onOpenDateEditor}><Calendar size={17}/> Edit trip</button></div>
+      <div className="trip-home-heading">
+        <div>
+          <p>{currentUser ? `Hello, ${currentUser.name || currentUser.username} • Your travel space` : 'Your travel space'}</p>
+          <h1>A little closer to going.</h1>
+        </div>
+        <button className="trip-text-button" onClick={onOpenDateEditor}><Calendar size={17}/> Edit trip</button>
+      </div>
       <section className="trip-overview" aria-label="Your trip overview">
         <div className={`trip-postcard ${postcardFlipped ? 'is-flipped' : ''}`} onPointerMove={movePhoto} onPointerLeave={resetPhoto}>
         <div className="trip-postcard-turn">

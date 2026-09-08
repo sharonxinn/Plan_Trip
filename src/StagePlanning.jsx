@@ -193,9 +193,9 @@ export default function StagePlanning({
                     <h3>1. Transportation</h3>
                     <p>Compare flights, trains, ferry routes, and airport transfers for {selectedCity?.city}.</p>
                     <div className="tile-highlights">
-                      <span>✓ Flight Deals</span>
-                      <span>✓ Route Times</span>
-                      <span>✓ Price Comparison</span>
+                      <span> Flight Deals</span>
+                      <span> Route Times</span>
+                      <span> Price Comparison</span>
                     </div>
                   </div>
                   <div className="tile-footer">
@@ -218,9 +218,9 @@ export default function StagePlanning({
                     <h3>2. Accommodation</h3>
                     <p>Compare verified hotels, boutique resorts, and homestays with direct booking links.</p>
                     <div className="tile-highlights">
-                      <span>✓ Verified Ratings</span>
-                      <span>✓ Price per Night</span>
-                      <span>✓ Key Amenities</span>
+                      <span> Verified Ratings</span>
+                      <span> Price per Night</span>
+                      <span> Key Amenities</span>
                     </div>
                   </div>
                   <div className="tile-footer">
@@ -243,9 +243,9 @@ export default function StagePlanning({
                     <h3>3. Places & Restaurants</h3>
                     <p>Interactive Google Maps, must-visit sights, local gastronomy, and 1-click smart route timeline.</p>
                     <div className="tile-highlights">
-                      <span>✓ Real Map View</span>
-                      <span>✓ Top Attractions</span>
-                      <span>✓ Smart Timeline</span>
+                      <span> Real Map View</span>
+                      <span> Top Attractions</span>
+                      <span> Smart Timeline</span>
                     </div>
                   </div>
                   <div className="tile-footer">
@@ -403,7 +403,7 @@ export default function StagePlanning({
                       ))}
                       {(groupPreferences?.dietary || []).map(d => (
                         <span key={d} className="sync-tag dietary">
-                          ✓ {d}
+                           {d}
                         </span>
                       ))}
                     </div>

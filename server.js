@@ -508,7 +508,7 @@ app.get('/api/places/restaurants', async (req, res) => {
           mealType: idx % 3 === 0 ? 'Lunch / Dinner' : idx % 3 === 1 ? 'Breakfast / Lunch' : 'Dinner / Supper',
           address: elem.tags?.['addr:street'] ? `${elem.tags['addr:street']}, ${destinationInfo.city}` : `${destinationInfo.city} Central District`,
           image: images[idx % images.length],
-          description: `Popular ${cuisine} spot in ${destinationInfo.city} rated ${ratingScore}★ by verified Google reviews.`
+          description: `Popular ${cuisine} spot in ${destinationInfo.city} rated ${ratingScore} by verified Google reviews.`
         })
       })
     }
@@ -586,13 +586,13 @@ app.get('/api/weather', async (req, res) => {
         51: { desc: 'Light Drizzle', icon: '🌦️', condition: 'rain' },
         53: { desc: 'Moderate Drizzle', icon: '🌧️', condition: 'rain' },
         55: { desc: 'Dense Drizzle', icon: '🌧️', condition: 'rain' },
-        61: { desc: 'Slight Rain Showers', icon: '🌧️', condition: 'rain' },
+        61: { desc: 'Slight Rain Showers', icon: '🌦️', condition: 'rain' },
         63: { desc: 'Moderate Rain', icon: '🌧️', condition: 'rain' },
         65: { desc: 'Heavy Rainstorm', icon: '⛈️', condition: 'rain' },
         80: { desc: 'Scattered Showers', icon: '🌦️', condition: 'rain' },
         81: { desc: 'Moderate Showers', icon: '🌧️', condition: 'rain' },
         82: { desc: 'Violent Rain Showers', icon: '⛈️', condition: 'rain' },
-        95: { desc: 'Thunderstorm with Lightning', icon: '⚡', condition: 'storm' },
+        95: { desc: 'Thunderstorm with Lightning', icon: '⚡⛈️', condition: 'storm' },
         96: { desc: 'Thunderstorm with Hail', icon: '⛈️', condition: 'storm' }
       }
 
@@ -620,8 +620,8 @@ app.get('/api/weather', async (req, res) => {
         windSpeed,
         isRainy: info.condition === 'rain' || info.condition === 'storm' || rainChance > 50,
         advice: rainChance > 40
-          ? 'Carry a compact umbrella & plan indoor cultural spots for afternoon rain showers.'
-          : 'Great weather for outdoor exploration! Apply sunscreen & stay hydrated.',
+          ? '☂️ Carry a compact umbrella & plan indoor cultural spots for afternoon rain showers.'
+          : '☀️ Great weather for outdoor exploration! Apply sunscreen & stay hydrated.',
         source: 'Open-Meteo Satellite & Meteorological Stations',
         timestamp: new Date().toISOString()
       })
@@ -638,7 +638,7 @@ app.get('/api/weather', async (req, res) => {
     maxTemp: 33,
     minTemp: 25,
     description: 'Partly Sunny & Warm',
-    icon: '🌤️',
+    icon: '⛅',
     condition: 'clear',
     rainChance: 25,
     humidity: 75,
@@ -721,8 +721,8 @@ app.post('/api/ai/emergency-solve', (req, res) => {
       ],
       itineraryReroute: `Pause today's sightseeing. Dedicate the morning (09:00 AM - 12:30 PM) to police station & consular processing. Resume with relaxed evening dining near your hotel.`,
       localSafetyResource: `${city} Central Police Station & Tourist Police Unit`,
-      hotline: '📞 999 / 112 (Police & Emergency Dispatch)',
-      whatsappBroadcastTemplate: `🚨 [Squad Update - Document Issue]\nHey squad, I need to report a missing passport/wallet. I'm heading to ${city} Central Police Station now. Please proceed with lunch first, I'll rendezvous with everyone at the hotel by 4:00 PM!`
+      hotline: '999 / 112 (Police & Emergency Dispatch)',
+      whatsappBroadcastTemplate: `[Squad Update - Document Issue]\nHey squad, I need to report a missing passport/wallet. I'm heading to ${city} Central Police Station now. Please proceed with lunch first, I'll rendezvous with everyone at the hotel by 4:00 PM!`
     }
   } else if (s.includes('ankle') || s.includes('injury') || s.includes('sprain') || s.includes('sick') || s.includes('fever') || s.includes('hospital') || s.includes('clinic') || s.includes('doctor') || s.includes('poison') || s.includes('stomach') || s.includes('hurt')) {
     result = {
@@ -739,8 +739,8 @@ app.post('/api/ai/emergency-solve', (req, res) => {
       ],
       itineraryReroute: `Cancel high-step walking tours & outdoor hiking. Swap with scenic air-conditioned river cruise, heritage tram ride, or traditional wellness massage lounge in ${city}.`,
       localSafetyResource: `${city} General Hospital & 24/7 Tourist Medical Helpline`,
-      hotline: '📞 999 (National Ambulance & Medical Dispatch)',
-      whatsappBroadcastTemplate: `⚠️ [Squad Update - Medical Rest]\nHey guys, minor sprain/illness issue here. Heading to a nearby clinic in ${city} for a quick check. Let's swap the walking trail for a relaxing cafe/spa this afternoon so everyone can chill!`
+      hotline: '999 (National Ambulance & Medical Dispatch)',
+      whatsappBroadcastTemplate: `[Squad Update - Medical Rest]\nHey guys, minor sprain/illness issue here. Heading to a nearby clinic in ${city} for a quick check. Let's swap the walking trail for a relaxing cafe/spa this afternoon so everyone can chill!`
     }
   } else if (s.includes('kid') || s.includes('children') || s.includes('crying') || s.includes('hungry') || s.includes('baby') || s.includes('toddler') || s.includes('meltdown') || s.includes('3 pm') || s.includes('food')) {
     result = {
@@ -757,8 +757,8 @@ app.post('/api/ai/emergency-solve', (req, res) => {
       ],
       itineraryReroute: `Push next outdoor attraction back by 45 minutes. Replace intense sunny walking with indoor family discovery venue with baby-care & nursery rooms.`,
       localSafetyResource: `${city} Premier Mall Family Lounge & Nursing Stations`,
-      hotline: '👨‍👩‍👧‍👦 Family Emergency Priority',
-      whatsappBroadcastTemplate: `🍼 [Squad Update - Quick Fuel Stop]\nKids need a quick recharge and snack! We are stopping by a cafe in ${city} for 40 mins to eat and cool off. See you guys at the next stop by 3:45 PM!`
+      hotline: 'Family Emergency Priority',
+      whatsappBroadcastTemplate: `[Squad Update - Quick Fuel Stop]\nKids need a quick recharge and snack! We are stopping by a cafe in ${city} for 40 mins to eat and cool off. See you guys at the next stop by 3:45 PM!`
     }
   } else if (s.includes('phone') || s.includes('battery') || s.includes('charge') || s.includes('dead') || s.includes('lost phone')) {
     result = {
@@ -775,8 +775,8 @@ app.post('/api/ai/emergency-solve', (req, res) => {
       ],
       itineraryReroute: `Maintain schedule without panic. Squad follows predefined timeline while teammate recharges for 20 minutes at next cafe checkpoint.`,
       localSafetyResource: `Convenience Store Powerbank Kiosks & Mall Concierge`,
-      hotline: '🔋 Mobile Powerbank Sharing Station',
-      whatsappBroadcastTemplate: `🔋 [Squad Quick Notice]\nMy phone battery is under 3%! I'm grabbing a powerbank at a nearby convenience store. If I go offline, let's meet at our scheduled 6:00 PM dinner venue!`
+      hotline: 'Mobile Powerbank Sharing Station',
+      whatsappBroadcastTemplate: `[Squad Quick Notice]\nMy phone battery is under 3%! I'm grabbing a powerbank at a nearby convenience store. If I go offline, let's meet at our scheduled 6:00 PM dinner venue!`
     }
   } else if (s.includes('rain') || s.includes('storm') || s.includes('thunder') || s.includes('weather') || s.includes('flood')) {
     result = {
@@ -791,10 +791,10 @@ app.post('/api/ai/emergency-solve', (req, res) => {
         `Book Grab e-hailing from underground / sheltered pickup lobby to avoid wet curbside waiting.`,
         `Swap outdoor nature / viewpoint tickets for indoor museum, art gallery, or royal palace exhibitions.`
       ],
-      itineraryReroute: `Activate Plan B Indoor Trail: 10:00 AM Arts & Heritage Gallery ➔ 01:00 PM Covered Air-Conditioned Food Arcade ➔ 03:30 PM Aquarium & Discovery Center.`,
+      itineraryReroute: `Activate Plan B Indoor Trail: 10:00 AM Arts & Heritage Gallery -> 01:00 PM Covered Air-Conditioned Food Arcade -> 03:30 PM Aquarium & Discovery Center.`,
       localSafetyResource: `${city} Weather Bureau & Sheltered Transit Network`,
-      hotline: '🌧️ Real-Time Radar Weather Shield Active',
-      whatsappBroadcastTemplate: `🌧️ [Squad Plan B Alert]\nHeavy rain incoming in ${city}! Activating Plan B: we're moving all activities indoors to the covered Heritage Mall & Museum. Staying 100% dry and comfortable!`
+      hotline: 'Real-Time Radar Weather Shield Active',
+      whatsappBroadcastTemplate: `[Squad Plan B Alert]\nHeavy rain incoming in ${city}! Activating Plan B: we're moving all activities indoors to the covered Heritage Mall & Museum. Staying 100% dry and comfortable!`
     }
   } else if (s.includes('flight') || s.includes('delay') || s.includes('traffic') || s.includes('jam') || s.includes('missed') || s.includes('train') || s.includes('late')) {
     result = {
@@ -811,8 +811,8 @@ app.post('/api/ai/emergency-solve', (req, res) => {
       ],
       itineraryReroute: `Compress Day Schedule: Drop the secondary museum stop, combine check-in and refresh into 30 mins, and head straight to prime sunset dinner at 06:30 PM.`,
       localSafetyResource: `${city} Airport Express & Rapid Transit Customer Service`,
-      hotline: '✈️ Airline & Rail Transit Dispatch',
-      whatsappBroadcastTemplate: `⏰ [Squad Transit Update]\nEncountering a transit delay of approx 1.5 hours in ${city}. Adjusting dinner booking to 7:30 PM. Don't rush, we will catch the best evening night market together!`
+      hotline: 'Airline & Rail Transit Dispatch',
+      whatsappBroadcastTemplate: `[Squad Transit Update]\nEncountering a transit delay of approx 1.5 hours in ${city}. Adjusting dinner booking to 7:30 PM. Don't rush, we will catch the best evening night market together!`
     }
   } else {
     // Dynamic NLP custom resolution for any other situation
@@ -830,8 +830,8 @@ app.post('/api/ai/emergency-solve', (req, res) => {
       ],
       itineraryReroute: `Auto-pause current day schedule by 60 minutes. Soften walking pace and transition to low-stress evening activity in ${city}.`,
       localSafetyResource: `${city} Tourist Information Center & Concierge Support`,
-      hotline: '📞 999 (National Emergency Services)',
-      whatsappBroadcastTemplate: `💡 [Squad Contingency Notice]\nHandling a quick situation ("${situation}") in ${city}. Schedule adjusted smoothly by 45 mins. All good, proceeding with backup plan!`
+      hotline: '999 (National Emergency Services)',
+      whatsappBroadcastTemplate: ` [Squad Contingency Notice]\nHandling a quick situation ("${situation}") in ${city}. Schedule adjusted smoothly by 45 mins. All good, proceeding with backup plan!`
     }
   }
 
@@ -1194,7 +1194,7 @@ app.post('/api/ai/plan', async (req, res) => {
         morning: {
           time: '09:00 - 12:00',
           title: attr1.name,
-          rating: `${(attr1.rating || 4.8).toFixed(1)}★ (${(attr1.reviewsCount || 15000).toLocaleString()} Google reviews)`,
+          rating: `${(attr1.rating || 4.8).toFixed(1)} (${(attr1.reviewsCount || 15000).toLocaleString()} Google reviews)`,
           location: attr1.address || cityName,
           description: attr1.description || `Explore ${attr1.name} with insider guided highlights.`
         },
@@ -1208,7 +1208,7 @@ app.post('/api/ai/plan', async (req, res) => {
         afternoon: {
           time: '14:30 - 17:30',
           title: attr2.name,
-          rating: `${(attr2.rating || 4.7).toFixed(1)}★ (${(attr2.reviewsCount || 12000).toLocaleString()} Google reviews)`,
+          rating: `${(attr2.rating || 4.7).toFixed(1)} (${(attr2.reviewsCount || 12000).toLocaleString()} Google reviews)`,
           location: attr2.address || cityName,
           description: attr2.description || `Immerse in ${attr2.name}, ideal for afternoon sightseeing.`
         },
@@ -1231,7 +1231,7 @@ app.post('/api/ai/plan', async (req, res) => {
 
     const plan = {
       tripTitle: `${numDays}-Day Curated ${destMatch.city || cityName} Experience`,
-      summary: `Exclusively tailored for ${travellers} travellers (${partyLabel}) in ${destMatch.city || cityName}. Designed around verified Google Review landmarks (4.7★+), signature gastronomy, and balanced pacing.`,
+      summary: `Exclusively tailored for ${travellers} travellers (${partyLabel}) in ${destMatch.city || cityName}. Designed around verified Google Review landmarks (4.7+), signature gastronomy, and balanced pacing.`,
       partyType: partyLabel,
       targetBudget: `RM ${Number(budgetAmount).toLocaleString()}`,
       totalEstimatedCost: `RM ${totalEstimated.toLocaleString()}`,
@@ -1334,7 +1334,7 @@ Instructions:
 2. If the user explicitly asks to add, change, swap, or update their itinerary:
    - Modify ONLY the specific day and slot requested.
    - Set "updatedPlan": <the full modified plan JSON>.
-   - Set "changesNotice": "✨ Day X slot updated to Place Name!".
+   - Set "changesNotice": "Day X slot updated to Place Name!".
    - Explain what was changed in "reply".
 
 Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do not include markdown fences.`
@@ -1383,20 +1383,20 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
     if (isGreeting) {
       const city = destMatch.city
       const greetings = [
-        `Hello! 👋 I'm your PlanTrip travel assistant for ${city}. How can I help you today? I can recommend top dining spots, iconic sights, train routes, or adjust your daily schedule.`,
-        `Hi there! 😊 Ready to explore ${city}? You can ask me for dinner ideas, top landmarks, transit directions, or tell me to customize any day of your trip. What would you like to know?`
+        `Hello! I'm your PlanTrip travel assistant for ${city}. How can I help you today? I can recommend top dining spots, iconic sights, train routes, or adjust your daily schedule.`,
+        `Hi there!  Ready to explore ${city}? You can ask me for dinner ideas, top landmarks, transit directions, or tell me to customize any day of your trip. What would you like to know?`
       ]
       reply = greetings[Math.floor(Math.random() * greetings.length)]
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
     if (isGratitude) {
-      reply = `You're very welcome! 😊 Let me know if you need any more recommendations for ${destMatch.city} — from great food spots to easy transit directions!`
+      reply = `You're very welcome!  Let me know if you need any more recommendations for ${destMatch.city} — from great food spots to easy transit directions!`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
     if (isFarewell) {
-      reply = `Have a wonderful time in ${destMatch.city}! Feel free to message me anytime if your plans change or if you need a quick tip on the road. Safe travels! ✈️`
+      reply = `Have a wonderful time in ${destMatch.city}! Feel free to message me anytime if your plans change or if you need a quick tip on the road. Safe travels! `
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1431,9 +1431,9 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
         const rating = (r.rating || 4.8).toFixed(1)
         const reviews = r.reviewsCount ? `${r.reviewsCount.toLocaleString()} reviews` : 'Google verified'
         const dish = r.description ? r.description.split('.')[0] : 'Chef signature special'
-        reply += `${idx + 1}. **${r.name}** (★ ${rating} · ${reviews})\n   • *Cuisine*: ${r.cuisine || 'Authentic Local Dining'} (${r.priceTier || '$$'})\n   • *Must-Try*: ${dish}\n\n`
+        reply += `${idx + 1}. **${r.name}** ( ${rating} · ${reviews})\n   • *Cuisine*: ${r.cuisine || 'Authentic Local Dining'} (${r.priceTier || '$$'})\n   • *Must-Try*: ${dish}\n\n`
       })
-      reply += `👉 *Want to add any of these to your schedule? Just say:* \`Add ${topSpots[0].name} to Day 2 dinner\`!`
+      reply += `*Want to add any of these to your schedule? Just say:* \`Add ${topSpots[0].name} to Day 2 dinner\`!`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1460,9 +1460,9 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
         const rating = (a.rating || 4.8).toFixed(1)
         const reviews = a.reviewsCount ? `${a.reviewsCount.toLocaleString()} reviews` : 'Google verified'
         const desc = a.description ? a.description.split('.')[0] : 'Iconic landmark highlights'
-        reply += `${idx + 1}. **${a.name}** (★ ${rating} · ${reviews})\n   • *Category*: ${a.category || 'Sightseeing & Culture'}\n   • *Highlights*: ${desc}\n\n`
+        reply += `${idx + 1}. **${a.name}** ( ${rating} · ${reviews})\n   • *Category*: ${a.category || 'Sightseeing & Culture'}\n   • *Highlights*: ${desc}\n\n`
       })
-      reply += `👉 *Want to add any of these to your trip? Just tell me:* \`Add ${topAttrs[0].name} to Day 1 morning\`!`
+      reply += `*Want to add any of these to your trip? Just tell me:* \`Add ${topAttrs[0].name} to Day 1 morning\`!`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1474,13 +1474,13 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
 
     if (isTransitInquiry) {
       if (lower.includes('batu caves')) {
-        reply = `🚆 **Getting to Batu Caves from Central KL (KL Sentral)**:\n• **Best Route**: Take the direct **KTM Komuter train** (Batu Caves Line) from Platform 3 at KL Sentral.\n• **Travel Time**: ~30 minutes straight to Batu Caves station (right at the entrance gates).\n• **Fare**: RM 2.40 using your Touch 'n Go card.\n• **Tip**: Climb the famous 272 rainbow steps in the morning to beat the midday heat!`
+        reply = ` **Getting to Batu Caves from Central KL (KL Sentral)**:\n• **Best Route**: Take the direct **KTM Komuter train** (Batu Caves Line) from Platform 3 at KL Sentral.\n• **Travel Time**: ~30 minutes straight to Batu Caves station (right at the entrance gates).\n• **Fare**: RM 2.40 using your Touch 'n Go card.\n• **Tip**: Climb the famous 272 rainbow steps in the morning to beat the midday heat!`
       } else if (lower.includes('klcc') || lower.includes('petronas') || lower.includes('twin towers')) {
-        reply = `🚆 **Getting to Petronas Twin Towers & Suria KLCC**:\n• **Best Route**: Take the **Kelana Jaya LRT (Line 5)** directly to **KLCC Station (KJ10)**.\n• **Underground Connection**: Walk directly through the air-conditioned tunnel into Suria KLCC and KLCC Park.\n• **Fare**: ~RM 1.60 - RM 2.40 depending on your starting station.`
+        reply = ` **Getting to Petronas Twin Towers & Suria KLCC**:\n• **Best Route**: Take the **Kelana Jaya LRT (Line 5)** directly to **KLCC Station (KJ10)**.\n• **Underground Connection**: Walk directly through the air-conditioned tunnel into Suria KLCC and KLCC Park.\n• **Fare**: ~RM 1.60 - RM 2.40 depending on your starting station.`
       } else if (lower.includes('trx') || lower.includes('exchange')) {
-        reply = `🚆 **Getting to The Exchange TRX**:\n• **Best Route**: Take either the **MRT Kajang Line (Line 9)** or **MRT Putrajaya Line (Line 12)** directly to **Tun Razak Exchange (TRX) Station**.\n• **Entrance**: Take Exit A or B directly into the mall concourse and 10-acre rooftop City Park.\n• **Fare**: ~RM 1.50 - RM 2.50 across central KL.`
+        reply = ` **Getting to The Exchange TRX**:\n• **Best Route**: Take either the **MRT Kajang Line (Line 9)** or **MRT Putrajaya Line (Line 12)** directly to **Tun Razak Exchange (TRX) Station**.\n• **Entrance**: Take Exit A or B directly into the mall concourse and 10-acre rooftop City Park.\n• **Fare**: ~RM 1.50 - RM 2.50 across central KL.`
       } else {
-        reply = `🚆 **Public Transit in ${destMatch.city}**:\n• **Rail Lines**: Connected by LRT (Lines 3, 4, 5), MRT (Lines 9, 12), and the KL Monorail (Line 8).\n• **Payment**: Conveniently cashless using a **Touch 'n Go** card or MyRapid tokens. Fares range from RM 1.20 to RM 4.00.\n• **Ride-Hailing**: The **Grab** app is widely available and affordable for group travel.\n\nNeed directions to a specific place? Just ask e.g. *'How to get to Batu Caves?'*!`
+        reply = ` **Public Transit in ${destMatch.city}**:\n• **Rail Lines**: Connected by LRT (Lines 3, 4, 5), MRT (Lines 9, 12), and the KL Monorail (Line 8).\n• **Payment**: Conveniently cashless using a **Touch 'n Go** card or MyRapid tokens. Fares range from RM 1.20 to RM 4.00.\n• **Ride-Hailing**: The **Grab** app is widely available and affordable for group travel.\n\nNeed directions to a specific place? Just ask e.g. *'How to get to Batu Caves?'*!`
       }
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
@@ -1491,7 +1491,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
     )
 
     if (isWeatherInquiry) {
-      reply = `☀️ **Weather in ${destMatch.city}**:\n• **Climate**: Warm and tropical year-round (~28°C to 33°C).\n• **Pattern**: Mornings are typically sunny. Brief afternoon tropical downpours are common between 3:00 PM and 5:30 PM.\n• **Tip**: Always keep a compact umbrella handy. If rain starts, ask me to *'Plan a rainy afternoon'* to swap to indoor spots like Aquaria KLCC or Petrosains!`
+      reply = ` **Weather in ${destMatch.city}**:\n• **Climate**: Warm and tropical year-round (~28°C to 33°C).\n• **Pattern**: Mornings are typically sunny. Brief afternoon tropical downpours are common between 3:00 PM and 5:30 PM.\n• **Tip**: Always keep a compact umbrella handy. If rain starts, ask me to *'Plan a rainy afternoon'* to swap to indoor spots like Aquaria KLCC or Petrosains!`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1501,7 +1501,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
     )
 
     if (isBudgetInquiry) {
-      reply = `💡 **Practical Money & Safety Tips for ${destMatch.city}**:\n• **Currency**: Malaysian Ringgit (MYR / RM).\n• **Cards & Cash**: Credit cards and Touch 'n Go / DuitNow are widely accepted in malls and cafes. Hawker stalls prefer cash.\n• **Tipping**: Tipping is not customary in Malaysia. Most restaurants include a 10% service charge and 6% SST.\n• **Safety**: Malaysia is very safe for solo and group travelers. Keep an eye on bags in crowded night markets.\n• **Drinking Water**: Bottled or filtered water is recommended over tap water.`
+      reply = ` **Practical Money & Safety Tips for ${destMatch.city}**:\n• **Currency**: Malaysian Ringgit (MYR / RM).\n• **Cards & Cash**: Credit cards and Touch 'n Go / DuitNow are widely accepted in malls and cafes. Hawker stalls prefer cash.\n• **Tipping**: Tipping is not customary in Malaysia. Most restaurants include a 10% service charge and 6% SST.\n• **Safety**: Malaysia is very safe for solo and group travelers. Keep an eye on bags in crowded night markets.\n• **Drinking Water**: Bottled or filtered water is recommended over tap water.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1510,7 +1510,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(pack|packing|clothes|clothing|wear|dress code|attire|shoes|what to bring|plug|adapter)\b/i.test(lower)
     )
     if (isPackingInquiry) {
-      reply = `🧳 **What to Pack for ${destMatch.city}**:\n• **Clothing**: Lightweight, breathable cotton or linen for warm tropical weather (~30°C).\n• **Rain Gear**: A compact travel umbrella or lightweight rain jacket for quick afternoon showers.\n• **Footwear**: Comfortable walking shoes (crucial if climbing the 272 steps at Batu Caves!).\n• **Temple & Mosque Etiquette**: Long pants or skirts covering knees, and shirts covering shoulders. Scarves/robes are usually provided free at major mosques.\n• **Power Plug**: Malaysia uses UK-standard **Type G** 3-pin rectangular plugs (240V, 50Hz).\n• **Indoor Layer**: A light sweater or cardigan because shopping malls and trains have icy air conditioning!`
+      reply = ` **What to Pack for ${destMatch.city}**:\n• **Clothing**: Lightweight, breathable cotton or linen for warm tropical weather (~30°C).\n• **Rain Gear**: A compact travel umbrella or lightweight rain jacket for quick afternoon showers.\n• **Footwear**: Comfortable walking shoes (crucial if climbing the 272 steps at Batu Caves!).\n• **Temple & Mosque Etiquette**: Long pants or skirts covering knees, and shirts covering shoulders. Scarves/robes are usually provided free at major mosques.\n• **Power Plug**: Malaysia uses UK-standard **Type G** 3-pin rectangular plugs (240V, 50Hz).\n• **Indoor Layer**: A light sweater or cardigan because shopping malls and trains have icy air conditioning!`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1519,7 +1519,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(shop|shopping|souvenir|souvenirs|mall|malls|buy|buying|market|central market|pasar seni|batik)\b/i.test(lower)
     )
     if (isShoppingInquiry) {
-      reply = `🛍️ **Best Shopping & Souvenirs in ${destMatch.city}**:\n• **Authentic Souvenirs & Crafts**: **Central Market (Pasar Seni)** & Kasturi Walk — famous for handmade Malaysian batik shirts, pewter crafts (Royal Selangor), songket fabrics, and wooden carvings.\n• **Luxury & Lifestyle**: **Pavilion Kuala Lumpur** (Bukit Bintang) & **The Exchange TRX** (luxury designer boutiques and 10-acre rooftop park).\n• **Bargains & Street Fashion**: **Petaling Street Chinatown** & Sungei Wang Plaza for street fashion, accessories, and sunglasses.\n• **Electronics & Gadgets**: **Plaza Low Yat** — Malaysia's premier IT and tech shopping center.\n• **Local Food Gifts**: Beryl's Malaysian chocolates, OldTown white coffee sachets, and Dodol sweets from local supermarkets.`
+      reply = `**Best Shopping & Souvenirs in ${destMatch.city}**:\n• **Authentic Souvenirs & Crafts**: **Central Market (Pasar Seni)** & Kasturi Walk — famous for handmade Malaysian batik shirts, pewter crafts (Royal Selangor), songket fabrics, and wooden carvings.\n• **Luxury & Lifestyle**: **Pavilion Kuala Lumpur** (Bukit Bintang) & **The Exchange TRX** (luxury designer boutiques and 10-acre rooftop park).\n• **Bargains & Street Fashion**: **Petaling Street Chinatown** & Sungei Wang Plaza for street fashion, accessories, and sunglasses.\n• **Electronics & Gadgets**: **Plaza Low Yat** — Malaysia's premier IT and tech shopping center.\n• **Local Food Gifts**: Beryl's Malaysian chocolates, OldTown white coffee sachets, and Dodol sweets from local supermarkets.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1528,7 +1528,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(photo|photos|photography|instagram|insta|instagrammable|pictures|viewpoint|golden hour|shots|camera|best view)\b/i.test(lower)
     )
     if (isPhotoInquiry) {
-      reply = `📸 **Top Photography & Instagram Spots in ${destMatch.city}**:\n1. **Petronas Twin Towers at Blue Hour (7:15 PM)**: Stand at the rim of the KLCC Lake Symphony fountain facing upward with a wide-angle lens for the glowing reflection.\n2. **Batu Caves Rainbow Steps (8:00 AM)**: Arrive early in the morning before crowds for vibrant shots ascending the 272 multicolored steps.\n3. **Kwai Chai Hong (Chinatown)**: A restored 1960s alleyway featuring nostalgic heritage murals, red lantern archways, and a wooden bridge.\n4. **The Exchange TRX Rooftop City Park**: Futuristic glass architecture framed against green rooftop lawns and the KL skyline.\n5. **Thean Hou Temple at Dusk**: Thousands of glowing red and yellow paper lanterns glowing against ornate tiered Chinese pagodas.`
+      reply = `**Top Photography & Instagram Spots in ${destMatch.city}**:\n1. **Petronas Twin Towers at Blue Hour (7:15 PM)**: Stand at the rim of the KLCC Lake Symphony fountain facing upward with a wide-angle lens for the glowing reflection.\n2. **Batu Caves Rainbow Steps (8:00 AM)**: Arrive early in the morning before crowds for vibrant shots ascending the 272 multicolored steps.\n3. **Kwai Chai Hong (Chinatown)**: A restored 1960s alleyway featuring nostalgic heritage murals, red lantern archways, and a wooden bridge.\n4. **The Exchange TRX Rooftop City Park**: Futuristic glass architecture framed against green rooftop lawns and the KL skyline.\n5. **Thean Hou Temple at Dusk**: Thousands of glowing red and yellow paper lanterns glowing against ornate tiered Chinese pagodas.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1537,7 +1537,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(nightlife|night life|bars?|rooftop|pubs?|club|clubs|evening|cocktail|cocktails|drinks?)\b/i.test(lower)
     )
     if (isNightlifeInquiry) {
-      reply = `🍸 **Nightlife & Rooftop Bars in ${destMatch.city}**:\n• **Heli Lounge Bar (Menara KH)**: A real operational helicopter landing pad converted into an open-air rooftop bar with completely unobstructed 360° sunset views over the entire city skyline.\n• **Jalan Alor Night Market**: Open until 3:00 AM for buzzing outdoor street food, cold tiger beer, satay skewers, and grilled seafood.\n• **Changkat Bukit Bintang**: Vibrant pedestrian street packed with Irish pubs, live music bars, and cocktail lounges.\n• **PS150 (Chinatown)**: Famous hidden speakeasy cocktail bar disguised behind a vintage stationery toy shopfront on Petaling Street.`
+      reply = ` **Nightlife & Rooftop Bars in ${destMatch.city}**:\n• **Heli Lounge Bar (Menara KH)**: A real operational helicopter landing pad converted into an open-air rooftop bar with completely unobstructed 360° sunset views over the entire city skyline.\n• **Jalan Alor Night Market**: Open until 3:00 AM for buzzing outdoor street food, cold tiger beer, satay skewers, and grilled seafood.\n• **Changkat Bukit Bintang**: Vibrant pedestrian street packed with Irish pubs, live music bars, and cocktail lounges.\n• **PS150 (Chinatown)**: Famous hidden speakeasy cocktail bar disguised behind a vintage stationery toy shopfront on Petaling Street.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1546,7 +1546,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(language|phrases|words|malay|bahasa|say|how to say|speak|slang)\b/i.test(lower)
     )
     if (isLanguageInquiry) {
-      reply = `🗣️ **Useful Local Phrases in Malaysia (Bahasa Melayu)**:\n• **Terima kasih** (*te-ree-mah kah-seh*) = Thank you\n• **Sama-sama** = You're welcome\n• **Berapa ini?** (*be-rah-pah ee-nee*) = How much is this?\n• **Tandas di mana?** (*tahn-dahs dee mah-nah*) = Where is the restroom?\n• **Kurang manis** (*koo-rahng mah-nees*) = Less sweet (vital when ordering local tea/coffee!)\n• **Satu lagi** = One more please\n• **Sedap!** (*seh-dahp*) = Delicious!\n\n💡 *Tip: English is widely and fluently spoken throughout Kuala Lumpur, in hotels, malls, transit stations, and restaurants!*`
+      reply = ` **Useful Local Phrases in Malaysia (Bahasa Melayu)**:\n• **Terima kasih** (*te-ree-mah kah-seh*) = Thank you\n• **Sama-sama** = You're welcome\n• **Berapa ini?** (*be-rah-pah ee-nee*) = How much is this?\n• **Tandas di mana?** (*tahn-dahs dee mah-nah*) = Where is the restroom?\n• **Kurang manis** (*koo-rahng mah-nees*) = Less sweet (vital when ordering local tea/coffee!)\n• **Satu lagi** = One more please\n• **Sedap!** (*seh-dahp*) = Delicious!\n\n *Tip: English is widely and fluently spoken throughout Kuala Lumpur, in hotels, malls, transit stations, and restaurants!*`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1555,7 +1555,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(hidden|gem|gems|secret|off the beaten|unique|unusual)\b/i.test(lower)
     )
     if (isHiddenGemsInquiry) {
-      reply = `💎 **Hidden Gems & Secret Spots in ${destMatch.city}**:\n1. **KL Forest Eco Park (Bukit Nanas)**: One of Malaysia's oldest permanent forest reserves right in the city center, featuring a canopy skywalk bridge suspended among rainforest trees.\n2. **REXKL**: A historic 1947 cinema transformed into an arts, indie bookstore, and trendy artisan dining collective.\n3. **Sin Sze Si Ya Temple**: Hidden down a narrow alleyway near Central Market, this is KL's oldest Taoist temple (built in 1864).\n4. **Kwai Chai Hong**: A picturesque heritage conservation laneway with interactive augmented-reality murals.\n5. **Taman Tugu**: Lush hiking trails across 66 acres of conserved jungle right behind the National Monument.`
+      reply = `**Hidden Gems & Secret Spots in ${destMatch.city}**:\n1. **KL Forest Eco Park (Bukit Nanas)**: One of Malaysia's oldest permanent forest reserves right in the city center, featuring a canopy skywalk bridge suspended among rainforest trees.\n2. **REXKL**: A historic 1947 cinema transformed into an arts, indie bookstore, and trendy artisan dining collective.\n3. **Sin Sze Si Ya Temple**: Hidden down a narrow alleyway near Central Market, this is KL's oldest Taoist temple (built in 1864).\n4. **Kwai Chai Hong**: A picturesque heritage conservation laneway with interactive augmented-reality murals.\n5. **Taman Tugu**: Lush hiking trails across 66 acres of conserved jungle right behind the National Monument.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1564,7 +1564,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(family|kids|children|child|toddler|baby|stroller)\b/i.test(lower)
     )
     if (isFamilyInquiry) {
-      reply = `👨‍👩‍👧‍👦 **Family & Kid-Friendly Highlights in ${destMatch.city}**:\n1. **Petrosains Discovery Centre (Suria KLCC)**: Highly engaging, interactive science and tech museum with earthquake simulators and oil rig rides.\n2. **Aquaria KLCC**: World-class aquarium with a 90-meter underwater tunnel where kids can watch sharks, giant stingrays, and sea turtles.\n3. **KLCC Park Wading Pool & Playground**: A massive, completely **FREE** public adventure playground with shaded climbing structures and a shallow wading pool for children.\n4. **Sunway Lagoon Theme Park**: Mega waterpark, wildlife animal petting zoo, and amusement rides located just 25 minutes from the city center.`
+      reply = `**Family & Kid-Friendly Highlights in ${destMatch.city}**:\n1. **Petrosains Discovery Centre (Suria KLCC)**: Highly engaging, interactive science and tech museum with earthquake simulators and oil rig rides.\n2. **Aquaria KLCC**: World-class aquarium with a 90-meter underwater tunnel where kids can watch sharks, giant stingrays, and sea turtles.\n3. **KLCC Park Wading Pool & Playground**: A massive, completely **FREE** public adventure playground with shaded climbing structures and a shallow wading pool for children.\n4. **Sunway Lagoon Theme Park**: Mega waterpark, wildlife animal petting zoo, and amusement rides located just 25 minutes from the city center.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1573,7 +1573,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(luggage|baggage|bags?|storage|locker|lockers|late flight|check out|checkout|store bag)\b/i.test(lower)
     )
     if (isLuggageInquiry) {
-      reply = `🧳 **Luggage Storage & Late Flight Tips in ${destMatch.city}**:\n• **KL Sentral Transit Lockers**: Automated lockers and left-luggage counters located on Level 1 (around RM 10 to RM 30 per day depending on size).\n• **In-Town Flight Check-In**: If flying with Malaysia Airlines or Batik Air, you can check your luggage and print boarding passes directly at KL Sentral station before taking the KLIA Ekspres train!\n• **Mall Concierges**: Suria KLCC and Pavilion KL offer bag drop facilities for shoppers.\n• **Luggage Apps**: Services like *Bounce* and *Stasher* have dozens of verified partner hotels and shops in Bukit Bintang for flexible hourly/daily luggage storage.`
+      reply = ` **Luggage Storage & Late Flight Tips in ${destMatch.city}**:\n• **KL Sentral Transit Lockers**: Automated lockers and left-luggage counters located on Level 1 (around RM 10 to RM 30 per day depending on size).\n• **In-Town Flight Check-In**: If flying with Malaysia Airlines or Batik Air, you can check your luggage and print boarding passes directly at KL Sentral station before taking the KLIA Ekspres train!\n• **Mall Concierges**: Suria KLCC and Pavilion KL offer bag drop facilities for shoppers.\n• **Luggage Apps**: Services like *Bounce* and *Stasher* have dozens of verified partner hotels and shops in Bukit Bintang for flexible hourly/daily luggage storage.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1582,7 +1582,7 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
       /\b(day trip|day trips|excursion|nearby|melaka|malacca|genting|putrajaya|cameron)\b/i.test(lower)
     )
     if (isDayTripInquiry) {
-      reply = `🚗 **Top Day Trips from ${destMatch.city}**:\n1. **Batu Caves** (30 mins via KTM Komuter): Iconic limestone caves, golden statue, and 272 steps.\n2. **Putrajaya** (20 mins via KLIA Transit): Malaysia's federal administrative center, famous for the stunning pink Putra Mosque and scenic lake cruises.\n3. **Genting Highlands** (45 mins drive + Awana SkyWay Cable Car): Cool mountain getaway with indoor theme parks, shopping outlets, and casinos.\n4. **Historical Melaka (Malacca)** (2 hours by bus/car): UNESCO World Heritage town featuring Dutch Red Square, Jonker Street night market, and riverboat cruises.`
+      reply = `**Top Day Trips from ${destMatch.city}**:\n1. **Batu Caves** (30 mins via KTM Komuter): Iconic limestone caves, golden statue, and 272 steps.\n2. **Putrajaya** (20 mins via KLIA Transit): Malaysia's federal administrative center, famous for the stunning pink Putra Mosque and scenic lake cruises.\n3. **Genting Highlands** (45 mins drive + Awana SkyWay Cable Car): Cool mountain getaway with indoor theme parks, shopping outlets, and casinos.\n4. **Historical Melaka (Malacca)** (2 hours by bus/car): UNESCO World Heritage town featuring Dutch Red Square, Jonker Street night market, and riverboat cruises.`
       return res.json({ success: true, reply, updatedPlan: null, changesNotice: '' })
     }
 
@@ -1620,15 +1620,15 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
         targetDay.afternoon = {
           time: '14:30 - 17:30 (Covered Indoor)',
           title: indoorSpot.name,
-          rating: `${(indoorSpot.rating || 4.7).toFixed(1)}★ (${(indoorSpot.reviewsCount || 18000).toLocaleString()} reviews)`,
+          rating: `${(indoorSpot.rating || 4.7).toFixed(1)} (${(indoorSpot.reviewsCount || 18000).toLocaleString()} reviews)`,
           location: indoorSpot.address || destMatch.city,
           description: indoorSpot.description || `Sheltered indoor attraction safely protected from tropical rain.`,
           aiRefined: true
         }
         targetDay.aiRefined = true
         updatedPlan.aiRefined = true
-        changesNotice = `✨ Day ${targetDayIndex + 1} afternoon updated to indoor: ${indoorSpot.name}!`
-        reply = `Stay dry! 🌧️ I've updated Day ${targetDayIndex + 1}'s afternoon to **${indoorSpot.name}** (${(indoorSpot.rating || 4.7).toFixed(1)}★), a wonderful covered indoor destination. Your timetable and map have refreshed in real time!`
+        changesNotice = `Day ${targetDayIndex + 1} afternoon updated to indoor: ${indoorSpot.name}!`
+        reply = `Stay dry! I've updated Day ${targetDayIndex + 1}'s afternoon to **${indoorSpot.name}** (${(indoorSpot.rating || 4.7).toFixed(1)}), a wonderful covered indoor destination. Your timetable and map have refreshed in real time!`
         return res.json({ success: true, reply, updatedPlan, changesNotice })
       }
 
@@ -1653,8 +1653,8 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
         }
         targetDay.aiRefined = true
         updatedPlan.aiRefined = true
-        changesNotice = `✨ Day ${targetDayIndex + 1} ${slotKey} updated to ${mealToUpdate.name} (${(mealToUpdate.rating || 4.8).toFixed(1)}★)!`
-        reply = `Done! 🍽️ I've updated Day ${targetDayIndex + 1}'s ${slotKey} to **${mealToUpdate.name}** (${(mealToUpdate.rating || 4.8).toFixed(1)}★). Your schedule timetable and map have refreshed in real time!`
+        changesNotice = `Day ${targetDayIndex + 1} ${slotKey} updated to ${mealToUpdate.name} (${(mealToUpdate.rating || 4.8).toFixed(1)})!`
+        reply = `Done! I've updated Day ${targetDayIndex + 1}'s ${slotKey} to **${mealToUpdate.name}** (${(mealToUpdate.rating || 4.8).toFixed(1)}). Your schedule timetable and map have refreshed in real time!`
         return res.json({ success: true, reply, updatedPlan, changesNotice })
       }
 
@@ -1672,15 +1672,15 @@ Return ONLY valid JSON with keys: "reply", "updatedPlan", "changesNotice". Do no
         targetDay[slotKey] = {
           time: slotKey === 'morning' ? '09:00 - 12:00' : '14:30 - 17:30',
           title: attrToUpdate.name,
-          rating: `${(attrToUpdate.rating || 4.8).toFixed(1)}★ (${(attrToUpdate.reviewsCount || 15000).toLocaleString()} reviews)`,
+          rating: `${(attrToUpdate.rating || 4.8).toFixed(1)} (${(attrToUpdate.reviewsCount || 15000).toLocaleString()} reviews)`,
           location: attrToUpdate.address || destMatch.city,
           description: attrToUpdate.description || `Explore ${attrToUpdate.name} with insider highlights.`,
           aiRefined: true
         }
         targetDay.aiRefined = true
         updatedPlan.aiRefined = true
-        changesNotice = `✨ Day ${targetDayIndex + 1} ${slotKey} updated to ${attrToUpdate.name} (${(attrToUpdate.rating || 4.8).toFixed(1)}★)!`
-        reply = `Done! 📍 I've updated Day ${targetDayIndex + 1}'s ${slotKey} to **${attrToUpdate.name}** (${(attrToUpdate.rating || 4.8).toFixed(1)}★). Your Official Trip Itinerary document has refreshed in real time!`
+        changesNotice = `Day ${targetDayIndex + 1} ${slotKey} updated to ${attrToUpdate.name} (${(attrToUpdate.rating || 4.8).toFixed(1)})!`
+        reply = `Done! I've updated Day ${targetDayIndex + 1}'s ${slotKey} to **${attrToUpdate.name}** (${(attrToUpdate.rating || 4.8).toFixed(1)}). Your Official Trip Itinerary document has refreshed in real time!`
         return res.json({ success: true, reply, updatedPlan, changesNotice })
       }
     }
@@ -1718,9 +1718,9 @@ async function resolvePlaceSuggestion({ incomingMessage, sender, destination, ap
     return {
       sender: senderName,
       actionType: 'chat',
-      aiResponse: `💬 Noted! What specific attractions, activities, or food spots in ${destMatch.city} does ${senderName} have in mind?`,
+      aiResponse: `Noted! What specific attractions, activities, or food spots in ${destMatch.city} does ${senderName} have in mind?`,
       suggestedItem: null,
-      counterProposal: `💬 *Reply to ${senderName} on WhatsApp:* "Sure! Send over any specific spots, food cravings, or areas you'd like to explore in ${destMatch.city}!"`
+      counterProposal: `*Reply to ${senderName} on WhatsApp:* "Sure! Send over any specific spots, food cravings, or areas you'd like to explore in ${destMatch.city}!"`
     }
   }
 
@@ -1778,7 +1778,7 @@ async function resolvePlaceSuggestion({ incomingMessage, sender, destination, ap
       type: 'attraction',
       description: attrMatch.description || `Real landmark in ${destMatch.city} matched for ${senderName}.`
     }
-    aiResponse = `🤖 AI Captured ${senderName}'s request! I've matched real landmark "${attrMatch.name}" (${(attrMatch.rating || 4.8).toFixed(1)}★, ${attrMatch.reviewsCount?.toLocaleString() || '15,000+'} Google Reviews) in ${destMatch.city}.`
+    aiResponse = `AI Captured ${senderName}'s request! I've matched real landmark "${attrMatch.name}" (${(attrMatch.rating || 4.8).toFixed(1)}, ${attrMatch.reviewsCount?.toLocaleString() || '15,000+'} Google Reviews) in ${destMatch.city}.`
   } else if (restMatch) {
     actionType = 'add_restaurant'
     suggestedItem = {
@@ -1786,23 +1786,23 @@ async function resolvePlaceSuggestion({ incomingMessage, sender, destination, ap
       type: 'restaurant',
       description: restMatch.description || `Real Google-verified restaurant in ${destMatch.city} matched for ${senderName}.`
     }
-    aiResponse = `🤖 AI Captured ${senderName}'s request! I've matched real spot "${restMatch.name}" (${(restMatch.rating || 4.8).toFixed(1)}★, ${restMatch.reviewsCount?.toLocaleString() || '8,000+'} Google Reviews) in ${destMatch.city}.`
+    aiResponse = `AI Captured ${senderName}'s request! I've matched real spot "${restMatch.name}" (${(restMatch.rating || 4.8).toFixed(1)}, ${restMatch.reviewsCount?.toLocaleString() || '8,000+'} Google Reviews) in ${destMatch.city}.`
   } else {
     suggestedItem = null
-    aiResponse = `🤖 AI Captured ${senderName}'s message: "${rawMsg}". I've recorded this in the group chat.`
+    aiResponse = `AI Captured ${senderName}'s message: "${rawMsg}". I've recorded this in the group chat.`
   }
 
-  counterProposal = suggestedItem ? `💬 *Reply to ${senderName} on WhatsApp:*
+  counterProposal = suggestedItem ? `*Reply to ${senderName} on WhatsApp:*
 "Hey ${senderName}! Our AI trip planner just captured your suggestion (${rawMsg}). 
-✨ *Real Place Recommendation:* ${suggestedItem.name} (${(suggestedItem.rating || 4.8).toFixed(1)}★ Google Reviews)!
-Check the live Google Maps plan: http://127.0.0.1:5173"` : `💬 *Reply to ${senderName} on WhatsApp:*
+*Real Place Recommendation:* ${suggestedItem.name} (${(suggestedItem.rating || 4.8).toFixed(1)} Google Reviews)!
+Check the live Google Maps plan: http://127.0.0.1:5173"` : `*Reply to ${senderName} on WhatsApp:*
 "Hey ${senderName}! Noted on your message: '${rawMsg}'!"`
 
   if (effectiveApiKey && suggestedItem) {
     try {
       const prompt = `You are a smart AI trip planner assistant inside a WhatsApp group. 
 A friend named "${senderName}" suggested: "${rawMsg}".
-The destination is ${cityName}. The matched real place is "${suggestedItem.name}" (${suggestedItem.rating}★).
+The destination is ${cityName}. The matched real place is "${suggestedItem.name}" (${suggestedItem.rating}).
 Write a 2-sentence confirmation explaining why this real place matches their wish.`
 
       const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${effectiveApiKey}`, {
@@ -1814,7 +1814,7 @@ Write a 2-sentence confirmation explaining why this real place matches their wis
       if (geminiRes.ok) {
         const data = await geminiRes.json()
         const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
-        if (reply) aiResponse = `🤖 ${reply}`
+        if (reply) aiResponse = `${reply}`
       }
     } catch (_err) {}
   }
@@ -1843,7 +1843,7 @@ app.post('/api/whatsapp/inbound', async (req, res) => {
   const suggestionRecord = {
     id: `sug-${Date.now()}`,
     sender: result.sender,
-    avatar: '💬',
+    avatar: 'AI',
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     message: req.body.incomingMessage || '',
     aiAnalysis: result.aiResponse,
@@ -1874,17 +1874,17 @@ app.post('/api/receipt/scan', async (req, res) => {
       currency: '$',
       confidenceScore: '99.9%',
       items: [
-        { id: 'item-1', name: 'BIL-CHANTI (Chianti Classic Wine)', category: 'drink', emoji: '🍷', price: 38.00, qty: 3, total: 114.00 },
-        { id: 'item-2', name: 'KETEL ONE Vodka Special', category: 'drink', emoji: '🍸', price: 10.00, qty: 1, total: 10.00 },
-        { id: 'item-3', name: 'Grigliata Appetizer Platter', category: 'food', emoji: '🍤', price: 19.00, qty: 3, total: 57.00 },
-        { id: 'item-4', name: 'Antipasto Tradizionale', category: 'food', emoji: '🥗', price: 20.00, qty: 2, total: 40.00 },
-        { id: 'item-5', name: 'Caesar Salad with Shaved Parmesan', category: 'food', emoji: '🥗', price: 8.00, qty: 4, total: 32.00 },
-        { id: 'item-6', name: 'Orata Filet (Mediterranean Sea Bream)', category: 'food', emoji: '🐟', price: 35.00, qty: 1, total: 35.00 },
-        { id: 'item-7', name: 'Seabass Escarola', category: 'food', emoji: '🐟', price: 35.00, qty: 1, total: 35.00 },
-        { id: 'item-8', name: 'Vegetable Terrine', category: 'food', emoji: '🥦', price: 9.00, qty: 1, total: 9.00 },
-        { id: 'item-9', name: 'Lasagna Cinghiale (Wild Boar Lasagna)', category: 'food', emoji: '🍝', price: 24.00, qty: 3, total: 72.00 },
-        { id: 'item-10', name: 'Mach Pesce Spada Sicilia (Swordfish)', category: 'food', emoji: '🐟', price: 26.00, qty: 1, total: 26.00 },
-        { id: 'item-11', name: 'V. Chop Spc Valdostana (Veal Chop)', category: 'food', emoji: '🥩', price: 68.00, qty: 1, total: 68.00 }
+        { id: 'item-1', name: 'BIL-CHANTI (Chianti Classic Wine)', category: 'drink', emoji: '', price: 38.00, qty: 3, total: 114.00 },
+        { id: 'item-2', name: 'KETEL ONE Vodka Special', category: 'drink', emoji: '', price: 10.00, qty: 1, total: 10.00 },
+        { id: 'item-3', name: 'Grigliata Appetizer Platter', category: 'food', emoji: '', price: 19.00, qty: 3, total: 57.00 },
+        { id: 'item-4', name: 'Antipasto Tradizionale', category: 'food', emoji: '', price: 20.00, qty: 2, total: 40.00 },
+        { id: 'item-5', name: 'Caesar Salad with Shaved Parmesan', category: 'food', emoji: '', price: 8.00, qty: 4, total: 32.00 },
+        { id: 'item-6', name: 'Orata Filet (Mediterranean Sea Bream)', category: 'food', emoji: '', price: 35.00, qty: 1, total: 35.00 },
+        { id: 'item-7', name: 'Seabass Escarola', category: 'food', emoji: '', price: 35.00, qty: 1, total: 35.00 },
+        { id: 'item-8', name: 'Vegetable Terrine', category: 'food', emoji: '', price: 9.00, qty: 1, total: 9.00 },
+        { id: 'item-9', name: 'Lasagna Cinghiale (Wild Boar Lasagna)', category: 'food', emoji: '', price: 24.00, qty: 3, total: 72.00 },
+        { id: 'item-10', name: 'Mach Pesce Spada Sicilia (Swordfish)', category: 'food', emoji: '', price: 26.00, qty: 1, total: 26.00 },
+        { id: 'item-11', name: 'V. Chop Spc Valdostana (Veal Chop)', category: 'food', emoji: '', price: 68.00, qty: 1, total: 68.00 }
       ],
       subtotal: 499.50,
       tax: 33.74, // Sales Tax 22.44 + Liquor Tax 11.30
@@ -1898,13 +1898,13 @@ app.post('/api/receipt/scan', async (req, res) => {
       currency: 'RM',
       confidenceScore: '99.8%',
       items: [
-        { id: 'item-1', name: 'Signature Butter Prawns (L)', category: 'food', emoji: '🦐', price: 68.00, qty: 1, total: 68.00 },
-        { id: 'item-2', name: 'Grilled Sambal Stingray (M)', category: 'food', emoji: '🐟', price: 42.00, qty: 1, total: 42.00 },
-        { id: 'item-3', name: 'Chicken Satay with Peanut Sauce (20 sticks)', category: 'food', emoji: '🍢', price: 30.00, qty: 1, total: 30.00 },
-        { id: 'item-4', name: 'Signature Hokkien Charcoal Fried Mee', category: 'food', emoji: '🍜', price: 22.00, qty: 1, total: 22.00 },
-        { id: 'item-5', name: 'Fresh Tropical Coconut (Chilled)', category: 'drink', emoji: '🥥', price: 9.00, qty: 2, total: 18.00 },
-        { id: 'item-6', name: 'Fresh Sugar Cane Juice w/ Lemon', category: 'drink', emoji: '🥤', price: 7.00, qty: 2, total: 14.00 },
-        { id: 'item-7', name: 'Tiger Draught Beer (Pint)', category: 'drink', emoji: '🍺', price: 18.00, qty: 2, total: 36.00 }
+        { id: 'item-1', name: 'Signature Butter Prawns (L)', category: 'food', emoji: '', price: 68.00, qty: 1, total: 68.00 },
+        { id: 'item-2', name: 'Grilled Sambal Stingray (M)', category: 'food', emoji: '', price: 42.00, qty: 1, total: 42.00 },
+        { id: 'item-3', name: 'Chicken Satay with Peanut Sauce (20 sticks)', category: 'food', emoji: '', price: 30.00, qty: 1, total: 30.00 },
+        { id: 'item-4', name: 'Signature Hokkien Charcoal Fried Mee', category: 'food', emoji: '', price: 22.00, qty: 1, total: 22.00 },
+        { id: 'item-5', name: 'Fresh Tropical Coconut (Chilled)', category: 'drink', emoji: '', price: 9.00, qty: 2, total: 18.00 },
+        { id: 'item-6', name: 'Fresh Sugar Cane Juice w/ Lemon', category: 'drink', emoji: '', price: 7.00, qty: 2, total: 14.00 },
+        { id: 'item-7', name: 'Tiger Draught Beer (Pint)', category: 'drink', emoji: '', price: 18.00, qty: 2, total: 36.00 }
       ],
       subtotal: 230.00,
       tax: 13.80, // 6% SST
@@ -1918,12 +1918,12 @@ app.post('/api/receipt/scan', async (req, res) => {
       currency: 'RM',
       confidenceScore: '99.5%',
       items: [
-        { id: 'item-1', name: 'Avocado Sourdough Toast & Poached Egg', category: 'food', emoji: '🥑', price: 28.00, qty: 2, total: 56.00 },
-        { id: 'item-2', name: 'Truffle Mushroom Scrambled Croissant', category: 'food', emoji: '🥐', price: 32.00, qty: 1, total: 32.00 },
-        { id: 'item-3', name: 'Matcha Basque Burnt Cheesecake', category: 'food', emoji: '🍰', price: 18.00, qty: 1, total: 18.00 },
-        { id: 'item-4', name: 'Iced Spanish Latte (Oat Milk)', category: 'drink', emoji: '☕', price: 16.00, qty: 2, total: 32.00 },
-        { id: 'item-5', name: 'Single Origin Ethiopia Cold Brew', category: 'drink', emoji: '🧊', price: 15.00, qty: 1, total: 15.00 },
-        { id: 'item-6', name: 'Ceremonial Uji Dirty Matcha Latte', category: 'drink', emoji: '🍵', price: 17.00, qty: 1, total: 17.00 }
+        { id: 'item-1', name: 'Avocado Sourdough Toast & Poached Egg', category: 'food', emoji: '', price: 28.00, qty: 2, total: 56.00 },
+        { id: 'item-2', name: 'Truffle Mushroom Scrambled Croissant', category: 'food', emoji: '', price: 32.00, qty: 1, total: 32.00 },
+        { id: 'item-3', name: 'Matcha Basque Burnt Cheesecake', category: 'food', emoji: '', price: 18.00, qty: 1, total: 18.00 },
+        { id: 'item-4', name: 'Iced Spanish Latte (Oat Milk)', category: 'drink', emoji: '', price: 16.00, qty: 2, total: 32.00 },
+        { id: 'item-5', name: 'Single Origin Ethiopia Cold Brew', category: 'drink', emoji: '', price: 15.00, qty: 1, total: 15.00 },
+        { id: 'item-6', name: 'Ceremonial Uji Dirty Matcha Latte', category: 'drink', emoji: '', price: 17.00, qty: 1, total: 17.00 }
       ],
       subtotal: 170.00,
       tax: 10.20,
@@ -1937,12 +1937,12 @@ app.post('/api/receipt/scan', async (req, res) => {
       currency: 'RM',
       confidenceScore: '99.2%',
       items: [
-        { id: 'item-1', name: 'Salmon & Hamachi Sashimi Moriawase', category: 'food', emoji: '🍣', price: 78.00, qty: 1, total: 78.00 },
-        { id: 'item-2', name: 'A5 Miyazaki Wagyu Skewers (4 pcs)', category: 'food', emoji: '🥩', price: 96.00, qty: 1, total: 96.00 },
-        { id: 'item-3', name: 'Crispy Garlic Yakitori Skewer Combo', category: 'food', emoji: '🍢', price: 44.00, qty: 1, total: 44.00 },
-        { id: 'item-4', name: 'Truffle Unagi Fried Rice (Stone Pot)', category: 'food', emoji: '🍚', price: 38.00, qty: 1, total: 38.00 },
-        { id: 'item-5', name: 'Yuzu Suntory Highball Cocktail', category: 'drink', emoji: '🍹', price: 32.00, qty: 3, total: 96.00 },
-        { id: 'item-6', name: 'Chilled Japanese Genmaicha Green Tea', category: 'drink', emoji: '🍵', price: 8.00, qty: 2, total: 16.00 }
+        { id: 'item-1', name: 'Salmon & Hamachi Sashimi Moriawase', category: 'food', emoji: '', price: 78.00, qty: 1, total: 78.00 },
+        { id: 'item-2', name: 'A5 Miyazaki Wagyu Skewers (4 pcs)', category: 'food', emoji: '', price: 96.00, qty: 1, total: 96.00 },
+        { id: 'item-3', name: 'Crispy Garlic Yakitori Skewer Combo', category: 'food', emoji: '', price: 44.00, qty: 1, total: 44.00 },
+        { id: 'item-4', name: 'Truffle Unagi Fried Rice (Stone Pot)', category: 'food', emoji: '', price: 38.00, qty: 1, total: 38.00 },
+        { id: 'item-5', name: 'Yuzu Suntory Highball Cocktail', category: 'drink', emoji: '', price: 32.00, qty: 3, total: 96.00 },
+        { id: 'item-6', name: 'Chilled Japanese Genmaicha Green Tea', category: 'drink', emoji: '', price: 8.00, qty: 2, total: 16.00 }
       ],
       subtotal: 368.00,
       tax: 22.08,
@@ -1956,12 +1956,12 @@ app.post('/api/receipt/scan', async (req, res) => {
       currency: 'RM',
       confidenceScore: '98.9%',
       items: [
-        { id: 'item-1', name: 'Duck Egg Char Kway Teow w/ Giant Prawns', category: 'food', emoji: '🥢', price: 16.00, qty: 2, total: 32.00 },
-        { id: 'item-2', name: 'Crispy Penang Oyster Omelette (Or Chien)', category: 'food', emoji: '🦪', price: 24.00, qty: 1, total: 24.00 },
-        { id: 'item-3', name: 'Penang Famous Asam Laksa', category: 'food', emoji: '🍜', price: 12.00, qty: 1, total: 12.00 },
-        { id: 'item-4', name: 'Signature Durian Cendol Bowl', category: 'food', emoji: '🍧', price: 10.00, qty: 2, total: 20.00 },
-        { id: 'item-5', name: 'Iced Milo Dinosaur Special', category: 'drink', emoji: '🥤', price: 6.50, qty: 2, total: 13.00 },
-        { id: 'item-6', name: 'Fresh Calamansi Plum Juice', category: 'drink', emoji: '🍋', price: 5.00, qty: 2, total: 10.00 }
+        { id: 'item-1', name: 'Duck Egg Char Kway Teow w/ Giant Prawns', category: 'food', emoji: '', price: 16.00, qty: 2, total: 32.00 },
+        { id: 'item-2', name: 'Crispy Penang Oyster Omelette (Or Chien)', category: 'food', emoji: '', price: 24.00, qty: 1, total: 24.00 },
+        { id: 'item-3', name: 'Penang Famous Asam Laksa', category: 'food', emoji: '', price: 12.00, qty: 1, total: 12.00 },
+        { id: 'item-4', name: 'Signature Durian Cendol Bowl', category: 'food', emoji: '', price: 10.00, qty: 2, total: 20.00 },
+        { id: 'item-5', name: 'Iced Milo Dinosaur Special', category: 'drink', emoji: '', price: 6.50, qty: 2, total: 13.00 },
+        { id: 'item-6', name: 'Fresh Calamansi Plum Juice', category: 'drink', emoji: '', price: 5.00, qty: 2, total: 10.00 }
       ],
       subtotal: 111.00,
       tax: 0.00,
@@ -2093,7 +2093,7 @@ Receipt input: ${receiptText || 'Image binary attached'}`
             id: `item-${idx + 1}`,
             name,
             category: isDrink ? 'drink' : 'food',
-            emoji: isDrink ? '🍹' : '🍽️',
+            emoji: isDrink ? '' : '',
             price: Number(unitPrice.toFixed(2)),
             qty,
             total: Number(total.toFixed(2))
@@ -2268,10 +2268,10 @@ const malaysiaTransitData = {
       frequencyOffPeak: '10-15 mins',
       operatingHours: '06:00 - 23:00 (Fri/Sat: 00:00)',
       stations: [
-        { id: 'GOKL-G', name: 'Green Line: KLCC ➔ Pavilion ➔ Bukit Bintang (Loop)', interchanges: ['KJ10', 'MR06', 'KG18A'] },
-        { id: 'GOKL-P', name: 'Purple Line: Pasar Seni ➔ Menara KL Tower ➔ Pavilion', interchanges: ['KJ14', 'KG16', 'MR06'] },
-        { id: 'GOKL-R', name: 'Red Line: KL Sentral ➔ Dataran Merdeka ➔ Medan Tuanku', interchanges: ['KJ15', 'KJ13', 'MR09'] },
-        { id: 'GOKL-B', name: 'Blue Line: Medan Mara ➔ Chow Kit ➔ Bukit Bintang', interchanges: ['MR09', 'MR06'] }
+        { id: 'GOKL-G', name: 'Green Line: KLCC -> Pavilion -> Bukit Bintang (Loop)', interchanges: ['KJ10', 'MR06', 'KG18A'] },
+        { id: 'GOKL-P', name: 'Purple Line: Pasar Seni -> Menara KL Tower -> Pavilion', interchanges: ['KJ14', 'KG16', 'MR06'] },
+        { id: 'GOKL-R', name: 'Red Line: KL Sentral -> Dataran Merdeka -> Medan Tuanku', interchanges: ['KJ15', 'KJ13', 'MR09'] },
+        { id: 'GOKL-B', name: 'Blue Line: Medan Mara -> Chow Kit -> Bukit Bintang', interchanges: ['MR09', 'MR06'] }
       ]
     },
     {
@@ -2285,10 +2285,10 @@ const malaysiaTransitData = {
       frequencyOffPeak: '15-20 mins',
       operatingHours: '05:30 - 23:00',
       stations: [
-        { id: 'PEN-CAT', name: 'CAT Free City Shuttle (Weld Quay ➔ Komtar ➔ UNESCO Street Art)', interchanges: ['Fast-Ferry', 'Rapid101'] },
-        { id: 'PEN-101', name: 'Rapid 101: Weld Quay ➔ Komtar ➔ Gurney Drive ➔ Batu Ferringhi Beach', interchanges: ['CAT', '204'] },
-        { id: 'PEN-204', name: 'Rapid 204: Komtar ➔ Air Itam Market ➔ Kek Lok Si ➔ Penang Hill Funicular', interchanges: ['Penang-Hill'] },
-        { id: 'PEN-FRY', name: 'Penang Fast Ferry: Butterworth Railway ➔ Georgetown Jetty (20 mins crossing)', interchanges: ['KTM-ETS'] }
+        { id: 'PEN-CAT', name: 'CAT Free City Shuttle (Weld Quay -> Komtar -> UNESCO Street Art)', interchanges: ['Fast-Ferry', 'Rapid101'] },
+        { id: 'PEN-101', name: 'Rapid 101: Weld Quay -> Komtar -> Gurney Drive -> Batu Ferringhi Beach', interchanges: ['CAT', '204'] },
+        { id: 'PEN-204', name: 'Rapid 204: Komtar -> Air Itam Market -> Kek Lok Si -> Penang Hill Funicular', interchanges: ['Penang-Hill'] },
+        { id: 'PEN-FRY', name: 'Penang Fast Ferry: Butterworth Railway -> Georgetown Jetty (20 mins crossing)', interchanges: ['KTM-ETS'] }
       ]
     }
   ]
@@ -2445,7 +2445,7 @@ app.post('/api/transit/route', (req, res) => {
         route: {
           originName: origMatch.station.name,
           destName: destMatch.station.name,
-          line: `${origMatch.line.name} ➔ ${destMatch.line.name}`,
+          line: `${origMatch.line.name} -> ${destMatch.line.name}`,
           lineCode: `${origMatch.line.code} ⇄ ${destMatch.line.code}`,
           lineColor: origMatch.line.color,
           stopsCount: totalStops,
@@ -2564,7 +2564,7 @@ const genCode = () => {
   for (let i = 0; i < 6; i++) c += chars[Math.floor(Math.random() * chars.length)]
   return c
 }
-const JOIN_AVATARS = ['🧭', '🌊', '🏔️', '🎒', '🍜', '📸', '🛺', '🗺️', '🌅', '🎡', '🏝️', '⛺']
+const JOIN_AVATARS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M']
 
 const tripStatus = trip => {
   if (trip.locked) return 'locked'
@@ -2617,7 +2617,7 @@ app.post('/api/public-trips', (req, res) => {
     currency: (String(b.currency || 'MYR').trim().toUpperCase().slice(0, 3)) || 'MYR',
     vibe: String(b.vibe || '').trim(),
     locked: false,
-    members: [{ id: hostId, name: hostName, avatar: String(b.hostAvatar || '🧭'), isHost: true, joinedAt: now }],
+    members: [{ id: hostId, name: hostName, avatar: String(b.hostAvatar || 'H'), isHost: true, joinedAt: now }],
     proposals: [],
     expenses: [],
     createdAt: now,
@@ -2788,6 +2788,71 @@ app.delete('/api/public-trips/:id/expenses/:eid', (req, res) => {
   trip.expenses = trip.expenses.filter(e => e.id !== expense.id)
   trip.updatedAt = Date.now()
   res.json({ data: publicView(trip) })
+})
+
+// --- Authentication Store & Routes ---
+const authUsers = new Map([
+  ['traveller', {
+    id: 'u_traveller',
+    username: 'traveller',
+    password: 'password123',
+    name: 'Alex Explorer',
+    createdAt: Date.now()
+  }]
+])
+
+app.post('/api/auth/register', (req, res) => {
+  const { username, password, name } = req.body || {}
+  const cleanUsername = String(username || '').trim().toLowerCase()
+  const cleanPassword = String(password || '').trim()
+  const cleanName = String(name || '').trim() || cleanUsername
+
+  if (!cleanUsername || cleanUsername.length < 3) {
+    return res.status(400).json({ error: 'Username must be at least 3 characters long.' })
+  }
+  if (!cleanPassword || cleanPassword.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long.' })
+  }
+  if (!/^[a-zA-Z0-9_-]+$/.test(cleanUsername)) {
+    return res.status(400).json({ error: 'Username can only contain letters, numbers, underscores, and hyphens.' })
+  }
+  if (authUsers.has(cleanUsername)) {
+    return res.status(409).json({ error: 'Username already taken. Please choose another.' })
+  }
+
+  const user = {
+    id: `u_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    username: cleanUsername,
+    password: cleanPassword,
+    name: cleanName,
+    createdAt: Date.now()
+  }
+  authUsers.set(cleanUsername, user)
+
+  return res.status(201).json({
+    message: 'Account created successfully!',
+    user: { id: user.id, username: user.username, name: user.name, createdAt: user.createdAt }
+  })
+})
+
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body || {}
+  const cleanUsername = String(username || '').trim().toLowerCase()
+  const cleanPassword = String(password || '').trim()
+
+  if (!cleanUsername || !cleanPassword) {
+    return res.status(400).json({ error: 'Username and password are required.' })
+  }
+
+  const user = authUsers.get(cleanUsername)
+  if (!user || user.password !== cleanPassword) {
+    return res.status(401).json({ error: 'Invalid username or password.' })
+  }
+
+  return res.json({
+    message: 'Logged in successfully!',
+    user: { id: user.id, username: user.username, name: user.name, createdAt: user.createdAt }
+  })
 })
 
 // Production static serving vs Vite dev server

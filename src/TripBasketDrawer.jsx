@@ -169,7 +169,7 @@ export default function TripBasketDrawer({
                         </div>
                         <div className="item-rating-row">
                           <Star size={12} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
-                          <span>{(typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('★', '').trim())}★</span>
+                          <span>{(typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('', '').trim())}</span>
                           <span className="item-category-tag">{item.category || 'Sight'}</span>
                         </div>
                         <small className="item-extra">{item.priceEstimate || 'Free admission'}</small>
@@ -202,7 +202,7 @@ export default function TripBasketDrawer({
                         </div>
                         <div className="item-rating-row">
                           <Star size={12} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
-                          <span>{(typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('★', '').trim())}★</span>
+                          <span>{(typeof item.rating === 'number' ? item.rating.toFixed(1) : String(item.rating || '4.8').replace('', '').trim())}</span>
                           <span className="item-price-tier">{item.priceTier || '$$'}</span>
                           <span className="item-cuisine-tag">{item.cuisine || 'Local Gastronomy'}</span>
                         </div>

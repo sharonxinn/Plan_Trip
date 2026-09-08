@@ -34,16 +34,36 @@ export default function StepPackExport({
   const [itinerarySyncError, setItinerarySyncError] = useState('')
   const [newItemText, setNewItemText] = useState('')
 
+  // Weather emoji resolver for the weather card exception
+  const getWeatherEmoji = (icon, desc = '', cond = '') => {
+    if (icon && /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u.test(icon)) return icon
+    const text = `${desc} ${icon} ${cond}`.toLowerCase()
+    if (text.includes('thunder') || text.includes('lightning') || text.includes('storm')) return '⚡⛈️'
+    if (text.includes('rain') || text.includes('drizzle') || text.includes('shower')) return '🌧️'
+    if (text.includes('sun') || text.includes('clear')) return '☀️'
+    if (text.includes('cloud') || text.includes('overcast')) return '⛅'
+    if (text.includes('fog')) return '🌫️'
+    return '🌤️'
+  }
+
+  const formatAdvice = (advice, rainChance) => {
+    if (!advice) return ''
+    if (/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u.test(advice.trim())) return advice
+    const prefix = (rainChance > 40 || advice.toLowerCase().includes('umbrella')) ? '☂️ ' : '☀️ '
+    return prefix + advice
+  }
+
   // Live real-time weather state
   const [liveWeather, setLiveWeather] = useState({
-    temp: 31,
-    feelsLike: 34,
-    description: 'Partly Sunny & Warm',
-    icon: '',
-    rainChance: 25,
-    humidity: 75,
+    temp: 29,
+    feelsLike: 32,
+    description: 'Clear Sunny Sky',
+    icon: '☀️',
+    condition: 'clear',
+    rainChance: 78,
+    humidity: 74,
     windSpeed: 10,
-    advice: 'Mild tropical temperatures, light comfortable clothes recommended.',
+    advice: '☂️ Carry a compact umbrella & plan indoor cultural spots for afternoon rain showers.',
     source: 'Open-Meteo Satellite Feed'
   })
 
@@ -362,25 +382,45 @@ END:VCALENDAR`
             <div className="setup-card">
               <div className="card-header-row">
                 <div className="card-icon-title">
-                  <Sun className="text-amber" size={20} />
-                  <h3>{cityName} Weather Forecast</h3>
+                  <Sun size={20} style={{ color: '#F59E0B' }} />
+                  <h3 style={{ color: '#0F172A', fontWeight: 800 }}>🌤️ {cityName} Weather Forecast</h3>
                 </div>
-                <span className="badge-highlight">Live Data</span>
               </div>
-              <div className="weather-forecast-card">
-                <div className="weather-temp-row">
-                  <span className="weather-big-temp">{liveWeather.temp}°C</span>
-                  <div className="weather-desc-col">
-                    <strong>{liveWeather.icon} {liveWeather.description}</strong>
-                    <span>Rain Probability: {liveWeather.rainChance}% · Humidity: {liveWeather.humidity}%</span>
+              <div className="weather-forecast-card warm-weather-card">
+                {/* Main Temperature & Condition Row */}
+                <div className="weather-main-row">
+                  <div className="weather-big-temp">
+                    ☀️ {liveWeather.temp}°C
+                  </div>
+                  <div className="weather-condition-wrap">
+                    <span className="weather-condition-badge">
+                      {getWeatherEmoji(liveWeather.icon, liveWeather.description, liveWeather.condition)} {liveWeather.description}
+                    </span>
                   </div>
                 </div>
-                <div className="weather-advice-box">
-                  <ShieldCheck size={16} className="text-cyan" />
-                  <span>{liveWeather.advice}</span>
+
+                {/* High-Contrast Clear Metrics Grid */}
+                <div className="weather-metrics-grid">
+                  <div className="weather-metric-item">
+                    <span className="metric-icon">🌧️</span>
+                    <span className="metric-label">Rain Probability:</span>
+                    <strong className="metric-value">{liveWeather.rainChance}%</strong>
+                  </div>
+                  <div className="weather-metric-item">
+                    <span className="metric-icon">💧</span>
+                    <span className="metric-label">Humidity:</span>
+                    <strong className="metric-value">{liveWeather.humidity}%</strong>
+                  </div>
                 </div>
-                <div style={{ marginTop: 6, fontSize: '0.7rem', color: '#64748b', textAlign: 'right' }}>
-                  Source: {liveWeather.source}
+
+                {/* Advice Box */}
+                <div className="weather-advice-box warm-advice-box">
+                  <span className="weather-advice-text">{formatAdvice(liveWeather.advice, liveWeather.rainChance)}</span>
+                </div>
+
+                {/* Source */}
+                <div className="weather-source-row">
+                  📡 Live Weather Feed: {liveWeather.source}
                 </div>
               </div>
             </div>
@@ -495,7 +535,7 @@ END:VCALENDAR`
         <div className="step-summary-text">
           Trip Status: <strong>{cityName} Trip 100% Complete & Exported</strong>
           {googleCalendarStatus === 'error' && (
-            <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: 4 }}>{googleCalendarError}</div>
+            <div style={{ color: '#0f172a', fontSize: '0.78rem', marginTop: 4 }}>{googleCalendarError}</div>
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
