@@ -45,9 +45,9 @@ export default function StepSetupSync({
   const vibeOptions = [
     { id: 'foodie', label: 'Local Food', desc: 'Must-try dishes & street eats' },
     { id: 'culture', label: 'Heritage & Culture', desc: 'Landmarks & museums' },
-    { id: 'nature', label: '🌿 Nature & Views', desc: 'Parks, viewpoints & sea' },
+    { id: 'nature', label: 'Nature & Views', desc: 'Parks, viewpoints & sea' },
     { id: 'adventure', label: 'Thrills & Theme Parks', desc: 'Outdoor & adventures' },
-    { id: 'shopping', label: '🛍️ Markets & Malls', desc: 'Boutiques & night markets' },
+    { id: 'shopping', label: 'Markets & Malls', desc: 'Boutiques & night markets' },
     { id: 'relaxed', label: 'Chill & Cafes', desc: 'Slow mornings & cafe hopping' }
   ]
 
@@ -301,7 +301,7 @@ export default function StepSetupSync({
                   className={`vibe-chip-btn ${isSelected ? 'active' : ''}`}
                   onClick={() => toggleVibe(v.id)}
                 >
-                  {isSelected ? '✓ ' : ''}{v.label}
+                  {isSelected ? ' ' : ''}{v.label}
                 </button>
               )
             })}
@@ -314,7 +314,7 @@ export default function StepSetupSync({
               {[
                 { id: 'relaxed', label: 'Relaxed' },
                 { id: 'moderate', label: 'Balanced' },
-                { id: 'packed', label: '🚀 Action-Packed' }
+                { id: 'packed', label: 'Action-Packed' }
               ].map(p => (
                 <button
                   key={p.id}
@@ -339,7 +339,7 @@ export default function StepSetupSync({
                     className={`diet-chip-btn ${isChecked ? 'active' : ''}`}
                     onClick={() => toggleDietary(diet)}
                   >
-                    {isChecked ? '✓ ' : '+ '}{diet}
+                    {isChecked ? ' ' : '+ '}{diet}
                   </button>
                 )
               })}

@@ -395,7 +395,7 @@ export default function PostcardCheckinPage({
           drawRoundedRect(ctx, width - 360, 80, 300, 65, 20, true, false)
           ctx.fillStyle = '#ffffff'
           ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif'
-          ctx.fillText(`📅 ${travelDate} · ${temperature}`, width - 340, 122)
+          ctx.fillText(`${travelDate} · ${temperature}`, width - 340, 122)
 
           // Slogan & Info Glass Box Bottom
           ctx.fillStyle = 'rgba(15, 23, 42, 0.92)'
@@ -411,7 +411,7 @@ export default function PostcardCheckinPage({
           // Spot Name & Location
           ctx.fillStyle = '#38bdf8'
           ctx.font = 'bold 44px Outfit, sans-serif'
-          ctx.fillText(`📍 ${customLocationName}`, 110, 1600)
+          ctx.fillText(`${customLocationName}`, 110, 1600)
 
           ctx.fillStyle = '#94a3b8'
           ctx.font = '30px "Plus Jakarta Sans", sans-serif'
@@ -442,7 +442,7 @@ export default function PostcardCheckinPage({
           const photoH = 960
           drawAspectCover(ctx, img, photoX, photoY, photoW, photoH)
 
-          ctx.fillStyle = '#dc2626'
+          ctx.fillStyle = '#0f172a'
           drawRoundedRect(ctx, width - 260, 180, 160, 190, 8, true, false)
           ctx.fillStyle = '#ffffff'
           ctx.font = 'bold 22px Outfit, sans-serif'
@@ -465,9 +465,9 @@ export default function PostcardCheckinPage({
           ctx.font = 'italic bold 52px Georgia, serif'
           wrapText(ctx, `“${sloganText}”`, 100, 1220, 880, 68)
 
-          ctx.fillStyle = '#dc2626'
+          ctx.fillStyle = '#0f172a'
           ctx.font = 'bold 42px Outfit, sans-serif'
-          ctx.fillText(`📍 ${customLocationName}`, 100, 1460)
+          ctx.fillText(`${customLocationName}`, 100, 1460)
 
           ctx.fillStyle = '#475569'
           ctx.font = '30px Georgia, serif'
@@ -483,7 +483,7 @@ export default function PostcardCheckinPage({
           ctx.fillStyle = '#1e293b'
           ctx.font = 'bold 32px Georgia, serif'
           ctx.fillText(`From: ${authorTag}`, 100, 1660)
-          ctx.fillText(`To: Instagram Story World ✨`, 100, 1720)
+          ctx.fillText(`To: Instagram Story World `, 100, 1720)
         } else if (theme.id === 'polaroid') {
           const cardX = 80
           const cardY = 120
@@ -505,7 +505,7 @@ export default function PostcardCheckinPage({
 
           ctx.fillStyle = '#38bdf8'
           ctx.font = 'bold 44px Outfit, sans-serif'
-          ctx.fillText(`📍 ${customLocationName}`, 140, 1560)
+          ctx.fillText(`${customLocationName}`, 140, 1560)
 
           ctx.fillStyle = '#64748b'
           ctx.font = '30px "Plus Jakarta Sans", sans-serif'
@@ -513,7 +513,7 @@ export default function PostcardCheckinPage({
 
           ctx.fillStyle = '#0f172a'
           ctx.font = 'bold 36px Outfit, sans-serif'
-          ctx.fillText(`✨ ${authorTag}`, width - 420, 1720)
+          ctx.fillText(`${authorTag}`, width - 420, 1720)
         } else {
           const photoX = 60
           const photoY = 120
@@ -531,7 +531,7 @@ export default function PostcardCheckinPage({
 
           ctx.fillStyle = theme.accent
           ctx.font = 'bold 44px Outfit, sans-serif'
-          ctx.fillText(`📍 ${customLocationName}`, 80, 1650)
+          ctx.fillText(`${customLocationName}`, 80, 1650)
 
           ctx.fillStyle = theme.subColor
           ctx.font = '30px "Plus Jakarta Sans", sans-serif'
@@ -574,7 +574,7 @@ export default function PostcardCheckinPage({
     link.href = canvas.toDataURL('image/png', 1.0)
     link.click()
     setIsGenerating(false)
-    setExportSuccessMsg('✅ HD Story Postcard Downloaded! Ready to upload to Instagram.')
+    setExportSuccessMsg('HD Story Postcard Downloaded! Ready to upload to Instagram.')
     setTimeout(() => setExportSuccessMsg(''), 4000)
   }
 
@@ -588,12 +588,12 @@ export default function PostcardCheckinPage({
         try {
           const file = new File([blob], `PlanTrip_${customLocationName}.png`, { type: 'image/png' })
           await navigator.share({
-            title: `📍 Check-in at ${customLocationName}!`,
+            title: `Check-in at ${customLocationName}!`,
             text: `${sloganText} #PlanTrip #${customLocationName.replace(/\s+/g, '')} #TravelMalaysia`,
             files: [file]
           })
           setIsGenerating(false)
-          setExportSuccessMsg('🎉 Successfully shared to Instagram Story!')
+          setExportSuccessMsg('Successfully shared to Instagram Story!')
           setTimeout(() => setExportSuccessMsg(''), 4000)
           return
         } catch (_err) {}
@@ -604,13 +604,13 @@ export default function PostcardCheckinPage({
           await navigator.clipboard.write([
             new ClipboardItem({ 'image/png': blob })
           ])
-          setExportSuccessMsg('📋 Postcard copied to clipboard! Opening Instagram...')
+          setExportSuccessMsg('Postcard copied to clipboard! Opening Instagram...')
         } else {
           const link = document.createElement('a')
           link.download = `PlanTrip_IG_Story.png`
           link.href = canvas.toDataURL('image/png')
           link.click()
-          setExportSuccessMsg('📥 Story downloaded! Opening Instagram...')
+          setExportSuccessMsg('Story downloaded! Opening Instagram...')
         }
       } catch (_e) {}
 
@@ -631,12 +631,12 @@ export default function PostcardCheckinPage({
           await navigator.clipboard.write([
             new ClipboardItem({ 'image/png': blob })
           ])
-          setExportSuccessMsg('📋 Postcard image copied! You can paste directly into IG Story Stickers.')
+          setExportSuccessMsg('Postcard image copied! You can paste directly into IG Story Stickers.')
         } else {
-          setExportSuccessMsg('⚠️ Clipboard direct copy not supported on this browser. Click Download instead!')
+          setExportSuccessMsg('Clipboard direct copy not supported on this browser. Click Download instead!')
         }
       } catch (_e) {
-        setExportSuccessMsg('⚠️ Please use Download HD button for this browser.')
+        setExportSuccessMsg('Please use Download HD button for this browser.')
       }
       setIsGenerating(false)
       setTimeout(() => setExportSuccessMsg(''), 4000)
@@ -655,7 +655,7 @@ export default function PostcardCheckinPage({
           {/* Header Banner */}
           <div className="postcard-panel-header">
             <div className="panel-tag-row">
-              <span className="pill-badge-hot">📸 Live Check-in</span>
+              <span className="pill-badge-hot">Live Check-in</span>
               <span className="pill-badge-sub">Instagram Story Creator</span>
               {onBackToExplore && (
                 <button className="btn-back-link" onClick={onBackToExplore}>
@@ -791,10 +791,10 @@ export default function PostcardCheckinPage({
             {/* Slogan Category Tabs */}
             <div className="slogan-cat-tabs">
               {[
-                { id: 'vibes', label: '🌴 Travel Vibes' },
-                { id: 'food', label: '🍜 Foodie' },
-                { id: 'culture', label: '🏛️ Culture' },
-                { id: 'squad', label: '👯 Squad' }
+                { id: 'vibes', label: 'Travel Vibes' },
+                { id: 'food', label: 'Foodie' },
+                { id: 'culture', label: 'Culture' },
+                { id: 'squad', label: 'Squad' }
               ].map(cat => (
                 <button
                   key={cat.id}
@@ -942,7 +942,7 @@ export default function PostcardCheckinPage({
                     <strong>PLANTRIP AI</strong>
                   </div>
                   <div className="story-date-weather">
-                    <span>📅 {travelDate}</span>
+                    <span>{travelDate}</span>
                     <span>·</span>
                     <span>{temperature}</span>
                   </div>
@@ -960,7 +960,7 @@ export default function PostcardCheckinPage({
                     />
                     <div className="polaroid-caption-area">
                       <p className="polaroid-quote">“{sloganText}”</p>
-                      <h4 className="polaroid-spot">📍 {customLocationName}</h4>
+                      <h4 className="polaroid-spot">{customLocationName}</h4>
                       <div className="polaroid-footer">
                         <small>{customAddress}</small>
                         <span className="polaroid-author">{authorTag}</span>
@@ -979,11 +979,11 @@ export default function PostcardCheckinPage({
                     </div>
                     <div className="airmail-bottom-box">
                       <p className="airmail-slogan">“{sloganText}”</p>
-                      <h3 className="airmail-location">📍 {customLocationName}</h3>
+                      <h3 className="airmail-location">{customLocationName}</h3>
                       <small className="airmail-addr">{customAddress}</small>
                       <div className="airmail-to-from">
                         <span>From: {authorTag}</span>
-                        <span>To: Instagram World ✈️</span>
+                        <span>To: Instagram World </span>
                       </div>
                     </div>
                   </div>
@@ -992,7 +992,7 @@ export default function PostcardCheckinPage({
                     <div className="glass-bottom-card">
                       <span className="stamp-pill-active">
                         <Award size={13} />
-                        {STAMPS.find(s => s.id === selectedStamp)?.label || '⭐ GOOGLE APPROVED'}
+                        {STAMPS.find(s => s.id === selectedStamp)?.label || 'GOOGLE APPROVED'}
                       </span>
 
                       <h3 className="glass-slogan-text">“{sloganText}”</h3>

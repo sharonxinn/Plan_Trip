@@ -158,8 +158,8 @@
 }
 
 .spotlight-close-btn:hover {
-  background: rgba(239, 68, 68, 0.35);
-  border-color: rgba(239, 68, 68, 0.6);
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(15, 23, 42, 0.6);
   color: #ffffff;
 }
 
@@ -542,13 +542,13 @@
 }
 
 .intel-icon-box.photo {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fbbf24;
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
 }
 
 .intel-icon-box.crowds {
-  background: rgba(168, 85, 247, 0.18);
-  color: #c084fc;
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
 }
 
 .intel-content h4 {
@@ -589,7 +589,7 @@
   font-size: 14.5px;
   line-height: 1.6;
   color: #e0f2fe;
-  background: rgba(254, 215, 170, 0.07);
+  background: rgba(56, 189, 248, 0.07);
   padding: 16px 18px;
   border-left: 3px solid #38bdf8;
   border-radius: 0 12px 12px 0;
@@ -692,9 +692,9 @@
 }
 
 .btn-add-to-plan.is-added {
-  background: linear-gradient(135deg, #16a34a, #15803d);
-  border-color: #22c55e;
-  box-shadow: 0 4px 18px rgba(34, 197, 94, 0.4);
+  background: linear-gradient(135deg, #0284c7, #0284c7);
+  border-color: #38bdf8;
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.4);
 }
 
 .btn-nav-directions {

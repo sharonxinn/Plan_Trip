@@ -6,8 +6,9 @@ import {
   Compass, Utensils, BedDouble, Calendar, Users, ChevronRight, Menu, X, Check,
   Map, Layers, User, Heart, Users2, DollarSign, Zap, Coffee, SlidersHorizontal,
   Wand2, Edit3, Plus, Minus, MessageCircle, Share2, Scale, Bot, Camera,
-  ShieldCheck, AlertCircle, Luggage, Receipt, ArrowLeft, Link2, Navigation, Coins
+  ShieldCheck, AlertCircle, Luggage, Receipt, ArrowLeft, Link2, Navigation, Coins, LogOut
 } from 'lucide-react'
+import AuthPage from './AuthPage'
 import RealMapView from './RealMapView'
 import AttractionsGrid from './AttractionsGrid'
 import RestaurantsGrid from './RestaurantsGrid'
@@ -38,6 +39,7 @@ import './trip-home.css'
 import './workspace-design.css'
 import './memory-world.css'
 import './global-ai-assistant.css'
+import './auth.css'
 
 function App() {
   // Navigation Flow: 'dashboard' (1st page) | 'planning' | 'travelling' | 'memory'
@@ -61,6 +63,27 @@ function App() {
   const [tripCoins, setTripCoins] = useState(() => {
     try { return Number(localStorage.getItem('plantrip-coin-balance-v1')) || 0 } catch { return 0 }
   })
+
+  // User Authentication State
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('plantrip_current_user') || sessionStorage.getItem('plantrip_current_user')
+      return stored ? JSON.parse(stored) : null
+    } catch {
+      return null
+    }
+  })
+  const [authInitialMode, setAuthInitialMode] = useState('login')
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+
+  const handleLogout = () => {
+    localStorage.removeItem('plantrip_current_user')
+    sessionStorage.removeItem('plantrip_current_user')
+    setCurrentUser(null)
+    setUserMenuOpen(false)
+    setPlanBToast('Signed out successfully.')
+    setTimeout(() => setPlanBToast(null), 3500)
+  }
 
   const earnTripCoins = amount => {
     setTripCoins(current => {
@@ -496,6 +519,34 @@ function App() {
     }
   }
 
+  // Mandatory Authentication Gate: Access dashboard and tools only after signing in or registering
+  if (!currentUser) {
+    return (
+      <div className="app-root-wrapper" data-page="auth">
+        {planBToast && (
+          <div className="planb-toast-banner fade-in" style={{ position: 'fixed', top: 24, zIndex: 9999 }}>
+            <Zap size={16} className="text-amber" />
+            <span>{planBToast}</span>
+            <button className="toast-close-btn" onClick={() => setPlanBToast(null)}>
+              <X size={14} />
+            </button>
+          </div>
+        )}
+        <AuthPage
+          isGate={true}
+          initialMode={authInitialMode}
+          onAuthSuccess={(user) => {
+            setCurrentUser(user)
+            setCurrentPage('dashboard')
+            setPlanBToast(`Welcome, ${user.name || user.username}!`)
+            setTimeout(() => setPlanBToast(null), 4000)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="app-root-wrapper" data-page={currentPage}>
       <div className="app-layout">
@@ -565,11 +616,66 @@ function App() {
                   <span className="basket-counter-badge">{totalBasketCount}</span>
                 )}
               </button>
+
+              {/* USER AUTHENTICATION / PROFILE (LIGHT BLUE, WHITE, BLACK) */}
+              {!currentUser ? (
+                <button
+                  className="header-auth-btn"
+                  onClick={() => {
+                    setAuthInitialMode('login')
+                    setCurrentPage('auth')
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  title="Sign In or Register"
+                >
+                  <User size={14} />
+                  <span>Sign In</span>
+                </button>
+              ) : (
+                <div className="header-user-menu-wrap">
+                  <button
+                    className="header-user-pill"
+                    onClick={() => setUserMenuOpen(open => !open)}
+                    aria-expanded={userMenuOpen}
+                    title={`Signed in as @${currentUser.username}`}
+                  >
+                    <div className="header-user-avatar">
+                      {(currentUser.name || currentUser.username).charAt(0).toUpperCase()}
+                    </div>
+                    <span className="desktop-only header-username">
+                      {currentUser.name || currentUser.username}
+                    </span>
+                  </button>
+                  {userMenuOpen && (
+                    <div className="header-user-popover">
+                      <div className="user-popover-info">
+                        <strong>{currentUser.name || currentUser.username}</strong>
+                        <small>@{currentUser.username}</small>
+                      </div>
+                      <div className="user-popover-divider" />
+                      <button
+                        className="user-popover-item"
+                        onClick={handleLogout}
+                      >
+                        <User size={14} />
+                        <span>Switch Account</span>
+                      </button>
+                      <button
+                        className="user-popover-item danger"
+                        onClick={handleLogout}
+                      >
+                        <LogOut size={14} />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </header>
 
-        {!['dashboard', 'globe'].includes(currentPage) && (
+        {!['dashboard', 'globe', 'auth'].includes(currentPage) && (
           <nav className="workspace-navigation" aria-label="Main navigation">
             <div className="workspace-navigation-inner">
               {[['dashboard', 'Overview', Compass], ['planning', 'Plan', Calendar], ['travelling', 'On the trip', Navigation], ['memory', 'Memories', Camera], ['public', 'Open trips', Users2]].map(([page, label, Icon]) => (
@@ -590,9 +696,28 @@ function App() {
           </div>
         )}
 
-        {/* 1. 🏠 ORIGIN DASHBOARD (ONLY PAGE ON 1ST LOAD) */}
+        {/* 0. REGISTER & LOGIN PAGE */}
+        {currentPage === 'auth' && (
+          <AuthPage
+            initialMode={authInitialMode}
+            onAuthSuccess={(user) => {
+              setCurrentUser(user)
+              setCurrentPage('dashboard')
+              setPlanBToast(`Welcome, ${user.name || user.username}!`)
+              setTimeout(() => setPlanBToast(null), 4000)
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            onBackToDashboard={() => {
+              setCurrentPage('dashboard')
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+          />
+        )}
+
+        {/* 1. ORIGIN DASHBOARD (ONLY PAGE ON 1ST LOAD) */}
         {currentPage === 'dashboard' && (
           <OriginDashboard
+            currentUser={currentUser}
             selectedCity={selectedCity}
             selectedCountry={selectedCountry}
             departureDate={departureDate}
@@ -618,7 +743,7 @@ function App() {
           />
         )}
 
-        {/* 2. 📋 PLANNING STAGE (SETUP, OVERALL BUDGET, DISCOVER 3-CARDS, PACK) */}
+        {/* 2. PLANNING STAGE (SETUP, OVERALL BUDGET, DISCOVER 3-CARDS, PACK) */}
         {currentPage === 'planning' && (
           <StagePlanning
             selectedCountry={selectedCountry}
@@ -672,7 +797,7 @@ function App() {
           />
         )}
 
-        {/* 3. 🚗 TRAVELLING STAGE (EXPENSE SPLITTER & PLAN B) */}
+        {/* 3. TRAVELLING STAGE (EXPENSE SPLITTER & PLAN B) */}
         {currentPage === 'travelling' && (
           <StageTravelling
             selectedCity={selectedCity}
@@ -695,7 +820,7 @@ function App() {
           />
         )}
 
-        {/* 4. 📸 MEMORY STAGE (AI DIGITAL POSTCARD & BUDGET VS ACTUAL SUMMARY) */}
+        {/* 4. MEMORY STAGE (AI DIGITAL POSTCARD & BUDGET VS ACTUAL SUMMARY) */}
         {currentPage === 'memory' && (
           <StageMemory
             selectedCity={selectedCity}
@@ -743,7 +868,7 @@ function App() {
           </main>
         )}
 
-        {/* 5. 🚪 OPEN TRIPS (HOST / JOIN A PUBLIC GROUP TRIP & PLAN TOGETHER) */}
+        {/* 5. OPEN TRIPS (HOST / JOIN A PUBLIC GROUP TRIP & PLAN TOGETHER) */}
         {currentPage === 'public' && (
           <PublicTripsPage
             defaultCity={selectedCity?.city}

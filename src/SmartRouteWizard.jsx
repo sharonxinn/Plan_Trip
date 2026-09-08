@@ -246,7 +246,7 @@ export default function SmartRouteWizard({
                           title="Mark as Must-Visit"
                         >
                           <Star size={13} fill={spot.isMustVisit ? '#38bdf8' : 'none'} color={spot.isMustVisit ? '#38bdf8' : '#94a3b8'} />
-                          <span>{spot.isMustVisit ? 'Must-Visit ⭐' : 'Optional'}</span>
+                          <span>{spot.isMustVisit ? 'Must-Visit ' : 'Optional'}</span>
                         </button>
 
                         <select
@@ -320,7 +320,7 @@ export default function SmartRouteWizard({
                     >
                       <option value="relaxed">Relaxed (2-3 spots/day)</option>
                       <option value="balanced">Balanced (4 spots/day)</option>
-                      <option value="packed">🚀 Packed (5-6 spots/day)</option>
+                      <option value="packed">Packed (5-6 spots/day)</option>
                     </select>
                   </div>
                 </div>
@@ -333,8 +333,8 @@ export default function SmartRouteWizard({
                 </div>
                 <ul>
                   <li>Nearest-Neighbor spatial distance sequencing (zero backtracking).</li>
-                  <li>✅ Synchronized meal and activity time slots (Breakfast ➔ Morning Sights ➔ Lunch ➔ Cafe/Indoor ➔ Sunset ➔ Dinner).</li>
-                  <li>✅ 1-Click Multi-Stop Google Maps navigation deep links!</li>
+                  <li>Synchronized meal and activity time slots (Breakfast &rarr; Morning Sights &rarr; Lunch &rarr; Cafe/Indoor &rarr; Sunset &rarr; Dinner).</li>
+                  <li>1-Click Multi-Stop Google Maps navigation deep links!</li>
                 </ul>
               </div>
             </div>

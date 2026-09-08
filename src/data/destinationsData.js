@@ -3,12 +3,12 @@
 
 export const countriesData = [
   // ==========================================
-  // MALAYSIA 🇲🇾 (Exhaustive National Coverage)
+  // MALAYSIA  (Exhaustive National Coverage)
   // ==========================================
   {
     country: 'Malaysia',
     code: 'MY',
-    flag: '🇲🇾',
+    flag: '',
     region: 'Asia',
     currency: 'MYR',
     description: 'Truly Asia — iconic twin towers, world-benchmark hawker food, pristine diving coral reefs, and 130-million-year-old rainforests.',
@@ -261,12 +261,12 @@ export const countriesData = [
   },
 
   // ==========================================
-  // JAPAN 🇯🇵 (Tokyo, Kyoto, Osaka, Sapporo, Okinawa, Nara, Fukuoka)
+  // JAPAN  (Tokyo, Kyoto, Osaka, Sapporo, Okinawa, Nara, Fukuoka)
   // ==========================================
   {
     country: 'Japan',
     code: 'JP',
-    flag: '🇯🇵',
+    flag: '',
     region: 'Asia',
     currency: 'JPY',
     description: 'Ancient shrines, cherry blossoms, snow-capped Mount Fuji, and world-class culinary mastery.',
@@ -343,12 +343,12 @@ export const countriesData = [
   },
 
   // ==========================================
-  // THAILAND 🇹🇭 (Bangkok, Phuket, Chiang Mai, Krabi, Koh Samui)
+  // THAILAND  (Bangkok, Phuket, Chiang Mai, Krabi, Koh Samui)
   // ==========================================
   {
     country: 'Thailand',
     code: 'TH',
-    flag: '🇹🇭',
+    flag: '',
     region: 'Asia',
     currency: 'THB',
     description: 'Golden spires, world-class street cuisine, lush northern mountains, and turquoise island beaches.',
@@ -408,12 +408,12 @@ export const countriesData = [
   },
 
   // ==========================================
-  // INDONESIA 🇮🇩 (Bali, Yogyakarta, Jakarta, Komodo, Lombok)
+  // INDONESIA  (Bali, Yogyakarta, Jakarta, Komodo, Lombok)
   // ==========================================
   {
     country: 'Indonesia',
     code: 'ID',
-    flag: '🇮🇩',
+    flag: '',
     region: 'Asia',
     currency: 'IDR',
     description: 'Emerald volcanic archipelago with sacred Hindu sea temples, surf breaks, and Komodo dragons.',
@@ -456,12 +456,12 @@ export const countriesData = [
   },
 
   // ==========================================
-  // SOUTH KOREA 🇰🇷 (Seoul, Busan, Jeju Island)
+  // SOUTH KOREA  (Seoul, Busan, Jeju Island)
   // ==========================================
   {
     country: 'South Korea',
     code: 'KR',
-    flag: '🇰🇷',
+    flag: '',
     region: 'Asia',
     currency: 'KRW',
     description: 'Joseon royal palaces, K-pop culture, futuristic smart cities, and volcanic island wonderlands.',
@@ -509,7 +509,7 @@ export const countriesData = [
   {
     country: 'France',
     code: 'FR',
-    flag: '🇫🇷',
+    flag: '',
     region: 'Europe',
     currency: 'EUR',
     description: 'Haute cuisine, iconic Eiffel Tower, Champagne vineyards, and Mediterranean glamour.',
@@ -553,7 +553,7 @@ export const countriesData = [
   {
     country: 'United Kingdom',
     code: 'GB',
-    flag: '🇬🇧',
+    flag: '',
     region: 'Europe',
     currency: 'GBP',
     description: 'Buckingham Palace, West End musicals, Scottish castles, and rolling Cotswold hills.',
@@ -597,7 +597,7 @@ export const countriesData = [
   {
     country: 'Italy',
     code: 'IT',
-    flag: '🇮🇹',
+    flag: '',
     region: 'Europe',
     currency: 'EUR',
     description: 'Renaissance masterpieces, Roman ruins, Venetian gondolas, and Michelin gastronomy.',
@@ -645,7 +645,7 @@ export const countriesData = [
   {
     country: 'United States',
     code: 'US',
-    flag: '🇺🇸',
+    flag: '',
     region: 'Americas',
     currency: 'USD',
     description: 'Vast national parks, iconic skyscrapers, diverse culinary hubs, and entertainment capitals.',
@@ -689,7 +689,7 @@ export const countriesData = [
   {
     country: 'Australia',
     code: 'AU',
-    flag: '🇦🇺',
+    flag: '',
     region: 'Oceania',
     currency: 'AUD',
     description: 'Sydney Opera House, Great Barrier Reef, Bondi surf beaches, and Melbourne coffee culture.',
@@ -716,7 +716,7 @@ export const countriesData = [
   {
     country: 'United Arab Emirates',
     code: 'AE',
-    flag: '🇦🇪',
+    flag: '',
     region: 'Middle East',
     currency: 'AED',
     description: 'Burj Khalifa, futuristic architecture, Palm Jumeirah islands, and golden desert dunes.',

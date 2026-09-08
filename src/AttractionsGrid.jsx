@@ -66,13 +66,13 @@ export default function AttractionsGrid({
 
         if (isFamilySpot) {
           score += 55
-          partyMatchReason = '👨‍👩‍👧‍👦 Family & Playground Top Pick: Adventure Play & Water Fun'
-          partyBadge = '🎠 Playground & Kids Fun'
+          partyMatchReason = 'Family & Playground Top Pick: Adventure Play & Water Fun'
+          partyBadge = 'Playground & Kids Fun'
           isPartyHighlight = true
         } else if (nameAndDesc.includes('park') || nameAndDesc.includes('garden') || nameAndDesc.includes('nature') || nameAndDesc.includes('beach')) {
           score += 28
-          partyMatchReason = '👨‍👩‍👧‍👦 Great for Family Strolls & Open Nature'
-          partyBadge = '🌿 Family Friendly'
+          partyMatchReason = 'Great for Family Strolls & Open Nature'
+          partyBadge = 'Family Friendly'
           isPartyHighlight = true
         }
       } else if (travelParty === 'couple') {
@@ -83,12 +83,12 @@ export default function AttractionsGrid({
 
         if (isCoupleSpot) {
           score += 50
-          partyMatchReason = '💑 Romantic Couple Top Pick: Scenic Sunset Panoramas & Intimate Vibe'
+          partyMatchReason = 'Romantic Couple Top Pick: Scenic Sunset Panoramas & Intimate Vibe'
           partyBadge = 'Romantic Sunset Spot'
           isPartyHighlight = true
         } else if (nameAndDesc.includes('garden') || nameAndDesc.includes('temple') || nameAndDesc.includes('beach') || nameAndDesc.includes('heritage')) {
           score += 25
-          partyMatchReason = '💑 Scenic & Atmospheric Date Walk'
+          partyMatchReason = 'Scenic & Atmospheric Date Walk'
           partyBadge = 'Couple Friendly'
           isPartyHighlight = true
         }
@@ -101,7 +101,7 @@ export default function AttractionsGrid({
         if (isFriendsSpot) {
           score += 50
           partyMatchReason = 'Friends Squad Top Pick: High Energy Thrills & Group Adventures'
-          partyBadge = '⚡ Group Adventure'
+          partyBadge = 'Group Adventure'
           isPartyHighlight = true
         } else {
           score += 20
@@ -114,7 +114,7 @@ export default function AttractionsGrid({
         if (isSoloSpot) {
           score += 45
           partyMatchReason = 'Solo Explorer Pick: Peaceful Culture Walks & Contemplative Views'
-          partyBadge = '🚶 Solo Friendly Walk'
+          partyBadge = 'Solo Friendly Walk'
           isPartyHighlight = true
         } else {
           score += 20
@@ -136,11 +136,11 @@ export default function AttractionsGrid({
       }
       if (vibes.includes('adventure') && (nameAndDesc.includes('thrill') || nameAndDesc.includes('theme park') || nameAndDesc.includes('waterplay') || nameAndDesc.includes('sky') || nameAndDesc.includes('adventure'))) {
         score += 25
-        styleTags.push('⚡ Thrill & Action')
+        styleTags.push('Thrill & Action')
       }
       if (vibes.includes('shopping') && (nameAndDesc.includes('mall') || nameAndDesc.includes('shopping') || nameAndDesc.includes('market') || nameAndDesc.includes('trx') || nameAndDesc.includes('klcc'))) {
         score += 22
-        styleTags.push('🛍️ Shopping & Malls')
+        styleTags.push('Shopping & Malls')
       }
       if (vibes.includes('relaxed') && (nameAndDesc.includes('garden') || nameAndDesc.includes('park') || nameAndDesc.includes('walk') || nameAndDesc.includes('botanical') || nameAndDesc.includes('peaceful'))) {
         score += 20
@@ -172,8 +172,8 @@ export default function AttractionsGrid({
         ...item,
         tailorScore: score,
         matchPercent,
-        partyMatchReason: partyMatchReason || `⭐ Highly Recommended Google Attraction in ${city?.city || 'the Area'}`,
-        partyBadge: partyBadge || (travelParty === 'couple' ? 'Couple Friendly' : travelParty === 'family' ? '👨‍👩‍👧‍👦 Family Friendly' : '⭐ Top Attraction'),
+        partyMatchReason: partyMatchReason || `Highly Recommended Google Attraction in ${city?.city || 'the Area'}`,
+        partyBadge: partyBadge || (travelParty === 'couple' ? 'Couple Friendly' : travelParty === 'family' ? 'Family Friendly' : 'Top Attraction'),
         isPartyHighlight,
         styleTags
       }
@@ -246,8 +246,8 @@ export default function AttractionsGrid({
               className="sort-dropdown"
             >
               <option value="tailored">Best Match for Trip Profile</option>
-              <option value="rating">⭐ Google Rating (Highest first)</option>
-              <option value="reviews">👥 Review Volume (Most popular)</option>
+              <option value="rating">Google Rating (Highest first)</option>
+              <option value="reviews">Review Volume (Most popular)</option>
             </select>
           </div>
         </div>
@@ -272,9 +272,9 @@ export default function AttractionsGrid({
         >
           <CurrentPartyIcon size={13} />
           <span>
-            {travelParty === 'family' ? '🎠 Playgrounds & Kids Only' :
+            {travelParty === 'family' ? 'Playgrounds & Kids Only' :
              travelParty === 'couple' ? 'Romantic & Sunset Only' :
-             travelParty === 'friends' ? '⚡ Thrills & Adventures Only' : '🚶 Solo Culture Walks Only'}
+             travelParty === 'friends' ? 'Thrills & Adventures Only' : 'Solo Culture Walks Only'}
           </span>
         </button>
 
@@ -320,7 +320,7 @@ export default function AttractionsGrid({
 
                 <div className="google-review-badge">
                   <Star size={13} className="star-icon filled" fill="#38bdf8" color="#38bdf8" />
-                  <strong>{typeof attraction.rating === 'number' ? attraction.rating.toFixed(1) : String(attraction.rating || '4.8').replace('★', '').trim()}</strong>
+                  <strong>{typeof attraction.rating === 'number' ? attraction.rating.toFixed(1) : String(attraction.rating || '4.8').replace('', '').trim()}</strong>
                 </div>
               </div>
 

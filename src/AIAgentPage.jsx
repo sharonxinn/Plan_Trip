@@ -14,19 +14,19 @@ function exportToWordDocument(plan, destination, travellers, travelParty, budget
       <meta charset="utf-8">
       <title>${plan.tripTitle || 'Trip Itinerary'}</title>
       <style>
-        body { font-family: 'Calibri', 'Arial', sans-serif; line-height: 1.6; color: #2C241E; padding: 30px; background-color: #FAF7F2; }
+        body { font-family: 'Calibri', 'Arial', sans-serif; line-height: 1.6; color: #0F172A; padding: 30px; background-color: #FFFFFF; }
         h1 { color: #38bdf8; font-size: 24pt; border-bottom: 2px solid #38bdf8; padding-bottom: 8px; margin-bottom: 5px; }
-        h2 { color: #3E7B6C; font-size: 16pt; margin-top: 20px; border-bottom: 1px solid #E6DFD5; padding-bottom: 4px; }
-        h3 { color: #2C241E; font-size: 13pt; margin-top: 15px; }
-        .summary-box { background-color: #FAF7F2; border-left: 4px solid #38bdf8; padding: 15px; margin: 15px 0; }
+        h2 { color: #0284c7; font-size: 16pt; margin-top: 20px; border-bottom: 1px solid #E2E8F0; padding-bottom: 4px; }
+        h3 { color: #0F172A; font-size: 13pt; margin-top: 15px; }
+        .summary-box { background-color: #FFFFFF; border-left: 4px solid #38bdf8; padding: 15px; margin: 15px 0; }
         .meta-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .meta-table td { padding: 8px 12px; border: 1px solid #E6DFD5; font-size: 10.5pt; color: #2C241E; }
-        .meta-table th { background-color: #F3EFE6; padding: 8px 12px; border: 1px solid #E6DFD5; text-align: left; color: #2C241E; }
+        .meta-table td { padding: 8px 12px; border: 1px solid #E2E8F0; font-size: 10.5pt; color: #0F172A; }
+        .meta-table th { background-color: #F1F5F9; padding: 8px 12px; border: 1px solid #E2E8F0; text-align: left; color: #0F172A; }
         .day-header { background-color: #38bdf8; color: white; padding: 8px 12px; font-weight: bold; font-size: 12pt; margin-top: 20px; border-radius: 4px; }
-        .slot-card { margin: 10px 0; padding: 10px; background-color: #FFFFFF; border-left: 3px solid #38bdf8; border: 1px solid #E6DFD5; }
+        .slot-card { margin: 10px 0; padding: 10px; background-color: #FFFFFF; border-left: 3px solid #38bdf8; border: 1px solid #E2E8F0; }
         .time-badge { font-weight: bold; color: #38bdf8; font-size: 10pt; }
-        .rating-badge { color: #d97706; font-weight: bold; }
-        .tips-list { background-color: #fffbeb; border: 1px solid #fde68a; padding: 12px 20px; border-radius: 4px; }
+        .rating-badge { color: #0284c7; font-weight: bold; }
+        .tips-list { background-color: #f0f9ff; border: 1px solid #bae6fd; padding: 12px 20px; border-radius: 4px; }
         .footer { font-size: 9pt; color: #64748b; margin-top: 30px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 10px; }
       </style>
     </head>

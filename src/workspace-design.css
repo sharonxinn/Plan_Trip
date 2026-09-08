@@ -71,7 +71,7 @@
 .app-root-wrapper :is(.clean-card-title-wrap h2,.card-icon-title h3,.section-title-row h3,.card-header-row h3) { color:#000000; font-size:16px; font-weight:650; letter-spacing:-.2px; }
 .app-root-wrapper :is(.clean-card-title-wrap>svg,.card-icon-title>svg,.section-title-row>svg) { color:#54759e; }
 .app-root-wrapper :is(.clean-badge,.badge-highlight,.setup-quick-summary-pill,.hub-city-pill,.metric-label,.cell-label,.day-num-tag) { color:#536274; background:#edf2f7; border:0; border-radius:6px; text-transform:none; letter-spacing:0; box-shadow:none; }
-.app-root-wrapper :is(.date-field-box,.pax-stepper,.budget-input-hero-box,.variance-hero-metrics,.result-metrics-grid,.route-summary-bar,.weather-forecast-card,.budget-breakdown-card) { background:#f3f6fa; border:1px solid #dfe6ee; border-radius:10px; box-shadow:none; color:#000000; }
+.app-root-wrapper :is(.date-field-box,.pax-stepper,.budget-input-hero-box,.variance-hero-metrics,.result-metrics-grid,.route-summary-bar,.budget-breakdown-card) { background:#f3f6fa; border:1px solid #dfe6ee; border-radius:10px; box-shadow:none; color:#000000; }
 .app-root-wrapper :is(.country-pill,.party-pill,.vibe-chip-btn,.dietary-chip,.dur-pill-btn,.pace-btn,.scenario-pill-btn,.shortcut-chip,.filter-pill,.theme-card-btn,.spot-chip-btn,.preset-tile,.budget-preset-tile) { box-shadow:none; border-radius:9px; transition:background 200ms,border-color 200ms,box-shadow 200ms; }
 .app-root-wrapper :is(.country-pill,.party-pill,.vibe-chip-btn,.dietary-chip,.dur-pill-btn,.pace-btn,.scenario-pill-btn,.shortcut-chip,.filter-pill,.theme-card-btn,.spot-chip-btn,.preset-tile,.budget-preset-tile).active { background:#38bdf8; border-color:#38bdf8; color:#000000; font-weight:700; box-shadow:none; }
 .app-root-wrapper :is(.city-card,.city-select-card) { border-radius:11px; overflow:hidden; box-shadow:none; }
@@ -104,7 +104,7 @@
 .app-root-wrapper .pack-item-row.checked .check-icon { animation:workspace-check 300ms ease-out; }
 .app-root-wrapper :is(.pack-progress-bar,.cat-progress-fill,.pt-pax-fill) { background:#38bdf8; transition:width 550ms cubic-bezier(.2,.8,.2,1); }
 .app-root-wrapper .cat-progress-track { height:8px; background:#edf2f7; }
-.app-root-wrapper .pack-progress-wrap { height:8px; border-radius:4px; background:#e5ece8; }
+.app-root-wrapper .pack-progress-wrap { height:8px; border-radius:4px; background:#F1F5F9; }
 .app-root-wrapper .discover-hub-header h2 { font-size:28px; color:#000000; letter-spacing:-.7px; font-weight:650; }
 .app-root-wrapper .discover-card-tile { border:1px solid #dfe6ee; background:#fff; border-radius:14px; box-shadow:none; overflow:hidden; transition:border-color 200ms,box-shadow 200ms; }
 .app-root-wrapper .discover-card-tile:hover { transform:none; border-color:#9db7df; box-shadow:0 5px 15px #2334490a; }
