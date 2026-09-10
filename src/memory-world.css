@@ -71,28 +71,36 @@
    3D POSTCARD CARDS & LYRA SPATIAL VIEWER
    ========================================================= */
 
-/* Postcard Gallery 3D Card Treatment */
-.public-postcard-gallery figure.is-3d-postcard {
+/* Postcard Gallery Card & Spotlight Treatment (Light Blue, White, Black) */
+.public-postcard-gallery figure.is-3d-postcard,
+.public-postcard-gallery figure.is-spotlight-card {
   cursor: pointer;
   position: relative;
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease, border-color 0.25s ease;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.2s ease;
   outline: none;
 }
 .public-postcard-gallery figure.is-3d-postcard:hover,
-.public-postcard-gallery figure.is-3d-postcard:focus-visible {
-  transform: translateY(-5px) scale(1.012);
-  border-color: #90b8f8;
-  box-shadow: 0 14px 34px -6px rgba(28, 64, 114, 0.16), 0 0 0 2px rgba(36, 91, 196, 0.18);
+.public-postcard-gallery figure.is-3d-postcard:focus-visible,
+.public-postcard-gallery figure.is-spotlight-card:hover,
+.public-postcard-gallery figure.is-spotlight-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: #38bdf8;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 .postcard-image-wrap {
   position: relative;
   overflow: hidden;
+  border-top-left-radius: 13px;
+  border-top-right-radius: 13px;
 }
 .postcard-image-wrap img {
   transition: transform 0.45s ease;
 }
-.public-postcard-gallery figure.is-3d-postcard:hover .postcard-image-wrap img {
-  transform: scale(1.045);
+.public-postcard-gallery figure:hover .postcard-image-wrap img {
+  transform: scale(1.035);
 }
 .postcard-3d-pill,
 .postcard-spotlight-pill {
@@ -102,51 +110,50 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 11px;
-  background: rgba(10, 20, 36, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 5px 12px;
+  background: #ffffff;
+  border: 1px solid #bae6fd;
   border-radius: 999px;
-  color: #fff;
-  font-size: 10.5px;
+  color: #000000;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .postcard-3d-pill svg,
 .postcard-spotlight-pill svg {
-  color: #38bdf8;
+  color: #0284c7;
 }
 .postcard-3d-pill.personal,
 .postcard-spotlight-pill.personal {
-  background: rgba(56, 189, 248, 0.85);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: #f0f9ff;
+  border-color: #38bdf8;
+  color: #000000;
 }
 .public-postcard-gallery figure:hover .postcard-3d-pill,
 .public-postcard-gallery figure:hover .postcard-spotlight-pill {
-  background: linear-gradient(135deg, #0284c7, #2563eb);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.06);
-  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.45);
+  background: #f0f9ff;
+  border-color: #38bdf8;
+  color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
 }
 .postcard-3d-action-hint,
 .postcard-spotlight-action-hint {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-size: 11px;
   font-weight: 700;
-  color: #0284c7;
+  color: #000000;
   margin-top: 8px;
-  opacity: 0.85;
   transition: all 0.2s ease;
 }
 .public-postcard-gallery figure:hover .postcard-3d-action-hint,
 .public-postcard-gallery figure:hover .postcard-spotlight-action-hint {
-  opacity: 1;
-  color: #0369a1;
-  transform: translateX(4px);
+  color: #0284c7;
+  transform: translateX(3px);
 }
 
 /* =========================================================

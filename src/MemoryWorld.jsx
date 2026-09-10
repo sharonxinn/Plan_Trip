@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import {
   Camera, Check, Coins, DollarSign, FileText, Globe2, History,
-  MapPin, Pause, Play, Rocket, Send, Sparkles, Users2
+  MapPin, Pause, Play, Rocket, Send, Sparkles, Users2, BookOpen
 } from 'lucide-react'
 import TravelStorySpotlightModal from './TravelStorySpotlightModal'
 
@@ -525,7 +525,7 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpenSpotli
               <div className="postcard-image-wrap">
                 <img src={image} alt={`${title} at ${place}`} loading="lazy"/>
                 <span className="postcard-spotlight-pill">
-                  <Sparkles size={11} />
+                  <BookOpen size={11} />
                   <span>Story & Place Guide</span>
                 </span>
               </div>
@@ -573,7 +573,7 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpenSpotli
               <div className="postcard-image-wrap">
                 <img src={post.image} alt={`${post.title} shared by you`} loading="lazy"/>
                 <span className="postcard-spotlight-pill personal">
-                  <Sparkles size={11} />
+                  <BookOpen size={11} />
                   <span>Your Memory Guide</span>
                 </span>
               </div>

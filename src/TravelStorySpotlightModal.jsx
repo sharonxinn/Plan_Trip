@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import {
   MapPin, Calendar, Users, Clock, Compass, Volume2, VolumeX,
-  Play, Pause, Bookmark, Check, Sparkles, Navigation, ExternalLink,
+  Play, Pause, Bookmark, Check, BookOpen, Navigation, ExternalLink,
   X, Heart, Flame, Lightbulb, Camera, Share2, ArrowRight,
   Train, DollarSign, Sun, Eye, Layers
 } from 'lucide-react'
@@ -540,7 +540,7 @@ export default function TravelStorySpotlightModal({
                 className={`tab-btn ${activeTab === 'journal' ? 'active' : ''}`}
                 onClick={() => setActiveTab('journal')}
               >
-                <Sparkles size={14} />
+                <BookOpen size={14} />
                 <span>Travel Diary</span>
               </button>
               <button
