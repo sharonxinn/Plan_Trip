@@ -32,6 +32,7 @@ import StageMemory from './StageMemory'
 import PublicTripsPage from './PublicTripsPage'
 import GlobalAiAssistant from './GlobalAiAssistant'
 import MemoryWorld from './MemoryWorld'
+import TravelYearRecap from './TravelYearRecap'
 import { countriesData, popularDestinations } from './data/destinationsData'
 import { generateSmartItinerary } from './utils/routeOptimizer'
 import './styles.css'
@@ -675,7 +676,7 @@ function App() {
           </div>
         </header>
 
-        {!['dashboard', 'globe', 'auth'].includes(currentPage) && (
+        {!['dashboard', 'globe', 'recap', 'auth'].includes(currentPage) && (
           <nav className="workspace-navigation" aria-label="Main navigation">
             <div className="workspace-navigation-inner">
               {[['dashboard', 'Overview', Compass], ['planning', 'Plan', Calendar], ['travelling', 'On the trip', Navigation], ['memory', 'Memories', Camera], ['public', 'Open trips', Users2]].map(([page, label, Icon]) => (
@@ -864,7 +865,17 @@ function App() {
               totalActual={Math.round(budgetAmount * .91)}
               varianceAmount={budgetAmount - Math.round(budgetAmount * .91)}
               basket={basket}
+              onOpenRecap={() => { setCurrentPage('recap'); window.scrollTo({ top: 0, behavior: 'instant' }) }}
             />
+          </main>
+        )}
+
+        {currentPage === 'recap' && (
+          <main className="anniversary-recap-page fade-in">
+            <button className="btn-back-to-dashboard" onClick={() => { setCurrentPage('globe'); window.scrollTo({ top: 0, behavior: 'instant' }) }}>
+              <ArrowLeft size={16}/><span>Back to public globe</span>
+            </button>
+            <TravelYearRecap onBack={() => { setCurrentPage('globe'); window.scrollTo({ top: 0, behavior: 'instant' }) }} />
           </main>
         )}
 

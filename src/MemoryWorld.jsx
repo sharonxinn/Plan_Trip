@@ -2,9 +2,17 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import {
   Camera, Check, Coins, DollarSign, FileText, Globe2, History,
-  MapPin, Pause, Play, Rocket, Send, Sparkles, Users2, BookOpen
+  MapPin, Pause, Play, Rocket, Send, Sparkles, Users2, BookOpen,
+  Calendar, ArrowRight
 } from 'lucide-react'
 import TravelStorySpotlightModal from './TravelStorySpotlightModal'
+import visitedCountries from '../public/data/visited-countries.geojson?raw'
+
+const VISITED = [
+  { city: 'Thailand', lat: 15.87, lng: 100.99 },
+  { city: 'Malaysia', lat: 4.21, lng: 101.98 },
+  { city: 'Singapore', lat: 1.35, lng: 103.82 }
+]
 
 const STORAGE_KEY = 'plantrip-public-memory-posts-v1'
 
@@ -147,20 +155,6 @@ function makeEarthTexture() {
   return texture
 }
 
-function makeStarGeometry(outer = .105, inner = .045) {
-  const shape = new THREE.Shape()
-  for (let i = 0; i < 10; i += 1) {
-    const radius = i % 2 === 0 ? outer : inner
-    const angle = -Math.PI / 2 + i * Math.PI / 5
-    const x = Math.cos(angle) * radius
-    const y = Math.sin(angle) * radius
-    if (i === 0) shape.moveTo(x, y)
-    else shape.lineTo(x, y)
-  }
-  shape.closePath()
-  return new THREE.ShapeGeometry(shape)
-}
-
 function makeMarkerLabel(post, color) {
   const canvas = document.createElement('canvas')
   canvas.width = 360
@@ -190,53 +184,10 @@ function makeMarkerLabel(post, color) {
   return sprite
 }
 
-function makeGoldStarMarker(post, count) {
-  const canvas = document.createElement('canvas')
-  canvas.width = 192
-  canvas.height = 192
-  const ctx = canvas.getContext('2d')
-  ctx.translate(96, 96)
-  ctx.beginPath()
-  for (let i = 0; i < 10; i += 1) {
-    const radius = i % 2 === 0 ? 72 : 32
-    const angle = -Math.PI / 2 + i * Math.PI / 5
-    const x = Math.cos(angle) * radius
-    const y = Math.sin(angle) * radius
-    if (i === 0) ctx.moveTo(x, y)
-    else ctx.lineTo(x, y)
-  }
-  ctx.closePath()
-  ctx.shadowColor = '#38bdf8'
-  ctx.shadowBlur = 28
-  const blueGrad = ctx.createLinearGradient(-40, -60, 45, 65)
-  blueGrad.addColorStop(0, '#f0f9ff')
-  blueGrad.addColorStop(.45, '#38bdf8')
-  blueGrad.addColorStop(1, '#0284c7')
-  ctx.fillStyle = blueGrad
-  ctx.fill()
-  ctx.shadowBlur = 0
-  ctx.strokeStyle = '#ffffff'
-  ctx.lineWidth = 5
-  ctx.stroke()
-  ctx.fillStyle = '#000000'
-  ctx.font = '800 42px sans-serif'
-  ctx.textAlign = 'center'
-  ctx.textBaseline = 'middle'
-  ctx.fillText(String(count), 0, 3)
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: true, depthWrite: false }))
-  sprite.scale.set(.52, .52, 1)
-  sprite.userData = { post, labelTexture: texture }
-  return sprite
-}
-
-function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
+function MemoryGlobe({ posts, onSelect }) {
   const mountRef = useRef(null)
   const onSelectRef = useRef(onSelect)
-  const playingRef = useRef(playing)
   useEffect(() => { onSelectRef.current = onSelect }, [onSelect])
-  useEffect(() => { playingRef.current = playing }, [playing])
 
   useEffect(() => {
     const mount = mountRef.current
@@ -280,15 +231,56 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
     )
     group.add(atmosphere)
 
-    const starsGeometry = new THREE.BufferGeometry()
-    const stars = new Float32Array(1450 * 3)
-    for (let i = 0; i < stars.length; i += 3) {
-      stars[i] = (Math.random() - .5) * 22
-      stars[i + 1] = (Math.random() - .5) * 13
-      stars[i + 2] = -2 - Math.random() * 10
-    }
-    starsGeometry.setAttribute('position', new THREE.BufferAttribute(stars, 3))
-    scene.add(new THREE.Points(starsGeometry, new THREE.PointsMaterial({ color: 0xddebf5, size: .018, transparent: true, opacity: .82 })))
+    // Natural Earth boundaries, including both parts of Malaysia and Singapore.
+    const countryCanvas = document.createElement('canvas')
+    countryCanvas.width = 4096
+    countryCanvas.height = 2048
+    const ctx = countryCanvas.getContext('2d')
+    ctx.fillStyle = '#ffda44'
+    ctx.strokeStyle = '#ffe878'
+    ctx.lineWidth = 1.5
+    JSON.parse(visitedCountries).features.forEach(feature => {
+      const polygons = feature.geometry.type === 'MultiPolygon' ? feature.geometry.coordinates : [feature.geometry.coordinates]
+      polygons.forEach(polygon => {
+        ctx.beginPath()
+        polygon.forEach(ring => {
+          ring.forEach(([lng, lat], i) => {
+            const x = (lng + 180) / 360 * 4096
+            const y = (90 - lat) / 180 * 2048
+            if (i === 0) ctx.moveTo(x, y)
+            else ctx.lineTo(x, y)
+          })
+          ctx.closePath()
+        })
+        ctx.fill('evenodd')
+        ctx.stroke()
+      })
+    })
+    const countryTexture = new THREE.CanvasTexture(countryCanvas)
+    countryTexture.colorSpace = THREE.SRGBColorSpace
+    group.add(new THREE.Mesh(new THREE.SphereGeometry(2.009, 96, 96), new THREE.MeshBasicMaterial({ map: countryTexture, transparent: true, depthWrite: false })))
+
+    const countryLabels = []
+    VISITED.forEach((country, index) => {
+      const anchor = latLngToVector3(country.lat, country.lng, 2.035)
+      const dot = new THREE.Mesh(new THREE.SphereGeometry(.023, 12, 12), new THREE.MeshBasicMaterial({color: '#ffe878'}))
+      dot.position.copy(anchor)
+      group.add(dot)
+      const label = makeMarkerLabel(country, '#ffda44')
+      label.scale.set(.85, .194, 1)
+      const labelPos = latLngToVector3(country.lat + [9, 0, -10][index], country.lng + [-14, 20, -12][index], 2.19)
+      label.position.copy(labelPos)
+      countryLabels.push(label)
+      group.add(label)
+      group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([anchor, labelPos]), new THREE.LineBasicMaterial({color: '#ffda44', transparent: true, opacity: .65})))
+      if (index > 0) {
+        const from = latLngToVector3(VISITED[index - 1].lat, VISITED[index - 1].lng, 1)
+        const to = anchor.clone().normalize()
+        const points = Array.from({length: 65}, (_, i) => from.clone().lerp(to, i / 64).normalize().multiplyScalar(2.04 + Math.sin(Math.PI * i / 64) * .16))
+        group.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 64, .009, 8, false), new THREE.MeshBasicMaterial({color: '#ffda44'})))
+      }
+    })
+
     scene.add(new THREE.AmbientLight(0x7790a6, .58))
     const key = new THREE.DirectionalLight(0xfff4dc, 2.35)
     key.position.set(-3.5, 2.6, 5)
@@ -310,7 +302,8 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
       const color = new THREE.Color(markerColor)
       const surface = latLngToVector3(post.lat + (index % 3) * .32, post.lng + (index % 4) * .32, 2.01)
       const pos = surface.clone().normalize().multiplyScalar(2.22)
-      const marker = makeGoldStarMarker(post, locationPosts.length)
+      const marker = new THREE.Mesh(new THREE.SphereGeometry(.032, 12, 12), new THREE.MeshBasicMaterial({ color }))
+      marker.userData.post = post
       marker.userData.locationKey = `${post.city}-${post.country}`
       marker.position.copy(pos)
       group.add(marker)
@@ -323,13 +316,6 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
       halo.userData.baseScale = .9 + (index % 3) * .12
       group.add(halo)
       halos.push(halo)
-      const label = makeMarkerLabel(post, markerColor)
-      label.position.copy(pos.clone().normalize().multiplyScalar(2.39))
-      label.position.y += .13
-      label.userData.post = post
-      label.userData.locationKey = `${post.city}-${post.country}`
-      group.add(label)
-      markers.push(label)
     })
 
     const raycaster = new THREE.Raycaster()
@@ -353,7 +339,7 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
       const rect = renderer.domElement.getBoundingClientRect()
       pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1)
       raycaster.setFromCamera(pointer, camera)
-      const hit = raycaster.intersectObjects(markers.filter(item => item.userData.post))[0]
+      const hit = raycaster.intersectObjects([earth, ...markers.filter(item => item.userData.post)])[0]
       if (hit?.object.userData.post) onSelectRef.current(hit.object.userData.locationKey)
     }
     renderer.domElement.addEventListener('pointerdown', down)
@@ -374,9 +360,15 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
     let frame
     const clock = new THREE.Clock()
     const animate = () => {
+      group.updateMatrixWorld(true)
+      countryLabels.forEach(label => {
+        const world = label.getWorldPosition(new THREE.Vector3())
+        label.visible = world.clone().normalize().dot(camera.position.clone().sub(world)) > 0
+      })
       const t = clock.getElapsedTime()
-      if (playingRef.current && !dragging) group.rotation.y += .0017
+      if (!dragging) group.rotation.y += .0017
       halos.forEach((marker, index) => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
         const pulse = marker.userData.baseScale + Math.sin(t * 2.3 + index) * .15
         marker.scale.setScalar(pulse)
         marker.material.opacity = .38 + Math.sin(t * 2.3 + index) * .2
@@ -391,6 +383,8 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
       renderer.domElement.removeEventListener('pointerdown', down)
       renderer.domElement.removeEventListener('pointermove', move)
       renderer.domElement.removeEventListener('pointerup', up)
+      countryTexture.dispose()
+      scene.traverse(item => item.material?.map?.dispose())
       texture.dispose()
       normalMap.dispose()
       specularMap.dispose()
@@ -402,15 +396,8 @@ function MemoryGlobe({ posts, onSelect, playing, onTogglePlaying }) {
 
   return (
     <div className="memory-earth-stage">
-      <div className="earth-stage-copy">
-        <span><span className="earth-live-dot" /> Live memory map</span>
-        <strong>{posts.length} stories around the world</strong>
-      </div>
       <div className="memory-earth-canvas" ref={mountRef} aria-label="Interactive 3D Earth with public travel memories" />
-      <button className="earth-motion-toggle" onClick={onTogglePlaying} aria-label={playing ? 'Pause globe rotation' : 'Resume globe rotation'}>
-        {playing ? <Pause size={15}/> : <Play size={15}/>} {playing ? 'Pause' : 'Rotate'}
-      </button>
-      <div className="earth-drag-hint">Drag to explore · select a light to open its story</div>
+      <div className="earth-drag-hint">Yellow: visited countries & connections · Blue: public stories</div>
     </div>
   )
 }
@@ -661,7 +648,7 @@ function LocationBlog({ story, personalPosts, onRemovePersonalPost, onOpenSpotli
 export default function MemoryWorld({
   selectedCity, selectedCountry, departureDate, returnDate, travellers,
   initialBudget = 3800, totalActual = 3458, varianceAmount = 342, basket = [], mode = 'browse',
-  currentCoinBalance = 0, onEarnCoins, onOpenDashboardGlobe
+  currentCoinBalance = 0, onEarnCoins, onOpenDashboardGlobe, onOpenRecap
 }) {
   const city = selectedCity?.city || 'Kuala Lumpur'
   const country = selectedCountry?.country || selectedCity?.country || 'Malaysia'
@@ -691,7 +678,6 @@ export default function MemoryWorld({
   const [selectedLocationKey, setSelectedLocationKey] = useState(`${PUBLIC_LOCATION_STORIES[0].city}-${PUBLIC_LOCATION_STORIES[0].country}`)
   const [selectedTypes, setSelectedTypes] = useState(['postcard', 'spending', 'trip', 'journal'])
   const [note, setNote] = useState('The kind of trip we will keep talking about.')
-  const [playing, setPlaying] = useState(true)
   const [rocketLaunching, setRocketLaunching] = useState(false)
   const [publishComplete, setPublishComplete] = useState(false)
   const [spotlightStory, setSpotlightStory] = useState(null)
@@ -835,12 +821,37 @@ export default function MemoryWorld({
   return (
     <section className="memory-world public-memory-explorer" aria-labelledby="memory-world-title">
       <header className="memory-world-header">
-        <div>
+        <div className="memory-world-header-left">
           <span className="memory-world-kicker"><Globe2 size={15}/> Public travel stories</span>
           <h2 id="memory-world-title">Travel the world through complete trip stories.</h2>
           <p>Select a location on the planet to read its postcards, full spending recap, past itinerary, journal and public notes.</p>
         </div>
-        <div className="memory-world-count"><Users2 size={17}/><strong>{posts.length}</strong><span>public memories</span></div>
+        <div className="memory-world-header-actions">
+          {onOpenRecap && (
+            <button
+              className="anniversary-recap-button"
+              onClick={onOpenRecap}
+              aria-label="View 1 Year Anniversary Travel Recap"
+            >
+              <div className="anniversary-btn-sparkle-layer" aria-hidden="true">
+                <span className="anniversary-spark-dot dot-1" />
+                <span className="anniversary-spark-dot dot-2" />
+              </div>
+              <div className="anniversary-icon-badge">
+                <Calendar size={17} aria-hidden="true" />
+              </div>
+              <div className="anniversary-btn-text">
+                <span className="anniversary-pill-tag">1-YEAR MILESTONE</span>
+                <strong>Annual Travel Recap</strong>
+                <span className="anniversary-btn-cta">
+                  <span>Replay journey</span>
+                  <ArrowRight size={13} className="anniversary-arrow-icon" aria-hidden="true" />
+                </span>
+              </div>
+            </button>
+          )}
+          <div className="memory-world-count"><Users2 size={17}/><strong>{posts.length}</strong><span>public memories</span></div>
+        </div>
       </header>
       <nav className="public-location-filter" aria-label="Public story locations">
         {PUBLIC_LOCATION_STORIES.map(story => {
@@ -849,9 +860,9 @@ export default function MemoryWorld({
         })}
       </nav>
       <div className="public-globe-blog-layout">
-        <div className="memory-world-visual">
-          <MemoryGlobe posts={posts} onSelect={setSelectedLocationKey} playing={playing} onTogglePlaying={() => setPlaying(value => !value)} />
-        </div>
+        <div className="public-globe-column"><div className="memory-world-visual">
+          <MemoryGlobe posts={posts} onSelect={setSelectedLocationKey} />
+        </div></div>
         <LocationBlog
           story={selectedStory}
           personalPosts={personalPosts}
