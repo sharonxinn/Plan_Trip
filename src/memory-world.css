@@ -1,5 +1,7 @@
 .memory-world{width:100%;min-width:0;color:#172436}
-.memory-world-header{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin:4px 0 24px}
+.memory-world-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:4px 0 24px}
+.memory-world-header-left{flex:1;min-width:0}
+.memory-world-header-actions{display:flex;align-items:center;gap:14px;flex-shrink:0;margin-bottom:4px}
 .memory-world-kicker{display:inline-flex;align-items:center;gap:8px;color:#0284c7;font-size:13px;font-weight:700;margin-bottom:10px}
 .memory-world-header h2{font-family:var(--font-heading);font-size:clamp(28px,4vw,46px);line-height:1.04;letter-spacing:-.045em;max-width:720px;margin:0}
 .memory-world-header p{font-size:15px;line-height:1.65;color:#66758a;max-width:660px;margin:12px 0 0}
@@ -12,7 +14,7 @@
 .memory-earth-stage:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.055;z-index:3;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.11) 4px);mix-blend-mode:soft-light}
 .memory-earth-canvas{position:absolute;inset:0}.memory-earth-canvas canvas{display:block;width:100%!important;height:100%!important;cursor:grab;touch-action:none}.memory-earth-canvas canvas:active{cursor:grabbing}
 .earth-stage-copy{position:absolute;z-index:4;top:25px;left:26px;display:flex;flex-direction:column;gap:7px;color:#fff;pointer-events:none}.earth-stage-copy>span{display:flex;align-items:center;gap:8px;font-size:12px;color:#b9d2e4}.earth-stage-copy strong{font-size:17px;letter-spacing:-.01em}
-.earth-live-dot{width:7px;height:7px;background:#38bdf8;border-radius:50%;box-shadow:0 0 0 5px rgba(56,189,248,.25),0 0 18px #38bdf8;animation:earth-live-pulse 2s ease-out infinite}
+.earth-live-dot{width:7px;height:7px;background:#ffda44;border-radius:50%;box-shadow:0 0 0 5px rgba(255,218,68,.25),0 0 18px #ffda44;animation:earth-live-pulse 2s ease-out infinite}
 .earth-motion-toggle{position:absolute;z-index:5;right:24px;top:22px;display:flex;align-items:center;gap:7px;border:1px solid rgba(198,225,243,.23);border-radius:999px;background:rgba(5,18,31,.68);backdrop-filter:blur(14px);color:#e8f5ff;padding:8px 12px;font-size:12px;font-weight:650}
 .earth-motion-toggle:hover{background:rgba(20,52,76,.82)}
 .earth-drag-hint{position:absolute;z-index:4;left:26px;bottom:24px;color:#97b4ca;font-size:11px;pointer-events:none}
@@ -28,7 +30,7 @@
 .memory-type-list{display:flex;flex-direction:column;gap:7px;margin:18px 0}.memory-type-choice{width:100%;display:grid;grid-template-columns:36px minmax(0,1fr) 20px;align-items:center;gap:10px;text-align:left;padding:10px;border:1px solid transparent;border-radius:11px;background:#f6f8fa;color:#26394e}.memory-type-choice:hover{background:#f0f4f8}.memory-type-choice.selected{background:#f0f9ff;border-color:#bae6fd}.memory-type-icon,.feed-memory-icon{display:grid;place-items:center;color:var(--memory-color);background:color-mix(in srgb,var(--memory-color) 13%,white);border-radius:9px;width:34px;height:34px}.memory-type-choice strong{display:block;font-size:12px}.memory-type-choice small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#728093;font-size:10px;margin-top:3px}.memory-choice-check{display:grid;place-items:center;width:18px;height:18px;border:1px solid #cad5e0;border-radius:50%;color:#fff}.memory-type-choice.selected .memory-choice-check{background:#38bdf8;border-color:#0284c7}
 .memory-note-field{position:relative;display:flex;flex-direction:column;gap:7px;margin-top:2px}.memory-note-field>span{font-size:12px;font-weight:700;color:#40546a}.memory-note-field textarea{resize:none;width:100%;box-sizing:border-box;border:1px solid #d5dfe9;border-radius:10px;padding:11px 12px 25px;background:#fff;color:#22364b;font:inherit;font-size:12px;line-height:1.5;outline:none}.memory-note-field textarea:focus{border-color:#7ca4dd;box-shadow:0 0 0 3px #e6effc}.memory-note-field small{position:absolute;right:10px;bottom:8px;font-size:9px;color:#95a0ad}
 .publish-privacy{display:flex;align-items:center;gap:7px;color:#748397;font-size:10px;margin:14px 2px}.memory-publish-button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 14px;border-radius:10px;background:#38bdf8;color:#000000;font-weight:700;font-size:13px;border:1px solid #38bdf8;box-shadow:0 4px 14px rgba(56,189,248,.25)}.memory-publish-button:hover{background:#7dd3fc;border-color:#7dd3fc;color:#000000}.memory-publish-button:disabled{opacity:.45;cursor:not-allowed}.memory-publish-success{display:flex;align-items:flex-start;gap:7px;color:#0284c7;background:#F0F9FF;border-radius:9px;padding:10px;margin-top:10px;font-size:11px;line-height:1.4;animation:earth-story-in .25s ease-out}
-@keyframes earth-live-pulse{0%{box-shadow:0 0 0 0 rgba(56,189,248,.35),0 0 14px #38bdf8}70%{box-shadow:0 0 0 8px transparent,0 0 20px #38bdf8}100%{box-shadow:0 0 0 0 transparent,0 0 14px #38bdf8}}
+@keyframes earth-live-pulse{0%{box-shadow:0 0 0 0 rgba(255,218,68,.35),0 0 14px #ffda44}70%{box-shadow:0 0 0 8px transparent,0 0 20px #ffda44}100%{box-shadow:0 0 0 0 transparent,0 0 14px #ffda44}}
 @keyframes earth-story-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes location-drawer-in{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
 @media(max-width:900px){.memory-world-layout{grid-template-columns:1fr}.memory-world-visual{height:590px}.memory-publish-panel{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}.publish-panel-heading{grid-column:1/-1}.memory-type-list{grid-row:2/6}}
@@ -71,28 +73,36 @@
    3D POSTCARD CARDS & LYRA SPATIAL VIEWER
    ========================================================= */
 
-/* Postcard Gallery 3D Card Treatment */
-.public-postcard-gallery figure.is-3d-postcard {
+/* Postcard Gallery Card & Spotlight Treatment (Light Blue, White, Black) */
+.public-postcard-gallery figure.is-3d-postcard,
+.public-postcard-gallery figure.is-spotlight-card {
   cursor: pointer;
   position: relative;
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease, border-color 0.25s ease;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.2s ease;
   outline: none;
 }
 .public-postcard-gallery figure.is-3d-postcard:hover,
-.public-postcard-gallery figure.is-3d-postcard:focus-visible {
-  transform: translateY(-5px) scale(1.012);
-  border-color: #90b8f8;
-  box-shadow: 0 14px 34px -6px rgba(28, 64, 114, 0.16), 0 0 0 2px rgba(36, 91, 196, 0.18);
+.public-postcard-gallery figure.is-3d-postcard:focus-visible,
+.public-postcard-gallery figure.is-spotlight-card:hover,
+.public-postcard-gallery figure.is-spotlight-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: #38bdf8;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 .postcard-image-wrap {
   position: relative;
   overflow: hidden;
+  border-top-left-radius: 13px;
+  border-top-right-radius: 13px;
 }
 .postcard-image-wrap img {
   transition: transform 0.45s ease;
 }
-.public-postcard-gallery figure.is-3d-postcard:hover .postcard-image-wrap img {
-  transform: scale(1.045);
+.public-postcard-gallery figure:hover .postcard-image-wrap img {
+  transform: scale(1.035);
 }
 .postcard-3d-pill,
 .postcard-spotlight-pill {
@@ -102,51 +112,50 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 11px;
-  background: rgba(10, 20, 36, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 5px 12px;
+  background: #ffffff;
+  border: 1px solid #bae6fd;
   border-radius: 999px;
-  color: #fff;
-  font-size: 10.5px;
+  color: #000000;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .postcard-3d-pill svg,
 .postcard-spotlight-pill svg {
-  color: #38bdf8;
+  color: #0284c7;
 }
 .postcard-3d-pill.personal,
 .postcard-spotlight-pill.personal {
-  background: rgba(56, 189, 248, 0.85);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: #f0f9ff;
+  border-color: #38bdf8;
+  color: #000000;
 }
 .public-postcard-gallery figure:hover .postcard-3d-pill,
 .public-postcard-gallery figure:hover .postcard-spotlight-pill {
-  background: linear-gradient(135deg, #0284c7, #2563eb);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: scale(1.06);
-  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.45);
+  background: #f0f9ff;
+  border-color: #38bdf8;
+  color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
 }
 .postcard-3d-action-hint,
 .postcard-spotlight-action-hint {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-size: 11px;
   font-weight: 700;
-  color: #0284c7;
+  color: #000000;
   margin-top: 8px;
-  opacity: 0.85;
   transition: all 0.2s ease;
 }
 .public-postcard-gallery figure:hover .postcard-3d-action-hint,
 .public-postcard-gallery figure:hover .postcard-spotlight-action-hint {
-  opacity: 1;
-  color: #0369a1;
-  transform: translateX(4px);
+  color: #0284c7;
+  transform: translateX(3px);
 }
 
 /* =========================================================
@@ -1098,3 +1107,7 @@
   }
 }
 
+
+/* The recap lives directly below the personal globe, beside public stories. */
+.public-globe-column { min-width: 0; }
+.public-globe-blog-layout .public-globe-column .memory-world-visual { position: relative; top: auto; height: 620px; min-height: 0; }
