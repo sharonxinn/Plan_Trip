@@ -1,0 +1,85 @@
+[
+  {
+    "id": "fly2xuk3ziqw6za",
+    "code": "VAW4MP",
+    "hostId": "7dkqu31w5cdw6za",
+    "hostName": "你好hellobonjour",
+    "title": "Penang (George Town) Weekend Squad Trip",
+    "destinationCity": "Penang (George Town)",
+    "destinationCountry": "Malaysia",
+    "departureDate": "2026-09-15",
+    "returnDate": "2026-09-18",
+    "minPax": 2,
+    "maxPax": 6,
+    "budgetTotal": 3800,
+    "currency": "MYR",
+    "vibe": "Local Food, Heritage & Culture, Halal Friendly",
+    "visibility": "private",
+    "locked": false,
+    "members": [
+      {
+        "id": "7dkqu31w5cdw6za",
+        "name": "你好hellobonjour",
+        "avatar": "MT",
+        "isHost": true,
+        "joinedAt": 1789005853270
+      },
+      {
+        "id": "vcl23ttp18x1qc",
+        "name": "你好hellobonjour",
+        "avatar": "MT",
+        "isHost": false,
+        "joinedAt": 1789005893124
+      },
+      {
+        "id": "hslqup6j85jy56r",
+        "name": "annyeong",
+        "avatar": "MP",
+        "isHost": false,
+        "joinedAt": 1789005944259
+      }
+    ],
+    "proposals": [],
+    "expenses": [],
+    "messages": [
+      {
+        "id": "mw3obtu9wgbw6za",
+        "kind": "system",
+        "text": "你好hellobonjour started this private trip. Share code VAW4MP to invite people.",
+        "createdAt": 1789005853270
+      },
+      {
+        "id": "j7w65gibtzhx1qc",
+        "kind": "system",
+        "text": "你好hellobonjour joined the trip.",
+        "createdAt": 1789005893124
+      },
+      {
+        "id": "3754k2rl9m8xd8e",
+        "kind": "chat",
+        "memberId": "vcl23ttp18x1qc",
+        "name": "你好hellobonjour",
+        "avatar": "MT",
+        "text": "haro",
+        "createdAt": 1789005908030
+      },
+      {
+        "id": "81yhyyfy8z4xict",
+        "kind": "chat",
+        "memberId": "vcl23ttp18x1qc",
+        "name": "你好hellobonjour",
+        "avatar": "MT",
+        "text": "pupioauso",
+        "createdAt": 1789005914669
+      },
+      {
+        "id": "62iypmloaxry56r",
+        "kind": "system",
+        "text": "annyeong joined the trip.",
+        "createdAt": 1789005944259
+      }
+    ],
+    "createdAt": 1789005853270,
+    "updatedAt": 1789005944259
+  }
+]

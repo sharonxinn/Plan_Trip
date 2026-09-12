@@ -9248,18 +9248,28 @@ input, select, textarea {
     padding-bottom: 90px;
   }
   .step-bottom-bar {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
     margin: 20px 16px 30px 16px;
     padding: 14px;
   }
+  .step-bottom-bar > .step-back-btn {
+    justify-self: stretch;
+  }
   .step-summary-text {
+    grid-column: unset;
     text-align: center;
   }
   .step-next-primary-btn, .step-back-btn {
     width: 100%;
     justify-content: center;
+  }
+  .step-bottom-bar-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px !important;
   }
 }
 
