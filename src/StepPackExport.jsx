@@ -538,7 +538,7 @@ END:VCALENDAR`
             <div style={{ color: '#0f172a', fontSize: '0.78rem', marginTop: 4 }}>{googleCalendarError}</div>
           )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div className="step-bottom-bar-actions" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <button className="step-back-btn" onClick={handleExportICS}>
             Download .ics instead
           </button>
