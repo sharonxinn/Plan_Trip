@@ -355,7 +355,7 @@ export default function TravelStorySpotlightModal({
               title={isPlayingAudio ? 'Pause ambient soundscape' : 'Listen to ambient travel soundscape'}
             >
               {isPlayingAudio ? <Volume2 size={15} /> : <VolumeX size={15} />}
-              <span>{isPlayingAudio ? 'Ambiance On' : 'Play Ambiance'}</span>
+              <span className="btn-label-text">{isPlayingAudio ? 'Ambiance On' : 'Play Ambiance'}</span>
               {isPlayingAudio && (
                 <span className="audio-wave-bars">
                   <i /><i /><i />
@@ -371,7 +371,7 @@ export default function TravelStorySpotlightModal({
               title="Copy share link"
             >
               {copiedLink ? <Check size={14} /> : <Share2 size={14} />}
-              <span>{copiedLink ? 'Copied' : 'Share'}</span>
+              <span className="btn-label-text">{copiedLink ? 'Copied' : 'Share'}</span>
             </button>
 
             {/* Close Button */}
@@ -424,7 +424,8 @@ export default function TravelStorySpotlightModal({
                 title="View full resolution photograph"
               >
                 <Eye size={13} />
-                <span>Inspect full photo</span>
+                <span className="btn-inspect-text-full">Inspect full photo</span>
+                <span className="btn-inspect-text-short">Zoom</span>
               </button>
             </div>
 
@@ -533,7 +534,8 @@ export default function TravelStorySpotlightModal({
                 onClick={() => setActiveTab('guide')}
               >
                 <Compass size={14} />
-                <span>Traveler Guide</span>
+                <span className="tab-label-full">Traveler Guide</span>
+                <span className="tab-label-short">Guide</span>
               </button>
               <button
                 type="button"
@@ -541,7 +543,8 @@ export default function TravelStorySpotlightModal({
                 onClick={() => setActiveTab('journal')}
               >
                 <BookOpen size={14} />
-                <span>Travel Diary</span>
+                <span className="tab-label-full">Travel Diary</span>
+                <span className="tab-label-short">Diary</span>
               </button>
               <button
                 type="button"
@@ -549,7 +552,8 @@ export default function TravelStorySpotlightModal({
                 onClick={() => setActiveTab('map')}
               >
                 <Navigation size={14} />
-                <span>Map & Directions</span>
+                <span className="tab-label-full">Map & Directions</span>
+                <span className="tab-label-short">Map</span>
               </button>
             </div>
 
@@ -648,7 +652,8 @@ export default function TravelStorySpotlightModal({
                 onClick={handleAddToTrip}
               >
                 {addedToTrip ? <Check size={16} /> : <Bookmark size={16} />}
-                <span>{addedToTrip ? 'Saved to Your Trip!' : '+ Add Spot to My Trip Plan'}</span>
+                <span className="btn-footer-text-full">{addedToTrip ? 'Saved to Your Trip!' : '+ Add Spot to My Trip Plan'}</span>
+                <span className="btn-footer-text-short">{addedToTrip ? 'Saved' : '+ Add to Trip'}</span>
               </button>
 
               <a
